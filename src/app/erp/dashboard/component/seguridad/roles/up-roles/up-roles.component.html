@@ -1,0 +1,37 @@
+<div class="col-12 p-fluid" >
+    <p-fieldset legend="Actualización de Roles">
+        <div class="col-12">
+            <form
+            [formGroup] = "up"
+            (ngSubmit)  = "guardar(                  
+                             up.controls['rolDes'].value 
+                      )">
+           
+                <div class="grid formgrid">
+                    <div class="col-12 mb-2 lg:mb-0  p-3" >
+                        <span class="p-float-label">
+                            <input id="float-input" type="text" pInputText value="{{this.idRol}}" oninput="this.value = this.value.toUpperCase()"
+                           disabled>
+                            <label for="float-input">Id Rol</label>
+                        </span> 
+                    </div>
+                    <div class="col-12">                       
+                        <span class="p-float-label">
+                            <input id="float-input" type="text" pInputText formControlName="rolDes" 
+                            [ngClass]="(up.controls['rolDes'].hasError('required'))
+              ? '           was-validated' : 'is-valid'" oninput="this.value = this.value.toUpperCase()">
+                            <label for="float-input" >Descripción</label>
+                        </span>
+                        <div *ngIf= "up.controls['rolDes'].hasError('required')">
+                            <span class="text-danger">Campo obligatorio!</span>
+                        </div>                    
+                    </div>
+                </div>              
+               <div class="flex  flex-wrap gap-2 align-items-center mt-3">
+                    <p-button type="submit" label="Guardar" icon="pi pi-check" size="small" *ngIf="up.valid"/>
+                    <p-button label="Volver" icon="pi pi-arrow-down" size="small"  routerLink="../.." severity="secondary" />
+               </div>
+            </form>
+        </div>
+    </p-fieldset>
+	

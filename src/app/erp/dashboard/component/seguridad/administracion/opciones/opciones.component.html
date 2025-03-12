@@ -1,0 +1,98 @@
+<div class="grid">
+    <div class="col-12 admin-card">
+        <div class="card">
+            <p-toast></p-toast>
+            
+            <!-- Header con título y búsqueda -->
+            <div class="admin-header">
+                <h2 class="header-title">Administración de Opciones</h2>
+                <div class="header-actions">
+                    <span class="p-input-icon-left">
+                        <i class="pi pi-search"></i>
+                        <input pInputText type="text" (input)="onGlobalFilter(dt, $event)" placeholder="Buscar..." class="p-inputtext-sm"/>
+                    </span>
+                    <button pButton pRipple label="Nuevo" icon="pi pi-plus" class="p-button-primary p-button-sm" (click)="openNew()"></button>
+                    <button pButton pRipple label="Exportar" icon="pi pi-upload" class="p-button-outlined p-button-sm" (click)="exportCSV()"></button>
+                </div>
+            </div>
+
+            <!-- Tabla modernizada -->
+            <div class="admin-table">
+                <p-table #dt [value]="data" 
+                        [columns]="cols" 
+                        styleClass="p-datatable-sm"
+                        [tableStyle]="{'min-width': '50rem'}"
+                        [paginator]="true" 
+                        [rows]="10" 
+                        [showCurrentPageReport]="true"
+                        [globalFilterFields]="globalFilterFields"
+                        [rowsPerPageOptions]="rowsPerPageOptions"
+                        currentPageReportTemplate="Mostrando {first} a {last} de {totalRecords} registros"
+                        [scrollable]="true"
+                        responsiveLayout="scroll">
+                    
+                    <ng-template pTemplate="header">
+                        <tr>
+                            <th>ID</th>                      
+                            <th>Descripción</th>
+                            <th>Enlace</th>
+                            <th>Creado</th>
+                            <th class="text-center">Acciones</th>
+                        </tr>
+                    </ng-template>
+                    
+                    <ng-template pTemplate="body" let-item>
+                        <tr>
+                            <td>{{item.optId}}</td>                    
+                            <td>
+                                <span class="font-medium">{{item.optDes}}</span>
+                            </td>
+                            <td>
+                                <span class="text-color-secondary">{{item.optLink}}</span>
+                            </td>
+                            <td>
+                                <span>{{item.created_at.substr(0, 10)}}</span>
+                            </td>                       
+                            <td>
+                                <div class="actions-column">
+                                    <button pButton pRipple 
+                                            icon="pi pi-pencil" 
+                                            class="p-button-text p-button-primary" 
+                                            (click)="edit(item.optId)" 
+                                            pTooltip="Editar" 
+                                            tooltipPosition="top">
+                                    </button>
+                                    <button pButton pRipple 
+                                            icon="pi pi-sitemap" 
+                                            class="p-button-text p-button-info" 
+                                            (click)="editAcciones(item)" 
+                                            pTooltip="Acciones" 
+                                            tooltipPosition="top">
+                                    </button>
+                                    <button pButton pRipple 
+                                            icon="pi pi-trash" 
+                                            class="p-button-text p-button-danger" 
+                                            (click)="del(item)" 
+                                            pTooltip="Eliminar" 
+                                            tooltipPosition="top">
+                                    </button>
+                                </div>
+                            </td>
+                        </tr>
+                    </ng-template>
+                    
+                    <ng-template pTemplate="emptymessage">
+                        <tr>
+                            <td colspan="5">
+                                <div class="empty-message">
+                                    <i class="pi pi-folder-open"></i>
+                                    <span>No se encontraron registros</span>
+                                </div>
+                            </td>
+                        </tr>
+                    </ng-template>
+                </p-table>
+            </div>
+        </div>
+    </div>
+</div>

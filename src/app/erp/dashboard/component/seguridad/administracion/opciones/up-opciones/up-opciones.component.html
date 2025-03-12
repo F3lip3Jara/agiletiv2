@@ -1,0 +1,48 @@
+<div class="col-12 p-fluid" >
+    <p-fieldset legend="Actualización de Opciones">
+        <div class="col-12">
+            <form
+            [formGroup] = "up"
+            (ngSubmit)  = "guardar(                  
+                             up.controls['optDes'].value,
+                             up.controls['optLink'].value
+                      )">           
+                <div class="grid formgrid">
+                    <div class="col-12 mb-2 lg:mb-0  p-3" >
+                        <span class="p-float-label">
+                            <input id="float-input" type="text" pInputText value="{{this.optId}}" oninput="this.value = this.value.toUpperCase()"
+                           disabled>
+                            <label for="float-input">Id Opción</label>
+                        </span> 
+                    </div>
+                    <div class="col-12 mb-2 lg:mb-0  p-3" >                       
+                        <span class="p-float-label">
+                            <input id="float-input" type="text" pInputText formControlName="optDes" 
+                            [ngClass]="(up.controls['optDes'].hasError('required'))
+              ? '           was-validated' : 'is-valid'" oninput="this.value = this.value.toUpperCase()">
+                            <label for="float-input" >Descripción</label>
+                        </span>
+                        <div *ngIf= "up.controls['optDes'].hasError('required')">
+                            <span class="text-danger">Campo obligatorio!</span>
+                        </div>                    
+                    </div>
+                    <div class="col-12 mb-2 lg:mb-0  p-3" >                       
+                        <span class="p-float-label">
+                            <input id="float-input" type="text" pInputText formControlName="optLink" 
+                            [ngClass]="(up.controls['optLink'].hasError('required'))
+              ? '           was-validated' : 'is-valid'" oninput="this.value = this.value.toUpperCase()">
+                            <label for="float-input" >Link</label>
+                        </span>
+                        <div *ngIf= "up.controls['optLink'].hasError('required')">
+                            <span class="text-danger">Campo obligatorio!</span>
+                        </div>                    
+                    </div>
+                </div>              
+               <div class="flex  flex-wrap gap-2 align-items-center mt-3">
+                    <p-button type="submit" label="Guardar" icon="pi pi-check" size="small" *ngIf="up.valid"/>
+                    <p-button label="Volver" icon="pi pi-arrow-down" size="small"  routerLink="../.." severity="secondary" />
+               </div>
+            </form>
+        </div>
+    </p-fieldset>
+	

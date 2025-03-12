@@ -1,0 +1,234 @@
+<div class="layout-topbar">
+    <p-toast position="top-right" key="notification-toast" [baseZIndex]="5000" id="notification-toast">
+       
+    </p-toast>
+
+    <a class="layout-topbar-logo animate-fade-in" routerLink="">
+        <div class="logo-letter"><span>{{empresaNombreFormateado.charAt(0)}}</span></div>
+        <span class="company-name animate-slide-in" [ngClass]="{'truncated': empresaNombreFormateado.length > 7}">
+            {{empresaNombreFormateado.length > 7 ? empresaNombreFormateado.substring(0, 7)  : empresaNombreFormateado}}
+        </span>
+    </a>
+
+    <button #menubutton class="p-link layout-menu-button layout-topbar-button modern-button" (click)="layoutService.onMenuToggle()">
+        <i class="pi pi-bars"></i>
+    </button>
+
+    <!-- Agregar el saludo aquí -->
+    <div class="greeting-container animate-fade-in">
+        <span class="greeting-emoji">{{greetingEmoji}}</span>
+        <span class="greeting-text">{{greeting}}, {{nombreUsr}}</span>
+    </div>
+     
+    <!-- Avatar y menú solo para móvil -->
+    <div class="topbar-button-wrapper d-block d-lg-none">
+        <p-menu #menuMobile [popup]="true" [model]="menuItems"  id="menu-topbar-mobile" styleClass="modern-menu"></p-menu>
+        <button class="modern-button p-link"  id="menu-topbar-mobile-button"(click)="menuMobile.toggle($event)">
+            <p-avatar *ngIf="img.length === 0"
+                    [label]="label"
+                    shape="circle"
+                    [style]="{'width': '32px', 'height': '32px'}"
+                    styleClass="cursor-pointer">
+            </p-avatar>
+            <p-avatar *ngIf="img.length > 0"
+                    [image]="img"
+                    shape="circle"
+                    [style]="{'width': '32px', 'height': '32px'}"
+                    styleClass="cursor-pointer">
+            </p-avatar>
+        </button>
+    </div>
+
+    <div #topbarmenu class="layout-topbar-menu" [ngClass]="{'layout-topbar-menu-mobile-active': layoutService.state.profileSidebarVisible}">
+        <div class="modern-topbar-buttons">
+            <!-- Botón de búsqueda -->
+            <div class="search-wrapper">
+                <div class="search-input-container" (click)="showSearch()">
+                    <i class="pi pi-search"></i>
+                    <span class="search-text">Buscar</span>
+                    <span class="search-shortcut">Ctrl + K</span>
+                </div>
+            </div>
+
+            <!-- Diálogo de búsqueda -->
+            <p-dialog [(visible)]="searchVisible" 
+                     [modal]="true" 
+                     [style]="{width: '640px'}" 
+                     [draggable]="false" 
+                     [resizable]="false"
+                     styleClass="search-dialog"
+                     [showHeader]="false"
+                     [dismissableMask]="true"
+                     [closeOnEscape]="true">
+                <div class="search-container">
+                    <div class="search-input-wrapper">
+                        <i class="pi pi-search"></i>
+                        <input type="text" 
+                               class="search-input"
+                               [(ngModel)]="searchQuery" 
+                               (input)="onSearch({query: searchQuery})"
+                               placeholder="Buscar..."
+                               autofocus>
+                        <span class="search-shortcut-dialog">ESC para cerrar</span>
+                    </div>
+                    <div class="search-results" *ngIf="filteredOptions.length > 0">
+                        <div class="search-result-item" 
+                             *ngFor="let option of filteredOptions" 
+                             (click)="onSelectOption(option)">
+                            <i [class]="option.icon"></i>
+                            <div class="result-content">
+                                <span class="result-label">{{option.label}}</span>
+                                <span class="result-module">{{option.module}}</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="search-empty" *ngIf="searchQuery && filteredOptions.length === 0">
+                        <i class="pi pi-info-circle"></i>
+                        <span>No se encontraron resultados</span>
+                    </div>
+                </div>
+            </p-dialog>
+
+           <!-- Menú de Usuario (visible solo en desktop) -->
+                <div class="topbar-button-wrapper d-none d-lg-block">
+                    <p-menu #menu [popup]="true" [model]="menuItems" id="menu-topbar" styleClass="modern-menu"></p-menu>
+                    <button class="modern-button p-link" (click)="menu.toggle($event)">
+                        <p-avatar *ngIf="img.length === 0"
+                                [label]="label"
+                                shape="circle"
+                                [style]="{'width': '32px', 'height': '32px'}"
+                                styleClass="cursor-pointer">
+                        </p-avatar>
+                        <p-avatar *ngIf="img.length > 0"
+                                [image]="img"
+                                shape="circle"
+                                [style]="{'width': '32px', 'height': '32px'}"
+                                styleClass="cursor-pointer">
+                        </p-avatar>
+                    </button>
+                </div>
+
+            <!-- Botón de Pantalla Completa -->
+           <!--   <div class="topbar-button-wrapper">
+                <button class="p-link layout-topbar-button modern-button" (click)="toggleFullscreen()">
+                    <div class="button-content">
+                        <i [class]="isFullscreen ? 'pi pi-window-minimize' : 'pi pi-window-maximize'"></i>
+                        <span>{{isFullscreen ? 'Salir Pantalla Completa' : 'Pantalla Completa'}}</span>
+                    </div>
+                </button>
+            </div>-->
+
+            <!-- Botón de Cambio de Tema -->
+            <div class="topbar-button-wrapper">
+                <button class="p-link layout-topbar-button modern-button" (click)="toggleTheme()">
+                    <div class="button-content">
+                        <i [class]=" this.isDarkMode ? 'pi pi-sun spin-icon' : 'pi pi-moon spin-icon'"></i>
+                        <span>{{this.isDarkMode ? 'Tema Claro' : 'Tema Oscuro'}}</span>
+                    </div>
+                </button>
+            </div>
+
+            <!-- Botón de notificaciones -->
+            <div class="topbar-button-wrapper">
+                <button class="p-link layout-topbar-button modern-button notification-button" (click)="op.toggle($event)">
+                    <div class="button-content">
+                        <div class="notification-icon-container">
+                            <i class="pi pi-bell" [class.has-notifications]="unreadCount > 0"></i>
+                            <span class="notification-badge" *ngIf="unreadCount > 0">{{unreadCount}}</span>
+                        </div>
+                        <span>Notificaciones</span>
+                    </div>
+                </button>
+            </div>
+
+            <!-- Panel de notificaciones -->
+            <p-overlayPanel #op 
+                [showCloseIcon]="true" 
+                styleClass="notifications-panel"
+                [style]="{width: '400px'}"
+                appendTo="body"
+                id="notificationsPanel">
+                <div class="notifications-container">
+                    <div class="notifications-header">
+                        <h3>Notificaciones</h3>
+                    </div>
+                    <div class="mark-all-read-container">
+                        <button id="markAllReadBtn" 
+                                class="p-button-text" 
+                                (click)="markAllAsRead()"
+                                *ngIf="unreadCount > 0">
+                            <i class="pi pi-check-circle"></i>
+                            <span>Marcar como leídos todos</span>
+                        </button>
+                    </div>
+                    <p-tabView id="notificationsTabView">
+                        <p-tabPanel header="General">
+                            <div class="notifications-list">
+                                <div class="notification-item" *ngFor="let msg of generalMessages">
+                                    <div class="notification-avatar">
+                                        <p-avatar [label]="'S'"
+                                                 shape="circle"
+                                                 [size]="'large'"
+                                                 [style]="getAvatarStyle(msg.type)">
+                                        </p-avatar>
+                                    </div>
+                                    <div class="notification-content">
+                                        <div class="notification-header">
+                                            <span class="sender-name">Sistema</span>
+                                            <span class="notification-time">{{msg.time}}</span>
+                                        </div>
+                                        <p class="notification-message">{{msg.mensaje}}</p>
+                                    </div>
+                                    <div class="notification-status" *ngIf="!msg.read">
+                                        <span class="unread-indicator"></span>
+                                    </div>
+                                </div>
+                                <div class="empty-message" *ngIf="generalMessages.length === 0">
+                                    <i class="pi pi-info-circle"></i>
+                                    <span>No hay notificaciones</span>
+                                </div>
+                            </div>
+                        </p-tabPanel>
+                        <p-tabPanel header="Archivados">
+                            <div class="notifications-list">
+                                <div class="notification-item" *ngFor="let msg of archivedMessages">
+                                    <div class="notification-avatar">
+                                        <p-avatar [label]="'S'"
+                                                 shape="circle"
+                                                 [size]="'large'"
+                                                 [style]="getAvatarStyle(msg.type)">
+                                        </p-avatar>
+                                    </div>
+                                    <div class="notification-content">
+                                        <div class="notification-header">
+                                            <span class="sender-name">Sistema</span>
+                                            <span class="notification-time">{{msg.time}}</span>
+                                        </div>
+                                        <p class="notification-message">{{msg.mensaje}}</p>
+                                    </div>
+                                </div>
+                                <div class="empty-message" *ngIf="archivedMessages.length === 0">
+                                    <i class="pi pi-info-circle"></i>
+                                    <span>No hay notificaciones archivadas</span>
+                                </div>
+                            </div>
+                        </p-tabPanel>
+                    </p-tabView>
+                </div>
+            </p-overlayPanel>
+        </div>
+
+            <!-- Botón de Configuración -->
+            <div class="topbar-button-wrapper">
+                <button class="p-link layout-topbar-button modern-button " (click)="onConfigButtonClick()">
+                    <div class="button-content">
+                        <i class="pi pi-cog"></i>
+                        <span>Ajustes</span>
+                    </div>
+                </button>
+            </div>
+
+            
+    </div>
+</div>
+

@@ -1,0 +1,126 @@
+<div class="col-12 p-fluid">
+    <p-fieldset legend="Actualización de Acciones">
+        <div class="col-12">
+            <form [formGroup]="up"
+                  (ngSubmit)="guardar(                   
+                    up.controls['accDes'].value,
+                    up.controls['accUrl'].value,
+                    up.controls['accetaDes'].value,
+                    up.controls['accType'].value,
+                    up.controls['accMessage'].value
+                  )">
+                
+                <div class="grid formgrid">
+                    <div class="col-12 mb-2 lg:mb-0  p-3" >
+                        <span class="p-float-label">
+                            <input id="float-input" type="text" pInputText value="{{this.acciones.accId}}" oninput="this.value = this.value.toUpperCase()"
+                           disabled>
+                            <label for="float-input">Id Accion</label>
+                        </span> 
+                    </div>
+                    <div class="col-12 mb-2 lg:mb-0  p-3" >
+                        <span class="p-float-label">
+                            <input id="float-input" type="text" pInputText value="{{this.opcion.optDes}}" oninput="this.value = this.value.toUpperCase()"
+                           disabled>
+                            <label for="float-input">Opción</label>
+                        </span> 
+                    </div>
+                    <div class="col-12 mb-2 lg:mb-0  p-3" >
+                        <span class="p-float-label">
+                            <input id="url-input" 
+                                   type="text" 
+                                   pInputText 
+                                   formControlName="accUrl"
+                                   [ngClass]="(up.controls['accUrl'].hasError('required'))
+                                   ? 'was-validated' : 'is-valid'">
+                            <label for="url-input">URL</label>
+                        </span>
+                            <div *ngIf="up.controls['accUrl'].hasError('required')">
+                            <span class="text-danger">Campo obligatorio!</span>
+                        </div>
+                    </div>
+
+                    <div class="col-12 mb-2 lg:mb-0  p-3" >
+                        <span class="p-float-label">
+                            <input id="accion-input" 
+                                   type="text" 
+                                   pInputText 
+                                   formControlName="accDes"
+                                   oninput="this.value = this.value.toUpperCase()"
+                                   [ngClass]="(up.controls['accDes'].hasError('required'))
+                                   ? 'was-validated' : 'is-valid'">
+                            <label for="accion-input">Acción</label>
+                        </span>
+                        <div *ngIf="up.controls['accDes'].hasError('required')">
+                            <span class="text-danger">Campo obligatorio!</span>
+                        </div>
+                    </div>
+
+                    <div class="col-12 mb-2 lg:mb-0  p-3" >
+                        <span class="p-float-label">
+                            <input id="mensaje-input" 
+                                   type="text" 
+                                   pInputText 
+                                   formControlName="accMessage"
+                                   [ngClass]="(up.controls['accMessage'].hasError('required'))
+                                   ? 'was-validated' : 'is-valid'">
+                            <label for="mensaje-input">Mensaje</label>
+                        </span>
+                        <div *ngIf="up.controls['accMessage'].hasError('required')">
+                            <span class="text-danger">Campo obligatorio!</span>
+                        </div>
+                    </div>
+
+                    <div class="col-12 mt-3 mb-2 lg:mb-0  p-3" >
+                        <label class="mb-2 block">Tipo de Alerta</label>
+                        <div class="flex gap-4">
+                            <div class="flex align-items-center">
+                                <p-radioButton name="accType" 
+                                             value="success" 
+                                             formControlName="accType"
+                                             inputId="success">
+                                </p-radioButton>
+                                <label for="success" class="ml-2 mr-2">Éxito</label>
+                                <p-tag severity="success" value="Success"></p-tag>
+                            </div>
+                            <div class="flex align-items-center">
+                                <p-radioButton name="accType" 
+                                             value="danger" 
+                                             formControlName="accType"
+                                             inputId="danger">
+                                </p-radioButton>
+                                <label for="danger" class="ml-2 mr-2">Peligro</label>
+                                <p-tag severity="danger" value="Danger"></p-tag>
+                            </div>
+                            <div class="flex align-items-center">
+                                <p-radioButton name="accType" 
+                                             value="warning" 
+                                             formControlName="accType"
+                                             inputId="warning">
+                                </p-radioButton>
+                                <label for="warning" class="ml-2 mr-2">Advertencia</label>
+                                <p-tag severity="warning" value="Warning"></p-tag>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="flex flex-wrap gap-2 align-items-center mt-3">
+                    <p-button type="submit" 
+                             label="Guardar" 
+                             icon="pi pi-check" 
+                             size="small" 
+                             *ngIf="up.valid"
+                           >
+                    </p-button>
+                    <p-button label="Volver" 
+                             icon="pi pi-arrow-down" 
+                             size="small" 
+                            (onClick)="volver()"
+                             severity="secondary">
+                    </p-button>
+                </div>
+            </form>
+        </div>
+    </p-fieldset>
+</div>

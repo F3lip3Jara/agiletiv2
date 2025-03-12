@@ -1,0 +1,47 @@
+<ul class="layout-menu">
+    <!-- Perfil del usuario en la parte superior -->
+    <li class="user-profile mb-4">
+        <div class="flex flex-column align-items-center p-3">
+            <div class="avatar-container">
+                <p-avatar *ngIf="img.length === 0" 
+                    label="{{label}}" 
+                    size="xlarge" 
+                    shape="circle"
+                    [style]="{'width': '90px', 'height': '90px', 'transition': 'all 0.3s ease'}"
+                    styleClass="cursor-pointer shadow-4">
+                </p-avatar>
+                <p-avatar *ngIf="img.length > 0" 
+                    image="{{img}}" 
+                    size="xlarge" 
+                    shape="circle"
+                    [style]="{'width': '45px', 'height': '45px', 'transition': 'all 0.3s ease'}"
+                    styleClass="cursor-pointer shadow-4">
+                </p-avatar>
+            </div>
+            <span class="text-xl font-semibold mt-3">{{nombreUsr}}</span>
+        </div>
+    </li>
+
+    <!-- Items del menú -->
+    <ng-container *ngFor="let item of model; let i = index;">
+        <li app-menuitem *ngIf="!item.separator" 
+            [item]="item" 
+            [index]="i" 
+            [root]="true"
+            class="menu-item">
+        </li>
+        <li *ngIf="item.separator" class="menu-separator my-2">
+            <div class="mx-2 border-top-1 surface-border"></div>
+        </li>
+    </ng-container>
+
+    <!-- Footer del menú -->
+    <li class="mt-auto">
+        <div class="mt-4 surface-section p-3 border-round-xl mx-2">
+            <div class="flex align-items-center justify-content-center">
+                <i class="pi pi-info-circle text-primary mr-2"></i>
+                <span class="text-sm">Versión 1.0.0</span>
+            </div>
+        </div>
+    </li>
+</ul>

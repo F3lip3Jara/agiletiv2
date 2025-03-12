@@ -1,0 +1,322 @@
+<div class="grid">
+    <div class="col-12 admin-card">
+        <div class="card">
+            <p-toast></p-toast>
+            
+            <!-- Header con título y búsqueda -->
+            <div class="admin-header">
+                <h2 class="header-title">Administración de Productos</h2>
+                <div class="header-actions">
+                    <span class="p-input-icon-left">
+                        <i class="pi pi-search"></i>
+                        <input pInputText type="text" (input)="onGlobalFilter(dt, $event)" placeholder="Buscar..." class="p-inputtext-sm"/>
+                    </span>
+                    <button pButton pRipple label="Nuevo" icon="pi pi-plus" class="p-button-primary p-button-sm" (click)="openNew()"></button>
+                    <button pButton pRipple label="Exportar" icon="pi pi-upload" class="p-button-outlined p-button-sm"></button>
+                </div>
+            </div>
+
+            <!-- Tabla modernizada -->
+            <div class="admin-table">
+                <p-table #dt [value]="data" 
+                        [columns]="cols" 
+                        styleClass="p-datatable-sm"
+                        [tableStyle]="{'min-width': '50rem'}"
+                        [paginator]="true" 
+                        [rows]="30" 
+                        [showCurrentPageReport]="true"
+                        [globalFilterFields]="globalFilterFields"
+                        [rowsPerPageOptions]="[10,20,30]"
+                        currentPageReportTemplate="Mostrando {first} a {last} de {totalRecords} registros"
+                        [scrollable]="true"
+                        responsiveLayout="scroll">
+                    
+                    <ng-template pTemplate="header">
+                        <tr>
+                            <th>ID</th>
+                            <th>Código de Pareo</th>
+                            <th>Imagen</th>
+                            <th>Talla</th>
+                            <th class="text-center">Acciones</th>
+                        </tr>
+                    </ng-template>
+                    
+                    <ng-template pTemplate="body" let-item>
+                        <tr>
+                            <td>
+                                <span class="font-medium">{{item.id}}</span>
+                            </td>
+                            <td>
+                                <span class="tag-date bg-primary-100 text-primary-900">{{item.cod_pareo}}</span>
+                            </td>
+                            <td>
+                                <div class="product-image-container">
+                                    <p-skeleton *ngIf="!item.imageLoaded" width="60px" height="60px" borderRadius="8px"></p-skeleton>
+                                    <img [src]="item.url" 
+                                         [alt]="item.cod_pareo" 
+                                         class="product-image shadow-2 border-round" 
+                                         (load)="onImageLoad(item)"
+                                         (error)="onImageError(item)"
+                                         [class.hidden]="!item.imageLoaded"/>
+                                    <div *ngIf="item.imageError" class="image-error">
+                                        <i class="pi pi-image text-500"></i>
+                                    </div>
+                                    <button pButton pRipple 
+                                            icon="pi pi-search-plus"
+                                            class="p-button-rounded p-button-text preview-button"
+                                            (click)="showPreview(item)"
+                                            pTooltip="Ver imagen"
+                                            tooltipPosition="top">
+                                    </button>
+                                </div>
+                            </td>
+                            <td>
+                                <span class="tag-date bg-blue-100 text-blue-900">{{item.talla}}</span>
+                            </td>
+                            <td>
+                                <div class="actions-column">
+                                    <button pButton pRipple 
+                                            icon="pi pi-pencil" 
+                                            class="p-button-text p-button-primary" 
+                                            (click)="editProduct(item)" 
+                                            pTooltip="Editar" 
+                                            tooltipPosition="top">
+                                    </button>
+                                    <button pButton pRipple 
+                                            icon="pi pi-trash" 
+                                            class="p-button-text p-button-danger" 
+                                            (click)="deleteProduct(item)" 
+                                            pTooltip="Eliminar" 
+                                            tooltipPosition="top">
+                                    </button>
+                                </div>
+                            </td>
+                        </tr>
+                    </ng-template>
+                    
+                    <ng-template pTemplate="emptymessage">
+                        <tr>
+                            <td colspan="5">
+                                <div class="empty-message">
+                                    <i class="pi pi-folder-open"></i>
+                                    <span>No se encontraron registros</span>
+                                </div>
+                            </td>
+                        </tr>
+                    </ng-template>
+                </p-table>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Modal de vista previa mejorado -->
+<p-dialog [(visible)]="previewVisible" 
+          [modal]="true" 
+          [dismissableMask]="true"
+          [showHeader]="false"
+          [closeOnEscape]="true"
+          styleClass="preview-dialog"
+          [style]="{width: '90vw', maxWidth: '850px'}"
+          [contentStyle]="{padding: '0'}"
+          appendTo="body">
+    <div class="preview-content">
+        <div class="preview-image-wrapper">
+            <p-skeleton *ngIf="!previewImageLoaded" width="100%" height="400px"></p-skeleton>
+            <img [src]="selectedImage?.url" 
+                 [alt]="selectedImage?.cod_pareo" 
+                 class="preview-image"
+                 (load)="previewImageLoaded = true"
+                 [class.hidden]="!previewImageLoaded"/>
+        </div>
+        <button pButton pRipple 
+                icon="pi pi-times" 
+                (click)="previewVisible = false"
+                class="p-button-rounded p-button-text close-button">
+        </button>
+        <div class="preview-info">
+            <div class="flex align-items-center justify-content-between">
+                <div>
+                    <h3>{{selectedImage?.cod_pareo}}</h3>
+                    <p class="mb-2">Talla: {{selectedImage?.talla}}</p>
+                </div>
+                <div class="preview-actions">
+                    <button pButton pRipple 
+                            icon="pi pi-download" 
+                            class="p-button-text p-button-secondary mr-2"
+                            pTooltip="Descargar imagen"
+                            tooltipPosition="top"
+                            (click)="downloadImage(selectedImage)">
+                    </button>
+                    <button pButton pRipple 
+                            icon="pi pi-share-alt" 
+                            class="p-button-text p-button-secondary"
+                            pTooltip="Compartir"
+                            tooltipPosition="top"
+                            (click)="shareImage(selectedImage)">
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+</p-dialog>
+
+<style>
+.product-image-container {
+    position: relative;
+    width: 60px;
+    height: 60px;
+    margin: 0 auto;
+    overflow: hidden;
+    border-radius: 8px;
+    background: var(--surface-ground);
+}
+
+.product-image {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: all 0.3s ease;
+}
+
+.preview-button {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    opacity: 0;
+    background: rgba(255, 255, 255, 0.9) !important;
+    width: 2rem !important;
+    height: 2rem !important;
+    transition: all 0.3s ease;
+}
+
+.product-image-container:hover {
+    .product-image {
+        filter: brightness(0.8);
+    }
+    
+    .preview-button {
+        opacity: 1;
+    }
+}
+
+.preview-dialog {
+    .p-dialog-content {
+        padding: 0;
+        overflow: hidden;
+        border-radius: var(--border-radius);
+    }
+}
+
+.preview-content {
+    position: relative;
+    background: var(--surface-ground);
+    
+    .preview-image {
+        width: 100%;
+        height: auto;
+        max-height: 80vh;
+        object-fit: contain;
+        display: block;
+    }
+    
+    .close-button {
+        position: absolute;
+        top: 1rem;
+        right: 1rem;
+        background: rgba(255, 255, 255, 0.9) !important;
+    }
+    
+    .preview-info {
+        padding: 1rem;
+        background: var(--surface-card);
+        
+        h3 {
+            margin: 0;
+            color: var(--primary-color);
+            font-size: 1.2rem;
+        }
+        
+        p {
+            margin: 0.5rem 0 0;
+            color: var(--text-color-secondary);
+        }
+    }
+}
+
+.image-error {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: var(--surface-ground);
+    
+    i {
+        font-size: 1.5rem;
+        opacity: 0.5;
+    }
+}
+
+.hidden {
+    display: none;
+}
+
+.preview-image-wrapper {
+    position: relative;
+    background: var(--surface-ground);
+    min-height: 200px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.preview-content {
+    .preview-info {
+        .preview-actions {
+            display: flex;
+            align-items: center;
+            
+            .p-button.p-button-text {
+                width: 2.5rem;
+                height: 2.5rem;
+                
+                &:hover {
+                    background: var(--surface-hover);
+                }
+            }
+        }
+    }
+}
+
+/* Animaciones */
+.preview-dialog {
+    .p-dialog-content {
+        animation: fadeIn 0.2s ease-out;
+    }
+}
+
+.preview-image {
+    animation: scaleIn 0.3s ease-out;
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+}
+
+@keyframes scaleIn {
+    from { 
+        opacity: 0;
+        transform: scale(0.95);
+    }
+    to { 
+        opacity: 1;
+        transform: scale(1);
+    }
+}
+</style>
