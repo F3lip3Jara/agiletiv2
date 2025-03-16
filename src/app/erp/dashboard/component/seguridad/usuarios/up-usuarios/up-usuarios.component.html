@@ -1,4 +1,4 @@
-<div class="grid p-fluid" >
+<div class="col-12 p-fluid" >
     <p-fieldset legend="Actualización de usuarios">
         <div class="col-12">
             <form [formGroup]="up"
@@ -116,7 +116,9 @@
                 </p-fieldset>                       
                </div>
                <div class="flex  flex-wrap gap-2 align-items-center mt-3">
-                    <p-button type="submit" label="Guardar" icon="pi pi-check" size="small" *ngIf="up.valid && !validNombre"/>
+                    <p-button type="submit" label="Guardar" icon="pi pi-check"   size="small" *ngIf="up.valid && !validNombre"
+                    [loading]="val"
+                        />
                     <p-button label="Volver" icon="pi pi-arrow-down" size="small"  [routerLink]="['/desk/seguridad/usuarios']" severity="secondary" />
                </div>
             </form>

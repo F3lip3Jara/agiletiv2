@@ -33,6 +33,16 @@ export const insertOpcionesSuccess = createAction(
     '[Opciones] Insert Opciones Success'
 );
 
+export const deleteOpcionesRequest = createAction(
+    '[Opciones] Delete Opciones Request',
+    props<{ opciones: any }>()
+);
+
+export const deleteOpcionesSuccess = createAction(
+    '[Opciones] Delete Opciones Success'
+);
+
+
 
 
 

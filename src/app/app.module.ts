@@ -22,6 +22,9 @@ import { OpcionesEffects } from './erp/dashboard/component/seguridad/state/effec
 import { AccionesEffects } from './erp/dashboard/component/seguridad/state/effects/acciones.effects';
 import { IndicadorEffects } from './erp/dashboard/component/state/effects/indicador.effects';
 import { MensajeEffects } from './erp/dashboard/component/state/effects/mensaje.efffects';
+import { EmpresaEffects } from './erp/dashboard/component/seguridad/state/effects/empresa.effects';
+import { UserIdleConfig } from 'angular-user-idle';
+import { ModuloEffects } from './erp/dashboard/component/seguridad/state/effects/modulo.effects';
 @NgModule({
     declarations: [AppComponent, NotfoundComponent],
     imports: [  AppRoutingModule, 
@@ -33,14 +36,16 @@ import { MensajeEffects } from './erp/dashboard/component/state/effects/mensaje.
                     OpcionesEffects , 
                     AccionesEffects,
                     IndicadorEffects,
-                    MensajeEffects
+                    MensajeEffects,
+                    EmpresaEffects,
+                    ModuloEffects
                 ]),
                 StoreDevtoolsModule.instrument(),
                 FontAwesomeModule,
                 ImageCropperModule
     ] ,
     providers: [
-        { provide: LocationStrategy, useClass: PathLocationStrategy },
+        { provide: LocationStrategy,  useClass: HashLocationStrategy},
         IconService, NodeService,
         { provide: LOCALE_ID, useValue: 'es-ES' },
         { provide: HTTP_INTERCEPTORS,
@@ -48,7 +53,11 @@ import { MensajeEffects } from './erp/dashboard/component/state/effects/mensaje.
           multi: true
          },
          MessageService,
-         
+         {
+            provide: UserIdleConfig,
+            useValue: { idle:900, timeout:60, ping: 120 }
+         }
+        
       
     ],
     bootstrap: [AppComponent],

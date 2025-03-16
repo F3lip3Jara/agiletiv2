@@ -130,7 +130,7 @@
 
             <!-- Botón de notificaciones -->
             <div class="topbar-button-wrapper">
-                <button class="p-link layout-topbar-button modern-button notification-button" (click)="op.toggle($event)">
+                <button class="p-link layout-topbar-button modern-button notification-button" (click)="onNotificationButtonClick($event)">
                     <div class="button-content">
                         <div class="notification-icon-container">
                             <i class="pi pi-bell" [class.has-notifications]="unreadCount > 0"></i>
@@ -146,75 +146,81 @@
                 [showCloseIcon]="true" 
                 styleClass="notifications-panel"
                 [style]="{width: '400px'}"
+                [showTransitionOptions]="'0ms'"
+                [hideTransitionOptions]="'0ms'"
+                [dismissable]="true"
+                [baseZIndex]="1000"
                 appendTo="body"
-                id="notificationsPanel">
-                <div class="notifications-container">
-                    <div class="notifications-header">
-                        <h3>Notificaciones</h3>
-                    </div>
-                    <div class="mark-all-read-container">
-                        <button id="markAllReadBtn" 
-                                class="p-button-text" 
-                                (click)="markAllAsRead()"
-                                *ngIf="unreadCount > 0">
-                            <i class="pi pi-check-circle"></i>
-                            <span>Marcar como leídos todos</span>
-                        </button>
-                    </div>
-                    <p-tabView id="notificationsTabView">
-                        <p-tabPanel header="General">
-                            <div class="notifications-list">
-                                <div class="notification-item" *ngFor="let msg of generalMessages">
-                                    <div class="notification-avatar">
-                                        <p-avatar [label]="'S'"
-                                                 shape="circle"
-                                                 [size]="'large'"
-                                                 [style]="getAvatarStyle(msg.type)">
-                                        </p-avatar>
-                                    </div>
-                                    <div class="notification-content">
-                                        <div class="notification-header">
-                                            <span class="sender-name">Sistema</span>
-                                            <span class="notification-time">{{msg.time}}</span>
+              >
+                <ng-template pTemplate="content"   id="notificationsPanel">
+                    <div class="notifications-container">
+                        <div class="notifications-header">
+                            <h3>Notificaciones</h3>
+                        </div>
+                        <div class="mark-all-read-container">
+                            <button id="markAllReadBtn" 
+                                    class="p-button-text" 
+                                    (click)="markAllAsRead()"
+                                    *ngIf="unreadCount > 0">
+                                <i class="pi pi-check-circle"></i>
+                                <span>Marcar como leídos todos</span>
+                            </button>
+                        </div>
+                        <p-tabView id="notificationsTabView">
+                            <p-tabPanel header="General">
+                                <div class="notifications-list">
+                                    <div class="notification-item" *ngFor="let msg of generalMessages">
+                                        <div class="notification-avatar">
+                                            <p-avatar [label]="'S'"
+                                                     shape="circle"
+                                                     [size]="'large'"
+                                                     [style]="getAvatarStyle(msg.type)">
+                                            </p-avatar>
                                         </div>
-                                        <p class="notification-message">{{msg.mensaje}}</p>
-                                    </div>
-                                    <div class="notification-status" *ngIf="!msg.read">
-                                        <span class="unread-indicator"></span>
-                                    </div>
-                                </div>
-                                <div class="empty-message" *ngIf="generalMessages.length === 0">
-                                    <i class="pi pi-info-circle"></i>
-                                    <span>No hay notificaciones</span>
-                                </div>
-                            </div>
-                        </p-tabPanel>
-                        <p-tabPanel header="Archivados">
-                            <div class="notifications-list">
-                                <div class="notification-item" *ngFor="let msg of archivedMessages">
-                                    <div class="notification-avatar">
-                                        <p-avatar [label]="'S'"
-                                                 shape="circle"
-                                                 [size]="'large'"
-                                                 [style]="getAvatarStyle(msg.type)">
-                                        </p-avatar>
-                                    </div>
-                                    <div class="notification-content">
-                                        <div class="notification-header">
-                                            <span class="sender-name">Sistema</span>
-                                            <span class="notification-time">{{msg.time}}</span>
+                                        <div class="notification-content">
+                                            <div class="notification-header">
+                                                <span class="sender-name">Sistema</span>
+                                                <span class="notification-time">{{msg.time}}</span>
+                                            </div>
+                                            <p class="notification-message">{{msg.mensaje}}</p>
                                         </div>
-                                        <p class="notification-message">{{msg.mensaje}}</p>
+                                        <div class="notification-status" *ngIf="!msg.read">
+                                            <span class="unread-indicator"></span>
+                                        </div>
+                                    </div>
+                                    <div class="empty-message" *ngIf="generalMessages.length === 0">
+                                        <i class="pi pi-info-circle"></i>
+                                        <span>No hay notificaciones</span>
                                     </div>
                                 </div>
-                                <div class="empty-message" *ngIf="archivedMessages.length === 0">
-                                    <i class="pi pi-info-circle"></i>
-                                    <span>No hay notificaciones archivadas</span>
+                            </p-tabPanel>
+                            <p-tabPanel header="Archivados">
+                                <div class="notifications-list">
+                                    <div class="notification-item" *ngFor="let msg of archivedMessages">
+                                        <div class="notification-avatar">
+                                            <p-avatar [label]="'S'"
+                                                     shape="circle"
+                                                     [size]="'large'"
+                                                     [style]="getAvatarStyle(msg.type)">
+                                            </p-avatar>
+                                        </div>
+                                        <div class="notification-content">
+                                            <div class="notification-header">
+                                                <span class="sender-name">Sistema</span>
+                                                <span class="notification-time">{{msg.time}}</span>
+                                            </div>
+                                            <p class="notification-message">{{msg.mensaje}}</p>
+                                        </div>
+                                    </div>
+                                    <div class="empty-message" *ngIf="archivedMessages.length === 0">
+                                        <i class="pi pi-info-circle"></i>
+                                        <span>No hay notificaciones archivadas</span>
+                                    </div>
                                 </div>
-                            </div>
-                        </p-tabPanel>
-                    </p-tabView>
-                </div>
+                            </p-tabPanel>
+                        </p-tabView>
+                    </div>
+                </ng-template>
             </p-overlayPanel>
         </div>
 

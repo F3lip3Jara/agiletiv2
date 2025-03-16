@@ -17,10 +17,13 @@ export class RolesSerivices {
               private rest    : RestService,
               private userSer : UsersService,
               private store   : Store<AppState>
-  ) {  }
+  ) { 
+
+    this.token = this.userSer.getToken();
+   }
 
    getRoles(): Observable<any> {
-    this.token = this.userSer.getToken();
+ 
     
        return this.rest.get('trabRoles', this.token, this.parametros).pipe(
         map(

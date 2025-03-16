@@ -1,19 +1,50 @@
-<div class="surface-ground flex align-items-center justify-content-center min-h-screen min-w-screen overflow-hidden">
-    <div class="flex flex-column align-items-center justify-content-center">
-        <img src="https://agileti.cl/wp-content/uploads/2023/12/cropped-logonew-e1702902489994-284x95.png" alt="Agileticl" class="mb-4 w-13rem flex-shrink-0">                
-        <div style="border-radius:56px; padding:0.1rem; background: linear-gradient(180deg, var(--primary-color) 10%, rgba(33, 150, 243, 0) 30%);">
-            <div class="w-full surface-card py-8 px-5 sm:px-8" style="border-radius:53px">              
-                <div class="text-center mb-5">
-                    <div class="text-900 text-3xl font-medium mb-3">Bienvenidos!</div>
-                    <span class="text-600 font-medium">Inicie sesión para continuar</span>
+<div class="login-container">
+    <div class="login-background"></div>
+    <div class="login-card-container">
+        <div class="login-card">
+            <div class="login-header">
+                <img src="https://agileti.cl/wp-content/uploads/2023/12/cropped-logonew-e1702902489994-284x95.png" alt="Agileti" class="login-logo">
+                <h2 class="welcome-text">¡Bienvenido de nuevo!</h2>
+                <p class="subtitle-text">Ingresa tus credenciales para continuar</p>
+            </div>
+            
+            <div class="login-form">
+                <div class="form-group">
+                    <label for="username">
+                        <i class="pi pi-user"></i>
+                        <span>Usuario</span>
+                    </label>
+                    <input id="username" type="text" pInputText placeholder="Ingresa tu usuario" #user>
                 </div>
-                <div>
-                    <label for="email1" class="block text-900 text-xl font-medium mb-2" >Usuario</label>
-                     <input id="email1" type="text" placeholder="Usuario" pInputText class="w-full md:w-30rem  mb-5" style="padding:1rem" #user>
-                    <label for="password1" class="block text-900 font-medium text-xl mb-2">Contraseña</label>
-                    <p-password id="password1" [(ngModel)]="password" placeholder="Contraseña" [toggleMask]="true" styleClass="mb-5" inputStyleClass="w-full p-3 md:w-30rem" ></p-password>
-                  <button pButton pRipple label="Ingresar" class="w-full md:w-30rem " style="display: block;" icon="pi pi-search" [loading]="enabled" (click)="login((user.value))"></button>
+
+                <div class="form-group">
+                    <label for="password">
+                        <i class="pi pi-lock"></i>
+                        <span>Contraseña</span>
+                    </label>
+                    <p-password id="password" 
+                               [(ngModel)]="password" 
+                               [toggleMask]="true"
+                               placeholder="Ingresa tu contraseña"
+                               [feedback]="false"
+                               styleClass="p-password-modern">
+                    </p-password>
                 </div>
+
+                <div class="form-actions">
+                    
+                </div>
+
+                <button pButton 
+                        class="login-button" 
+                        [loading]="enabled"
+                        (click)="login(user.value)"
+                        label="Iniciar Sesión">
+                </button>
+            </div>
+
+            <div class="login-footer">
+                <p>¿Necesitas ayuda? <a href="https://agileti.cl/contacto/" target="_blank">Contáctanos</a></p>
             </div>
         </div>
     </div>

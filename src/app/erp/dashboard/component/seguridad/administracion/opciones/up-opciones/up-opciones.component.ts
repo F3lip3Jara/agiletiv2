@@ -6,7 +6,10 @@ import { ActivatedRoute } from '@angular/router';
 import { AppState } from '../../../../app.state';
 import { Store } from '@ngrx/store';
 import { incrementarRequest } from '../../../../state/actions/estado.actions';
-import { updateOpcionesRequest } from '../../../state/actions/opciones.actions';
+import { opcionesError, updateOpcionesRequest, updateOpcionesSuccess } from '../../../state/actions/opciones.actions';
+import { ofType } from '@ngrx/effects';
+import { MessageService } from 'primeng/api';
+import { Actions } from '@ngrx/effects';
 @Component({
   selector: 'app-up-opciones',
   templateUrl: './up-opciones.component.html',
@@ -15,12 +18,13 @@ import { updateOpcionesRequest } from '../../../state/actions/opciones.actions';
 export class UpOpcionesComponent {
   up : FormGroup;
   optId : number = 0;
-   
+  val: boolean = false;
    constructor(fgUser             : FormBuilder,
              private router       : Router,
-             private route        : ActivatedRoute,
-          
+             private route        : ActivatedRoute,          
              private store: Store<AppState>,
+             private actions$: Actions,
+             private messageService: MessageService
  ) {
  
        this.up = fgUser.group({
@@ -52,8 +56,28 @@ export class UpOpcionesComponent {
        optDes: optDes,
        optLink: optLink
      }
+     this.val = true;
      this.store.dispatch(incrementarRequest({request:1}));
-     this.store.dispatch(updateOpcionesRequest({opciones:opcion}));
-   }
+     this.store.dispatch(updateOpcionesRequest({opciones:opcion}));   
+     this.actions$.pipe(
+      ofType(updateOpcionesSuccess)
+    ).subscribe(() => {
+      setTimeout(() => {
+        this.val = false; 
+        this.router.navigate(['/desk/seguridad/administracion/opciones']);
+      }, 1000);
+     });
+
+     this.actions$.pipe(
+      ofType(opcionesError)
+    ).subscribe((error) => {
+      this.val = false;
+      this.messageService.add({
+        severity: 'error',
+        summary: 'Error',
+        detail: 'Error al actualizar la opción'
+      });
+    });
+    }
  
 }

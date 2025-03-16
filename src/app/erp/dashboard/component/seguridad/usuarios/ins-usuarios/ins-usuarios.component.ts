@@ -16,9 +16,11 @@ import localeEs from '@angular/common/locales/es';
 import { registerLocaleData } from '@angular/common';
 import { CreateUsuario, Usuario } from '../../state/interface/usuarios.interface';
 import {  selectUsuarios } from '../../state/selectors/usuarios.selectors';
-import { createUsuarioRequest, getUsuariosRequest } from '../../state/actions/usuarios.actions';
+import { createUsuarioRequest, createUsuarioSuccess, getUsuariosRequest, usuariosError } from '../../state/actions/usuarios.actions';
 import { incrementarRequest } from '../../../state/actions/estado.actions';
-
+import { Actions } from '@ngrx/effects';
+import { ofType } from '@ngrx/effects';
+import { MessageService } from 'primeng/api';
 registerLocaleData(localeEs);
 
 
@@ -47,7 +49,9 @@ export class InsUsuariosComponent implements OnInit {
 
     constructor(private store: Store<AppState>,
                 private router: Router,
-                private fb: FormBuilder
+                private fb: FormBuilder,
+                private actions$: Actions,
+                private messageService: MessageService
               ) {
                }
 
@@ -92,7 +96,9 @@ export class InsUsuariosComponent implements OnInit {
      
     }
 
-    fileChangeEvent(event: any): void {   
+    fileChangeEvent(event: any): void {  
+      console.log(event);
+       
       this.imageChangedEvent = event;
       this.display = true; // Muestra el popup al seleccionar una imagen
     
@@ -161,8 +167,7 @@ export class InsUsuariosComponent implements OnInit {
 
   
     public guardar( nombre: string , apellido: string , fecha: Date , rol: number , nombreUsuario : string){
-     // this.serviLoad.sumar.emit(1);
-      this.val          = true;
+   
       let usuario : CreateUsuario = {
 
           'name'          : nombreUsuario,      
@@ -174,7 +179,24 @@ export class InsUsuariosComponent implements OnInit {
           'emploAvatar'   : this.avatar,
           'empId'         : 0,
       }
+      this.val = true;
+      this.store.dispatch(incrementarRequest({request:1}));
       this.store.dispatch(createUsuarioRequest({usuario}));
+      
+      this.actions$.pipe(
+        ofType(createUsuarioSuccess)
+      ).subscribe(() => {
+        setTimeout(() => {
+          this.val = false;
+          this.router.navigate(['/desk/seguridad/usuarios']);
+        }, 1000);
+      });
+
+      this.actions$.pipe(
+        ofType(usuariosError)
+      ).subscribe((error) => {
+        this.messageService.add({severity:'error', summary:'Error', detail:error.error});
+      });
     }
   
     acceptCrop(): void {
@@ -193,7 +215,7 @@ export class InsUsuariosComponent implements OnInit {
     clearAvatar(){
       this.avatar = '';
       this.label = this.ins.controls['nombreUsuario'].value.substring(0,1);
-     this.inputAvatar.nativeElement.value = '';
+      this.inputAvatar.nativeElement.value = '';
     }
 }
 

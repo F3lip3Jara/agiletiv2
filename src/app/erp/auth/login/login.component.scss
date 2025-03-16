@@ -1,0 +1,219 @@
+.login-container {
+    width: 100vw;
+    height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: var(--surface-ground);
+    position: relative;
+    overflow: hidden;
+}
+
+.login-background {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(135deg, var(--primary-color) 0%, var(--primary-color-text) 100%);
+    opacity: 0.1;
+    z-index: 1;
+}
+
+.login-card-container {
+    position: relative;
+    z-index: 2;
+    width: 100%;
+    max-width: 450px;
+    padding: 2rem;
+}
+
+.login-card {
+    background: var(--surface-card);
+    border-radius: 1rem;
+    padding: 2rem;
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    animation: fadeIn 0.5s ease-out;
+}
+
+.login-header {
+    text-align: center;
+    margin-bottom: 2rem;
+}
+
+.login-logo {
+    width: 200px;
+    margin-bottom: 1.5rem;
+    animation: slideDown 0.5s ease-out;
+}
+
+.welcome-text {
+    color: var(--text-color);
+    font-size: 1.75rem;
+    font-weight: 600;
+    margin-bottom: 0.5rem;
+}
+
+.subtitle-text {
+    color: var(--text-color-secondary);
+    font-size: 1rem;
+}
+
+.login-form {
+    .form-group {
+        margin-bottom: 1.5rem;
+
+        label {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            margin-bottom: 0.5rem;
+            color: var(--text-color);
+            font-weight: 500;
+
+            i {
+                color: var(--primary-color);
+                font-size: 1.1rem;
+            }
+        }
+
+        input, :host ::ng-deep .p-password input {
+            width: 100%;
+            padding: 1rem;
+            border-radius: 0.5rem;
+            border: 1px solid var(--surface-border);
+            transition: all 0.3s ease;
+            background: var(--surface-ground);
+
+            &:focus {
+                border-color: var(--primary-color);
+                box-shadow: 0 0 0 2px rgba(var(--primary-color-rgb), 0.1);
+            }
+        }
+    }
+}
+
+.form-actions {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 1.5rem;
+
+    .remember-me {
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+    }
+
+    .forgot-password {
+        color: var(--primary-color);
+        text-decoration: none;
+        font-size: 0.875rem;
+        transition: color 0.3s ease;
+
+        &:hover {
+            color: var(--primary-600);
+            text-decoration: underline;
+        }
+    }
+}
+
+:host ::ng-deep {
+    .login-button {
+        width: 100%;
+        padding: 1rem;
+        border-radius: 0.5rem;
+        font-weight: 600;
+        transition: all 0.3s ease;
+        background: var(--primary-color) !important;
+        border: none;
+        color: var(--primary-color-text) !important;
+
+        &:enabled:hover {
+            background: var(--primary-600) !important;
+            transform: translateY(-1px);
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        &:enabled:active {
+            transform: translateY(1px);
+            background: var(--primary-700) !important;
+        }
+
+        &.p-button-loading {
+            background: var(--primary-700) !important;
+        }
+    }
+}
+
+.login-footer {
+    text-align: center;
+    margin-top: 2rem;
+    color: var(--text-color-secondary);
+    font-size: 0.875rem;
+
+    a {
+        color: var(--primary-color);
+        text-decoration: none;
+        font-weight: 500;
+
+        &:hover {
+            text-decoration: underline;
+        }
+    }
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@keyframes slideDown {
+    from {
+        opacity: 0;
+        transform: translateY(-20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+:host ::ng-deep {
+    .p-password-modern {
+        width: 100%;
+
+        input {
+            width: 100%;
+            padding: 1rem;
+        }
+
+        i {
+            color: var(--primary-color);
+            font-size: 1.1rem;
+        }
+    }
+
+    .p-checkbox {
+        .p-checkbox-box {
+            border-radius: 0.25rem;
+            border: 2px solid var(--surface-border);
+
+            &.p-highlight {
+                background: var(--primary-color);
+                border-color: var(--primary-color);
+            }
+        }
+    }
+}
+
+@media (max-width: 768px) {
+   
+}
+

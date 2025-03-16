@@ -8,4 +8,10 @@ export const selectEstado = createSelector(
     (state) => state.estado
 );
 
+export const selectToken = createSelector(
+    selectState,
+    (state) => {
+        return state.estado.token;
+    }
+);
 

@@ -6,6 +6,10 @@ import { UpOpcionesComponent } from './opciones/up-opciones/up-opciones.componen
 import { AccionesComponent } from './acciones/acciones.component';
 import { InsAccionesComponent } from './acciones/ins-acciones/ins-acciones.component';
 import { UpAccionesComponent } from './acciones/up-acciones/up-acciones.component';
+import { EmpresaComponent } from './empresa/empresa.component';
+import { InsEmpresaComponent } from './empresa/ins-empresa/ins-empresa.component';
+import { UpEmpresaComponent } from './empresa/up-empresa/up-empresa.component';
+import { AdmOpcionesComponent } from './empresa/adm-opciones/adm-opciones.component';
 const routes: Routes = [
   {
     path: '',
@@ -37,6 +41,22 @@ const routes: Routes = [
       {
         path: 'opciones/acciones/up-acciones/:accion',
         component:UpAccionesComponent
+      },
+      {
+        path: 'empresa',
+        component:EmpresaComponent
+      },
+      {
+        path: 'empresa/ins-empresa',
+        component:InsEmpresaComponent
+      },
+      {
+        path: 'empresa/up-empresa/:empresa',
+        component:UpEmpresaComponent
+      },
+      {
+        path: 'empresa/adm-opciones/:empresa',
+        component:AdmOpcionesComponent
       }
     ]
   }

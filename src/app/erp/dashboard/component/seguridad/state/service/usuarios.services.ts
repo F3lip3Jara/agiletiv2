@@ -18,11 +18,12 @@ export class UsuariosService {
               private rest    : RestService,
               private userSer : UsersService,
               private store   : Store<AppState>
-  ) { }
+  ) { 
+
+    this.token = this.userSer.getToken();
+  }
 
    getUsuarios(): Observable<any> {
-    this.token = this.userSer.getToken();
-
        return this.rest.get('trabUsuarios', this.token, this.parametros).pipe(
         map(
           (data: any) => data // Se devuelve el resultado de la llamada a la API
@@ -31,8 +32,6 @@ export class UsuariosService {
   }
 
   createUsuario(usuario: any): Observable<any> {
-    this.token = this.userSer.getToken();
-
     return this.rest.post('insUser', this.token, usuario).pipe(
       map(
         (data: any) => data // Se devuelve el resultado de la llamada a la API
@@ -40,8 +39,7 @@ export class UsuariosService {
     );
   }
 
-  updateUsuario(usuario: any): Observable<any> {
-    this.token = this.userSer.getToken();
+  updateUsuario(usuario: any): Observable<any> {  
     let xuser = {'user':btoa(JSON.stringify(usuario))};
     return this.rest.post('upUsuario', this.token, xuser).pipe(
       map(
@@ -50,9 +48,9 @@ export class UsuariosService {
     );
   }
 
-  dataUsuario(usuario: any): Observable<any> {
-    this.token = this.userSer.getToken();
-    let id = usuario.usuario.id;
+  dataUsuario(usuario: any): Observable<any> { 
+    
+    let id = usuario.id;
     this.parametros = [{key : 'userid', value:id}];
     return this.rest.get('getUsuarios', this.token, this.parametros).pipe(
       map(
@@ -61,8 +59,7 @@ export class UsuariosService {
     );
   }
 
-  desactivarUsuario(usuario: any): Observable<any> {
-    this.token = this.userSer.getToken();
+  desactivarUsuario(usuario: any): Observable<any> { 
     let user          = {usrid : usuario.id , name:usuario.name };
     let activado      = usuario.activado;
     let xuser         = {'user':btoa(JSON.stringify(user))};
@@ -79,6 +76,16 @@ export class UsuariosService {
       )
     );
   }
+}
+
+reiniciarUsuario(usuario: any): Observable<any> { 
+  let user = {usrid : usuario.id , name:usuario.name };
+  let xuser = {'user':btoa(JSON.stringify(user))};
+  return this.rest.post('reiniciar', this.token, xuser).pipe(
+    map(
+      (data: any) => data // Se devuelve el resultado de la llamada a la API
+    )
+  );
 }
 
 }

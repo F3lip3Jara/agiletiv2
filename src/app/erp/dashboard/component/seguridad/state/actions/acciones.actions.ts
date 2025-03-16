@@ -34,5 +34,18 @@ export const accionesUpdateSuccess = createAction(
     '[Acciones] Up Acciones Success'
 );  
 
+export const accionesDeleteRequest = createAction(
+    '[Acciones] Del Acciones Request',
+    props<{ acciones: any }>()
+);  
+
+export const accionesDeleteSuccess = createAction(
+    '[Acciones] Del Acciones Success'
+);    
+
+
+
+
+
 
 

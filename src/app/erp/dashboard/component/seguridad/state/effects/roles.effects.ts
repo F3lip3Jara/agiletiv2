@@ -27,10 +27,11 @@ export class RolesEffects {
     ofType(createRolesRequest), 
     exhaustMap(action =>
       this.rolesServices.createRoles(action.rolDes).pipe(
-        map((resp) => 
-          getMensajesSuccess({ mensaje: resp }) , createRolesSuccess()
-      ) ,
-        catchError(err => of(rolesError({ error: 'Error al obtener los roles' }))) // Usar of para emitir una acción
+        mergeMap(resp => [
+          getMensajesSuccess({ mensaje: resp }),                   
+          createRolesSuccess()
+        ]),
+        catchError(error => of(rolesError({ error: error.message })))    
       )
     )
   )); 
@@ -39,10 +40,11 @@ export class RolesEffects {
     ofType(updateRolesRequest), 
     exhaustMap(action =>
       this.rolesServices.updateRoles(action.roles).pipe(
-        map((resp) => 
-          getMensajesSuccess({ mensaje: resp }) , updateRolesSuccess()
-      ) ,
-        catchError(err => of(rolesError({ error: 'Error al obtener los roles' }))) // Usar of para emitir una acción
+        mergeMap(resp => [
+          getMensajesSuccess({ mensaje: resp }),                   
+          updateRolesSuccess()
+        ]),
+        catchError(error => of(rolesError({ error: error.message })))    
       )
     )
   )); 
@@ -51,15 +53,11 @@ export class RolesEffects {
     ofType(deleteRolesRequest), 
     switchMap(action =>
       this.rolesServices.deleteRoles(action.roles).pipe(
-        map((resp) => {
-          this.store.dispatch(getMensajesSuccess({ mensaje: resp }));
-          return deleteRolesSuccess();
-        }),
-        switchMap((action) => {
-          this.store.dispatch(getRolesRequest())
-          return of(action)
-        }),
-        catchError(err => of(rolesError({ error: 'Error al obtener los roles' })))
+        mergeMap(resp => [
+          getMensajesSuccess({ mensaje: resp }),                   
+          deleteRolesSuccess()
+        ]),
+        catchError(error => of(rolesError({ error: error.message })))    
       )
     )
   )); 

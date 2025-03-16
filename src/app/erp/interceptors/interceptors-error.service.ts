@@ -5,6 +5,7 @@ import {throwError,catchError, tap} from 'rxjs';
 import { Router } from '@angular/router';
 import { Store } from '@ngrx/store';
 import { decrementarRequest, setAltura } from '../dashboard/component/state/actions/estado.actions';
+import { RestService } from '../dashboard/service/rest.service';
 export interface MensajesSystem{
     url    :string ,
     mensaje:string,
@@ -25,7 +26,7 @@ private excludedUrl  : any [] = [
 
 ]; 
 
-constructor(   private router : Router, private store: Store) {
+constructor(   private router : Router, private store: Store ) {
    
  }
 

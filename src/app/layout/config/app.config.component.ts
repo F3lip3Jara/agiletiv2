@@ -8,7 +8,7 @@ import { Store } from '@ngrx/store';
 import { selectMensaje } from 'src/app/erp/dashboard/component/state/selectors/mensaje.selectors';
 import { selectIndicador } from 'src/app/erp/dashboard/component/state/selectors/indicador.selectors';
 import { getIndicadorRequest } from 'src/app/erp/dashboard/component/state/actions/indicador.actions';
-
+import { incrementarRequest } from 'src/app/erp/dashboard/component/state/actions/estado.actions';
 @Component({
     selector: 'app-config',
     templateUrl: './app.config.component.html',
@@ -133,7 +133,9 @@ export class AppConfigComponent {
         // Cargar configuración guardada
         this.loadSavedConfig();
      //   this.store.dispatch(getIndicadorRequest());
-        this.store.select(selectIndicador).subscribe((indicador : any) => {           
+        this.store.select(selectIndicador).subscribe((indicador : any) => {  
+           // console.log(indicador);
+                     
             if(indicador.length > 0 ){
             this.indicadoresEconomicos.dolares = indicador.map((indicador: any) => {
                 const tendencia = indicador.valor_actual.valor > indicador.valor_anterior.valor ? 'up' : 'down';
@@ -148,6 +150,7 @@ export class AppConfigComponent {
                 };
             });
             }else{
+                this.store.dispatch(incrementarRequest({ request: 1 }));
                 this.store.dispatch(getIndicadorRequest());
             }
         });

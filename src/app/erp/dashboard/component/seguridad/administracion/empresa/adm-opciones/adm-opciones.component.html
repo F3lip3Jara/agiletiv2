@@ -1,0 +1,67 @@
+<div class="grid">
+    <div class="col-12">
+        <p-toast></p-toast>
+        <p-fieldset legend="Administración de opciones para Empresa">
+            <div class="grid">
+                <div class="col-12">
+                    <p-pickList 
+                        [source]="opcionesNoAsignadas" 
+                        [target]="opcionesAsignadas"
+                        sourceHeader="Opciones Disponibles"
+                        targetHeader="Opciones Asignadas"
+                        [showSourceControls]="false"
+                        [showTargetControls]="false"
+                        [dragdrop]="true"
+                        [responsive]="true"
+                        [showSourceFilter]="true"
+                        [showTargetFilter]="true"
+                        filterBy="optDes"
+                        [sourceStyle]="{'height':'300px'}" 
+                        [targetStyle]="{'height':'300px'}"
+                        sourceFilterPlaceholder="Buscar opciones..."
+                        targetFilterPlaceholder="Buscar opciones..."
+                        (onMoveToTarget)="onMoveToTarget($event)"
+                        (onMoveToSource)="onMoveToSource($event)"
+                        styleClass="custom-picklist">
+                        <ng-template let-opcion pTemplate="item">
+                            <div class="flex align-items-center gap-2">
+                                <i class="pi pi-check-circle"></i>
+                                <div>
+                                    <span class="font-bold">{{opcion.optDes}}</span>
+                                </div>
+                            </div>
+                        </ng-template>
+                    </p-pickList>
+                </div>
+            </div>
+
+            <!-- Botones de acción -->
+            <div class="flex justify-content-end gap-2 mt-4">
+                <p-button 
+                    icon="pi pi-arrow-left" 
+                    label="Volver"
+                    (onClick)="volver()"
+                    styleClass="p-button-secondary">
+                </p-button>
+
+                <p-button 
+                    icon="pi pi-refresh" 
+                    label="Restaurar" 
+                    severity="secondary"
+                    [disabled]="!cambiosPendientes"
+                    (onClick)="restaurarCambios()"
+                    styleClass="p-button-outlined">
+                </p-button>
+
+                <p-button 
+                    icon="pi pi-save" 
+                    label="Guardar Cambios" 
+                    severity="success"
+                    [disabled]="!cambiosPendientes"
+                    (onClick)="guardarCambios()"
+                    [loading]="val">
+                </p-button>
+            </div>
+        </p-fieldset>
+    </div>
+</div>

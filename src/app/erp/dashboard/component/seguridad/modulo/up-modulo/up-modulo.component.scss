@@ -1,0 +1,31 @@
+.icon-item {
+    border: 1px solid transparent;
+    border-radius: 4px;
+    transition: all 0.2s;
+
+    &:hover {
+        background-color: var(--surface-hover);
+        border-color: var(--primary-color);
+    }
+
+    &.selected {
+        background-color: var(--primary-color-lighter);
+        border-color: var(--primary-color);
+    }
+}
+
+.cursor-pointer {
+    cursor: pointer;
+}
+
+:host ::ng-deep {
+    .p-pickList {
+        .p-pickList-list {
+            .p-pickList-item {
+                &:not(.p-highlight):hover {
+                    background: var(--surface-hover);
+                }
+            }
+        }
+    }
+}

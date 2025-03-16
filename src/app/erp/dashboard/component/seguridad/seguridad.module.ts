@@ -38,7 +38,14 @@ import { RolesComponent } from './roles/roles.component';
 import { InsRolesComponent } from './roles/ins-roles/ins-roles.component';
 import { UpRolesComponent } from './roles/up-roles/up-roles.component';
 import { SpeedDialModule } from 'primeng/speeddial';
-
+import { SplitButtonModule } from 'primeng/splitbutton';
+import { ModuloComponent } from './modulo/modulo.component';
+import { InsModuloComponent } from './modulo/ins-modulo/ins-modulo.component';
+import { PickListModule } from 'primeng/picklist';
+import { ScrollPanelModule } from 'primeng/scrollpanel';
+import { UpModuloComponent } from './modulo/up-modulo/up-modulo.component';
+import { SubModuloComponent } from './modulo/sub-modulo/sub-modulo.component';
+import { InsSubModuloComponent } from './modulo/sub-modulo/ins-sub-modulo/ins-sub-modulo.component';
 @NgModule({
   declarations: [
     UsuariosComponent,
@@ -47,7 +54,11 @@ import { SpeedDialModule } from 'primeng/speeddial';
     RolesComponent,
     InsRolesComponent,
     UpRolesComponent,
-  
+    ModuloComponent,
+    InsModuloComponent,
+    UpModuloComponent,
+    SubModuloComponent,
+    InsSubModuloComponent
   ],
   imports: [
     CommonModule,
@@ -83,7 +94,10 @@ import { SpeedDialModule } from 'primeng/speeddial';
     PasswordModule,
     AccordionModule,
     ToggleButtonModule,
-    SpeedDialModule
+    SpeedDialModule,
+    SplitButtonModule,
+    PickListModule,
+    ScrollPanelModule
   ]
 })
 export class SeguridadModule { }

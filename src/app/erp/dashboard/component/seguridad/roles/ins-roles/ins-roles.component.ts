@@ -8,16 +8,17 @@ import { faArrowDown } from '@fortawesome/free-solid-svg-icons';
 import { Store } from '@ngrx/store';
 import { AppState } from '../../../app.state';
 import { Router } from '@angular/router';
-import { createRolesRequest } from '../../state/actions/roles.actions';
+import { createRolesRequest, createRolesSuccess, rolesError } from '../../state/actions/roles.actions';
 import { incrementarRequest } from '../../../state/actions/estado.actions';
-
+import { ofType } from '@ngrx/effects';
+import { Actions } from '@ngrx/effects';
 @Component({
   selector: 'app-ins-roles',
   templateUrl: './ins-roles.component.html',
   styleUrl: './ins-roles.component.scss'
 })
 export class InsRolesComponent {
-  roles$ :   Observable<Roles[]>;
+    roles$ :   Observable<Roles[]>;
     usuarios$: any[];
     filterRoles      : string [];
     imageChangedEvent: any    = '';
@@ -34,7 +35,8 @@ export class InsRolesComponent {
 
     constructor(private store: Store<AppState>,
                 private router: Router,
-                private fb: FormBuilder
+                private fb: FormBuilder,
+                private actions$: Actions
               ) {
                }
 
@@ -51,6 +53,21 @@ export class InsRolesComponent {
       this.val          = true;
       this.store.dispatch(incrementarRequest({request:1}));
       this.store.dispatch(createRolesRequest({rolDes:rolDes}));
+    
+      this.actions$.pipe(
+        ofType(createRolesSuccess)
+      ).subscribe(() => {
+        setTimeout(() => {
+          this.val = false;
+          this.router.navigate(['/desk/seguridad/roles']);
+        }, 1000);
+      });
+
+      this.actions$.pipe(
+        ofType(rolesError)
+      ).subscribe((error) => {
+        this.val = false;
+      });
     }
   
  

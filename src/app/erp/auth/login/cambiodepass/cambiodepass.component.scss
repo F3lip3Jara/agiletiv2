@@ -1,0 +1,239 @@
+.password-change-container {
+    width: 100vw;
+    height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: var(--surface-ground);
+    position: relative;
+    overflow: hidden;
+}
+
+.password-change-background {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(135deg, var(--primary-color) 0%, var(--primary-color-text) 100%);
+    opacity: 0.1;
+    z-index: 1;
+}
+
+.password-change-card-container {
+    position: relative;
+    z-index: 2;
+    width: 100%;
+    max-width: 500px;
+    padding: 2rem;
+}
+
+.password-change-card {
+    background: var(--surface-card);
+    border-radius: 1rem;
+    padding: 2rem;
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    animation: fadeIn 0.5s ease-out;
+}
+
+.card-header {
+    text-align: center;
+    margin-bottom: 2rem;
+
+    i {
+        font-size: 3rem;
+        color: var(--primary-color);
+        margin-bottom: 1rem;
+    }
+
+    h2 {
+        color: var(--text-color);
+        font-size: 1.75rem;
+        font-weight: 600;
+        margin-bottom: 0.5rem;
+    }
+
+    .subtitle {
+        color: var(--text-color-secondary);
+        font-size: 1rem;
+    }
+}
+
+.password-form {
+    .form-group {
+        margin-bottom: 1.5rem;
+
+        label {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            margin-bottom: 0.5rem;
+            color: var(--text-color);
+            font-weight: 500;
+
+            i {
+                color: var(--primary-color);
+                font-size: 1.1rem;
+            }
+        }
+    }
+
+    .text-error {
+        color: var(--red-500);
+        font-size: 0.875rem;
+        margin-top: 0.25rem;
+        display: block;
+    }
+}
+
+.password-strength {
+    margin: 1rem 0;
+
+    .strength-meter {
+        height: 4px;
+        background: var(--surface-border);
+        border-radius: 2px;
+        margin-bottom: 0.5rem;
+
+        .strength-bar {
+            height: 100%;
+            border-radius: 2px;
+            transition: all 0.3s ease;
+
+            &.weak {
+                width: 33.33%;
+                background: var(--red-500);
+            }
+
+            &.medium {
+                width: 66.66%;
+                background: var(--yellow-500);
+            }
+
+            &.strong {
+                width: 100%;
+                background: var(--green-500);
+            }
+        }
+    }
+
+    .strength-text {
+        font-size: 0.875rem;
+        font-weight: 500;
+
+        &.weak {
+            color: var(--red-500);
+        }
+
+        &.medium {
+            color: var(--yellow-500);
+        }
+
+        &.strong {
+            color: var(--green-500);
+        }
+    }
+}
+
+.password-requirements {
+    p {
+        color: var(--text-color-secondary);
+        font-size: 0.875rem;
+        margin-bottom: 0.5rem;
+    }
+
+    ul {
+        list-style: none;
+        padding: 0;
+        margin: 0;
+
+        li {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            color: var(--text-color-secondary);
+            font-size: 0.875rem;
+            margin-bottom: 0.25rem;
+
+            i {
+                font-size: 1rem;
+
+                &.pi-check-circle {
+                    color: var(--green-500);
+                }
+
+                &.pi-times-circle {
+                    color: var(--red-500);
+                }
+            }
+
+            &.requirement-met {
+                color: var(--green-500);
+            }
+        }
+    }
+}
+
+:host ::ng-deep {
+    .p-password {
+        width: 100%;
+
+        input {
+            width: 100%;
+            padding: 1rem;
+            border-radius: 0.5rem;
+        }
+
+        i {
+            color: var(--primary-color);
+            font-size: 1.1rem;
+        }
+
+        .p-password-panel {
+            border-radius: 0.5rem;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+        }
+    }
+
+    .submit-button {
+        width: 100%;
+        padding: 1rem;
+        border-radius: 0.5rem;
+        font-weight: 600;
+        margin-top: 1rem;
+        background: var(--primary-color) !important;
+        border: none;
+        color: var(--primary-color-text) !important;
+
+        &:enabled:hover {
+            background: var(--primary-600) !important;
+            transform: translateY(-1px);
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        &:enabled:active {
+            transform: translateY(1px);
+            background: var(--primary-700) !important;
+        }
+
+        &.p-button-loading {
+            background: var(--primary-700) !important;
+        }
+
+        &:disabled {
+            opacity: 0.7;
+            cursor: not-allowed;
+        }
+    }
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}

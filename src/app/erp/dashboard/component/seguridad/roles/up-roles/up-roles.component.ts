@@ -5,9 +5,10 @@ import { Router } from '@angular/router';
 import { Store } from '@ngrx/store';
 import { AppState } from '../../../app.state';
 import { FormGroup } from '@angular/forms';
-import { updateRolesRequest } from '../../state/actions/roles.actions';
+import { rolesError, updateRolesRequest, updateRolesSuccess } from '../../state/actions/roles.actions';
 import { incrementarRequest } from '../../../state/actions/estado.actions';
-
+import { ofType } from '@ngrx/effects';
+import { Actions } from '@ngrx/effects';
 @Component({
   selector: 'app-up-roles',
   templateUrl: './up-roles.component.html',
@@ -16,11 +17,11 @@ import { incrementarRequest } from '../../../state/actions/estado.actions';
 export class UpRolesComponent {
  up : FormGroup;
  idRol : number = 0;
-  
+ val: boolean = false;
   constructor(fgUser             : FormBuilder,
             private router       : Router,
             private route        : ActivatedRoute,
-         
+            private actions$: Actions,
             private store: Store<AppState>,
 ) {
 
@@ -37,10 +38,9 @@ export class UpRolesComponent {
    
     this.route.params.subscribe(params => {
       const dato   = params['roles'];
-      let roles = JSON.parse(atob(dato));
+      let roles    = JSON.parse(atob(dato));
       this.up.controls['rolDes'].setValue(roles.rolDes);      
-      this.idRol = roles.rolId;
-      
+      this.idRol = roles.rolId;      
     });
   }
 
@@ -49,9 +49,24 @@ export class UpRolesComponent {
       idRol: this.idRol,
       rolDes: rolDes
     }
+    this.val = true;  
     this.store.dispatch(incrementarRequest({request:1}));
     this.store.dispatch(updateRolesRequest({roles:roles}));
-  }
+   
+    this.actions$.pipe(
+      ofType(updateRolesSuccess)
+    ).subscribe(() => {
+      setTimeout(() => {
+        this.val = false;
+        this.router.navigate(['/desk/seguridad/roles']);
+      }, 1000);
+    });
 
+    this.actions$.pipe(
+      ofType(rolesError)
+    ).subscribe((error) => {
+      this.val = false;
+    });
+  } 
 
 }

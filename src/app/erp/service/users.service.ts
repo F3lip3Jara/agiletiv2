@@ -1,9 +1,11 @@
-
 import { EventEmitter, Injectable, Output } from "@angular/core";
 import { CookieService } from "ngx-cookie-service";
 import { HttpClient } from "@angular/common/http";
 import { Observable } from "rxjs";
-
+import { Store } from "@ngrx/store";
+import { AppState } from "../dashboard/component/app.state";
+import { selectToken } from "../dashboard/component/state/selectors/estado.selectors";
+import { setToken, getToken } from "../dashboard/component/state/actions/estado.actions";
 
 
 @Injectable({
@@ -16,7 +18,7 @@ export class UsersService {
   menu    : any        = [];
 
 
-  constructor(private http: HttpClient , private cookies: CookieService ) {}
+   constructor(private http: HttpClient , private cookies: CookieService , private store: Store<AppState>) {}
 
   login(user: any): Observable<any> {
      const headers = { 'Content-Type': 'application/json' };
@@ -26,22 +28,31 @@ export class UsersService {
 
   setToken(token: string ) { 
     localStorage.setItem('token', token);   
+    this.store.dispatch(setToken({token:token}));
   }
 
   getToken() : string{
    // return this.cookies.get("token");
-   let datos = localStorage.getItem('token');
-
-     if (!datos) {
-       datos = '';
-     }
-     return datos;
+   let token = '';
+    this.store.select(selectToken).subscribe((tok) => {
+      token = tok;
+      if(token === null || token === undefined || token === ''){
+           token = localStorage.getItem('token') || '';
+           this.store.dispatch(setToken({token:token}));
+      }else{
+        this.store.dispatch(getToken());
+        
+      }
+    });
+   
+    return token;
+    
   }
 
   eliminarToken () {
-    localStorage.clear();
-    localStorage.removeItem('user');
     localStorage.removeItem('token');
+    localStorage.removeItem('crf');
+    localStorage.removeItem('user');
     this.setUsuario('','','','','','','','');
     this.menu     = [];
   }
@@ -80,14 +91,15 @@ export class UsersService {
     let icono      = {};
     let dato = this.getUser();
     this.menu = [];
-    this.menu = dato.menu;
-    
-    
+    this.menu = dato.menu;  
     this.menu.forEach((element:any) => {
     
     });
 
   }
-  
+
+ 
+
+ 
 
 }

@@ -18,11 +18,15 @@ export class AccionesSerivices {
               private rest    : RestService,
               private userSer : UsersService,
               private store   : Store<AppState>
-  ) {  }
+  ) {  
+
+    this.token = this.userSer.getToken();    
+
+  }
 
    getAcciones(optId: number): Observable<any> {
     this.parametros = [{key: 'optId' , value: optId}]
-    this.token = this.userSer.getToken();    
+  
        return this.rest.get('trabAcciones', this.token, this.parametros).pipe(
         map(
           (data: any) => data

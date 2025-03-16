@@ -1,0 +1,329 @@
+.card {
+  border-radius: 12px;
+  border: none;
+  transition: all 0.3s ease;
+  background: white;
+
+  &:hover {
+    box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.15) !important;
+  }
+}
+
+.card-header {
+  background: linear-gradient(to right, #f8f9fa, #ffffff);
+  border-bottom: 1px solid rgba(0,0,0,0.05);
+  padding: 1.25rem;
+  border-top-left-radius: 12px !important;
+  border-top-right-radius: 12px !important;
+}
+
+.list-group-item {
+  transition: all 0.2s ease;
+  border-left: 3px solid transparent;
+  margin-bottom: 0.5rem;
+  border-radius: 8px;
+  background: #ffffff;
+  
+  &:hover {
+    background-color: #f8f9fa;
+    border-left-color: #007bff;
+    transform: translateX(5px);
+  }
+
+  .fas {
+    transition: all 0.2s ease;
+  }
+
+  &:hover .fas {
+    transform: scale(1.1);
+  }
+}
+
+.btn {
+  transition: all 0.2s ease;
+  border-radius: 6px;
+  padding: 0.5rem 1rem;
+
+  &:hover:not(:disabled) {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+  }
+
+  &:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+  }
+}
+
+.btn-sm {
+  padding: 0.4rem 0.8rem;
+  font-size: 0.875rem;
+}
+
+.input-group {
+  .input-group-text {
+    background-color: white;
+    border-right: none;
+    padding-right: 0;
+  }
+
+  input {
+    border-left: none;
+    padding-left: 0;
+    &:focus {
+      box-shadow: none;
+      border-color: #ced4da;
+    }
+  }
+}
+
+.card-body {
+  padding: 1.25rem;
+  
+  &::-webkit-scrollbar {
+    width: 6px;
+  }
+
+  &::-webkit-scrollbar-track {
+    background: #f1f1f1;
+    border-radius: 3px;
+  }
+
+  &::-webkit-scrollbar-thumb {
+    background: #888;
+    border-radius: 3px;
+  }
+
+  &::-webkit-scrollbar-thumb:hover {
+    background: #555;
+  }
+}
+
+.transfer-icon-container {
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
+  background: #f8f9fa;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 1rem auto;
+  
+  .fas {
+    opacity: 0.5;
+    transition: all 0.3s ease;
+
+    &:hover {
+      opacity: 1;
+      transform: scale(1.1) rotate(180deg);
+    }
+  }
+}
+
+.badge {
+  padding: 0.5rem 1rem;
+  font-weight: 500;
+  border-radius: 20px;
+}
+
+// Animaciones para los elementos de la lista
+@keyframes slideIn {
+  from {
+    opacity: 0;
+    transform: translateX(-20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+.list-group-item {
+  animation: slideIn 0.3s ease-out forwards;
+}
+
+// Estilos para los mensajes de "no hay resultados"
+.text-muted {
+  .fas {
+    margin-bottom: 1rem;
+    opacity: 0.5;
+  }
+  
+  p {
+    font-size: 0.9rem;
+    margin: 0;
+  }
+}
+
+:host ::ng-deep {
+  .p-fieldset {
+    .p-fieldset-legend {
+      padding: 1rem;
+      font-weight: 600;
+      border-radius: 6px;
+      background: linear-gradient(to right, #f8f9fa, #ffffff);
+      
+      &:hover {
+        background: linear-gradient(to right, #e9ecef, #f8f9fa);
+      }
+    }
+  }
+
+  // Estilos para los botones de acción
+  .p-button {
+    transition: all 0.2s ease;
+    
+    &.p-button-outlined:not(:disabled) {
+      &:hover {
+        background: rgba(33, 150, 243, 0.04);
+        border-color: #2196F3;
+      }
+    }
+
+    &.p-button-success:not(:disabled) {
+      &:hover {
+        background: #2E7D32;
+        border-color: #2E7D32;
+      }
+    }
+
+    &:disabled {
+      opacity: 0.6;
+    }
+
+    .p-button-icon {
+      font-size: 1rem;
+    }
+  }
+
+  .custom-picklist {
+    .p-picklist-list-wrapper {
+      background: #ffffff;
+      border-radius: 8px;
+      box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+    }
+
+    .p-picklist-list {
+      min-height: 400px;
+      max-height: 400px;
+      overflow-y: auto;
+
+      &::-webkit-scrollbar {
+        width: 8px;
+      }
+      
+      &::-webkit-scrollbar-track {
+        background: #f1f1f1;
+        border-radius: 4px;
+      }
+      
+      &::-webkit-scrollbar-thumb {
+        background: #c1c1c1;
+        border-radius: 4px;
+        
+        &:hover {
+          background: #a8a8a8;
+        }
+      }
+    }
+
+    .p-picklist-header {
+      background: linear-gradient(to right, #f8f9fa, #ffffff);
+      padding: 1rem;
+      font-weight: 600;
+      border-radius: 8px 8px 0 0;
+      border-bottom: 1px solid #e9ecef;
+    }
+
+    .p-picklist-filter-container {
+      padding: 0.75rem;
+      background: #ffffff;
+      border-bottom: 1px solid #e9ecef;
+
+      input {
+        border-radius: 6px;
+        border: 1px solid #e9ecef;
+        padding: 0.5rem 1rem;
+        transition: all 0.2s;
+
+        &:focus {
+          border-color: #2196F3;
+          box-shadow: 0 0 0 2px rgba(33, 150, 243, 0.1);
+        }
+      }
+    }
+
+    .option-item {
+      margin: 0.25rem;
+      padding: 0.75rem;
+      border-radius: 6px;
+      transition: all 0.2s ease;
+      cursor: move;
+      background: #ffffff;
+      border: 1px solid transparent;
+
+      &:hover {
+        background: #f8f9fa;
+        border-color: #e9ecef;
+        transform: translateY(-1px);
+        box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+      }
+
+      .pi {
+        font-size: 1rem;
+        color: #6c757d;
+        transition: all 0.2s;
+
+        &.text-primary {
+          color: #2196F3;
+        }
+      }
+
+      .option-text {
+        font-size: 0.95rem;
+        color: #495057;
+      }
+    }
+
+    .p-picklist-buttons {
+      padding: 1rem;
+
+      .p-button {
+        border-radius: 6px;
+        transition: all 0.2s;
+        margin: 0.25rem 0;
+
+        &:hover {
+          transform: translateY(-1px);
+          box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+
+        &:active {
+          transform: translateY(0);
+        }
+      }
+    }
+  }
+
+  // Estilos para el modo responsive
+  @media screen and (max-width: 768px) {
+    .custom-picklist {
+      .p-picklist-buttons {
+        padding: 0.5rem;
+      }
+
+      .p-picklist-list {
+        min-height: 300px;
+      }
+    }
+
+    .p-button {
+      .p-button-label {
+        display: none;
+      }
+      .p-button-icon {
+        margin-right: 0;
+      }
+    }
+  }
+}

@@ -1,0 +1,127 @@
+:host ::ng-deep {
+    .p-picklist {
+        .p-picklist-list {
+            .p-picklist-item {
+                padding: 1rem;
+                margin: 0;
+                border-bottom: 1px solid var(--surface-200);
+
+                &:hover {
+                    background: var(--surface-100);
+                }
+
+                .flex {
+                    gap: 1rem;
+                }
+
+                i {
+                    color: var(--primary-color);
+                    font-size: 1.2rem;
+                }
+
+                .text-500 {
+                    color: var(--text-500);
+                    font-size: 0.875rem;
+                }
+            }
+        }
+
+        .p-picklist-header {
+            background: var(--surface-0);
+            color: var(--surface-900);
+            padding: 1rem;
+            font-weight: 600;
+        }
+    }
+
+    .field {
+        margin-bottom: 1.5rem;
+
+        label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: 500;
+        }
+
+        .p-inputgroup {
+            .p-inputgroup-addon {
+                background: var(--surface-100);
+                border-left: 0;
+                min-width: 3rem;
+                justify-content: center;
+                cursor: pointer;
+                transition: background-color 0.2s;
+
+                &:hover {
+                    background: var(--surface-200);
+                }
+
+                i {
+                    color: var(--primary-color);
+                    font-size: 1.2rem;
+                }
+            }
+        }
+    }
+
+    .p-error {
+        color: var(--red-500);
+        font-size: 0.875rem;
+        margin-top: 0.25rem;
+    }
+
+    .card-header {
+        margin-bottom: 1rem;
+
+        h3 {
+            color: var(--surface-900);
+            margin: 0 0 0.5rem 0;
+            font-weight: 600;
+        }
+
+        p {
+            color: var(--text-500);
+            margin: 0;
+        }
+    }
+
+    // Estilos para el selector de iconos
+    .icon-item {
+        border: 1px solid var(--surface-200);
+        border-radius: var(--border-radius);
+        transition: all 0.2s;
+
+        &:hover {
+            background: var(--surface-100);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+        }
+
+        &.selected {
+            background: var(--primary-color);
+            border-color: var(--primary-color);
+            color: var(--primary-color-text);
+
+            i {
+                color: var(--primary-color-text);
+            }
+        }
+
+        i {
+            font-size: 1.5rem;
+            color: var(--primary-color);
+        }
+    }
+
+    // Estilos para el scroll panel
+    .p-scrollpanel {
+        .p-scrollpanel-wrapper {
+            border-right: none;
+        }
+
+        .p-scrollpanel-bar {
+            background: var(--primary-color);
+            opacity: 0.3;
+        }
+    }
+}

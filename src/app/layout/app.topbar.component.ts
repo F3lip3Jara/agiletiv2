@@ -8,6 +8,7 @@ import { Store } from '@ngrx/store';
 import { selectEstado } from '../erp/dashboard/component/state/selectors/estado.selectors';
 import { selectMensaje } from '../erp/dashboard/component/state/selectors/mensaje.selectors';
 import { readMensajeRequest } from '../erp/dashboard/component/state/actions/mensajes.actions';
+import { OverlayPanel } from 'primeng/overlaypanel';
 
 @Component({
     selector: 'app-topbar',
@@ -21,7 +22,6 @@ export class AppTopBarComponent {
     menuItems: MenuItem[] = [];
     hasNotifications: boolean = true;
     appLoading: boolean = false;
-
     // Propiedades para la búsqueda
     searchVisible: boolean = false;
     searchQuery: string = '';
@@ -86,6 +86,7 @@ export class AppTopBarComponent {
     @ViewChild('menubutton') menuButton!: ElementRef;
     @ViewChild('topbarmenubutton') topbarMenuButton!: ElementRef;
     @ViewChild('topbarmenu') menu!: ElementRef;
+    @ViewChild('op') overlayPanel!: OverlayPanel;
 
     isFullscreen: boolean = false;
 
@@ -146,17 +147,10 @@ export class AppTopBarComponent {
                 }
             },
             {
-                label: 'Mis Tareas',
-                icon: 'pi pi-check-square',
-                command: () => {
-                    // Implementar navegación a tareas
-                }
-            },
-            {
-                label: 'Mensajes',
-                icon: 'pi pi-envelope',
-                command: () => {
-                    // Implementar navegación a mensajes
+                label: 'Notificaciones',
+                icon: 'pi pi-bell',
+                command: (event) => {
+                    this.onNotificationButtonClick(event.originalEvent);
                 }
             },
             { separator: true },
@@ -172,7 +166,7 @@ export class AppTopBarComponent {
                 label: 'Cerrar Sesión',
                 icon: 'pi pi-sign-out',
                 command: () => {
-                    // Implementar cierre de sesión
+                    this.onLogoutButtonClick();
                 }
             }
         ];
@@ -355,7 +349,7 @@ export class AppTopBarComponent {
                 // Limpiar los mensajes existentes antes de agregar los nuevos
                 this.generalMessages = [];
                 this.archivedMessages = [];
-                
+                let msj : any ; 
                 state.forEach((ms:any)=> {                     
                     if(ms.read === false){
                         this.generalMessages.push({
@@ -363,15 +357,16 @@ export class AppTopBarComponent {
                             time: this.formatDate(new Date()),
                             read: false
                         });
-                        // Mostrar toast para nuevos mensajes
-                        this.showNotificationToast(ms);
+                        msj = ms;
                     }else{
                         this.archivedMessages.push({
                             ...ms,
                         });
                     }
                 });
-
+                if(msj){
+                    this.showNotificationToast(msj);
+                }
                 this.unreadCount = this.generalMessages.length;
             }
         });
@@ -426,4 +421,24 @@ export class AppTopBarComponent {
         return styles[type] || styles['info'];
     }
 
+    onNotificationButtonClick(event: Event) {
+        if (this.overlayPanel) {
+            this.overlayPanel.hide(); // Ocultar primero para asegurar que se resetee la posición
+            setTimeout(() => {
+                this.overlayPanel.show(event, document.querySelector('.notification-button'));
+            }, 0);
+        }
+    }
+
+    onLogoutButtonClick() {
+        localStorage.removeItem('token');
+        localStorage.removeItem('crf');
+        localStorage.removeItem('user');
+        
+            // Navegar al inicio y recargar para limpiar el estado completamente
+        this.router.navigate(['/']).then(() => {
+             window.location.reload();
+        });
+       
+    }
 }

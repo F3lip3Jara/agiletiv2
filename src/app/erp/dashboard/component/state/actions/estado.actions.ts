@@ -12,6 +12,9 @@ export const setEstadoLoading =createAction(
      props<{ error: string }>()    // Carga útil que contiene el mensaje de error
  )
 
+ export const setToken = createAction('[Estado] Set Token',
+                                                 props<{ token: string }>());
+
  export const incrementarRequest = createAction('[Estado] Incrementar Request',
                                                  props<{ request: number }>());
 
@@ -20,3 +23,5 @@ export const setEstadoLoading =createAction(
 export const setAltura           = createAction('[Estado] Set Altura',
                                         props<{ altura: number }>());
  
+export const getToken = createAction('[Estado] Get Token');
+

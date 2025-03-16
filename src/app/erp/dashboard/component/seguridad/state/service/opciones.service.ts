@@ -18,10 +18,13 @@ export class OpcionesService {
                 private rest    : RestService,
                 private userSer : UsersService,
                 private store   : Store<AppState>
-    ) {  }
+    ) { 
+
+      this.token = this.userSer.getToken();
+     }
   
      getOpciones(): Observable<any> {
-      this.token = this.userSer.getToken();
+      
       
          return this.rest.get('trabOpciones', this.token, this.parametros).pipe(
           map(
@@ -46,7 +49,6 @@ export class OpcionesService {
     }
   
     deleteOpciones(opciones: any): Observable<any> {
-  
       return this.rest.post('delOpciones', this.token, opciones).pipe(
         map((data: any) => data)
       );  

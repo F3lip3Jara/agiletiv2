@@ -40,6 +40,12 @@ import { AccionesComponent } from "./acciones/acciones.component";
 import { InsAccionesComponent } from "./acciones/ins-acciones/ins-acciones.component";
 import { UpAccionesComponent } from "./acciones/up-acciones/up-acciones.component";
 import { TagModule } from "primeng/tag";
+import { EmpresaComponent } from "./empresa/empresa.component";
+import { InsEmpresaComponent } from "./empresa/ins-empresa/ins-empresa.component";
+import { UpEmpresaComponent } from "./empresa/up-empresa/up-empresa.component";
+import { AdmOpcionesComponent } from "./empresa/adm-opciones/adm-opciones.component";
+import { PickListModule } from 'primeng/picklist';
+import { SplitButtonModule } from 'primeng/splitbutton';
 @NgModule({
     declarations: [
         OpcionesComponent,
@@ -47,8 +53,11 @@ import { TagModule } from "primeng/tag";
         UpOpcionesComponent,
         AccionesComponent,
         InsAccionesComponent,
-        UpAccionesComponent
-
+        UpAccionesComponent,
+        EmpresaComponent,
+        InsEmpresaComponent,
+        UpEmpresaComponent,
+        AdmOpcionesComponent
     ],
     imports: [
       CommonModule,
@@ -85,7 +94,8 @@ import { TagModule } from "primeng/tag";
       ToggleButtonModule,
       SpeedDialModule,
       TagModule,
-        
+      PickListModule,
+      SplitButtonModule
     ],
 })
 

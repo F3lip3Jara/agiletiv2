@@ -15,7 +15,8 @@ export class RestService {
     
 }
 
-  public get(url:string , token : string , parms : any){
+  public get(url:string , tok : string , parms : any){
+    let token = this.UsersService.getToken();
     let headers : HttpHeaders  = new HttpHeaders ({"access-token" : token});
     let parmx   : HttpParams   = new HttpParams();
     parms.forEach(function (val : any) {

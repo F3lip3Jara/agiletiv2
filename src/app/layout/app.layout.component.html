@@ -1,9 +1,10 @@
 <div class="layout-wrapper" [ngClass]="containerClass">
     <app-topbar></app-topbar>
     <div class="layout-sidebar">
-        <app-sidebar></app-sidebar>
+        <app-sidebar></app-sidebar> 
     </div>
     <div class="layout-main-container">
+        <app-breadcrumb></app-breadcrumb>
         <div id="loading" *ngIf="isLoading$">
             <div class="loading-overlay loading-content"  style="height:{{altura$ | async}}px">
                 <div class="loader"></div>
@@ -17,4 +18,3 @@
     <app-config></app-config>
     <div class="layout-mask"></div>
 </div>
- 

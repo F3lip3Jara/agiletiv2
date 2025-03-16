@@ -8,6 +8,9 @@ import { Estado } from "./state/interface/estado.interface";
 import { _opcionesReducer } from "./seguridad/state/reducers/opciones.reducer";
 import { _accionesReducer } from "./seguridad/state/reducers/acciones.reducer";
 import { _indicadoresReducer } from "./state/reducer/indicador.reducers";
+import { _empresaReducer } from "./seguridad/state/reducers/empresa.reducer";
+import { _moduloReducer } from "./seguridad/state/reducers/modulo.reducer";
+import { _subModuloReducer } from "./seguridad/state/reducers/subModulo.reducer";
 
 export interface AppState {
     usuarios    : DataStateUsuarios,
@@ -17,7 +20,10 @@ export interface AppState {
     estado      : DataStateEstado,
     opciones    : DataStateOpciones,   
     acciones    : DataStateAcciones,
-    indicadores : DataStateIndicadores
+    indicadores : DataStateIndicadores,
+    empresa     : DataStateEmpresa,
+    modulo      : DataStateModulo,
+    subModulo   : DataStateSubModulo
 }
 
 export interface DataStateUsuarios {
@@ -66,13 +72,39 @@ export interface DataStateIndicadores {
     loading: boolean,
 }
 
+export interface DataStateEmpresa {
+    empresa: any[],
+    logo: string,
+    error?: string,
+    loading: boolean,
+    opcionesAsignadas: any[],
+    opcionesNoAsignadas: any[]
+}   
+
+export interface DataStateModulo {
+    modulo: any[],
+    error?: string,
+    loading: boolean,
+    roles: any[],
+    opciones : any[]
+}
+
+export interface DataStateSubModulo {
+    subModulo: any[],
+    error?: string,
+    loading: boolean,
+}
+
 export const ROOT_APP_REDUCER: ActionReducerMap<AppState> = {
-    usuarios : _usuarioReducer, 
-    productos:_productoReducer,
-    roles    :_rolesReducer,
-    mensajes : _mensajeReducer,
-    estado   : _estadoReducer,
-    opciones : _opcionesReducer,
-    acciones : _accionesReducer,
-    indicadores : _indicadoresReducer
+    usuarios    : _usuarioReducer, 
+    productos   :_productoReducer,
+    roles       :_rolesReducer,
+    mensajes    : _mensajeReducer,
+    estado      : _estadoReducer,
+    opciones    : _opcionesReducer,
+    acciones    : _accionesReducer,
+    indicadores : _indicadoresReducer,
+    empresa     : _empresaReducer,
+    modulo      : _moduloReducer,
+    subModulo   : _subModuloReducer
   };

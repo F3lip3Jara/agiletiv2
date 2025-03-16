@@ -754,7 +754,9 @@
 }
 
 #notificationsPanel {
-    .p-overlaypanel {
+    margin-top: 57.25px !important;
+    
+    &.p-overlaypanel {
         border-radius: 12px;
         box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
         padding: 0;
@@ -777,6 +779,9 @@
         align-items: center;
         border-bottom: 1px solid var(--surface-border);
         background: var(--surface-section);
+        position: sticky;
+        top: 0;
+        z-index: 1;
 
         h3 {
             margin: 0;
@@ -786,6 +791,7 @@
         }
     }
 }
+
 
 
 #notificationsTabView {
@@ -1065,6 +1071,23 @@
                         outline: none;
                     }
                 }
+            }
+        }
+    }
+}
+
+:host ::ng-deep {
+    .notifications-panel {
+        margin-top: 57.25px !important;
+        
+        &.p-overlaypanel {
+            .p-overlaypanel-content {
+                padding: 0;
+                border-radius: 8px;
+            }
+
+            &:before, &:after {
+                display: none !important;
             }
         }
     }

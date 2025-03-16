@@ -1,0 +1,59 @@
+<p-dialog 
+    [(visible)]="visible" 
+    [modal]="true" 
+    [closable]="false"
+    [draggable]="false"
+    [resizable]="false"
+    styleClass="p-dialog-custom"
+    [style]="{width: '450px'}"
+    header="¿Sigues ahí?">
+    
+    <div class="flex flex-column align-items-center">
+        <div class="clock mb-4">
+            <div class="clock-face">
+                <div class="hand hour-hand"></div>
+                <div class="hand minute-hand"></div>
+                <div class="hand second-hand"></div>
+                <div class="center-dot"></div>
+            </div>
+        </div>
+        
+        <h2 class="text-xl font-semibold mb-2">Tu sesión está por expirar</h2>
+        
+        <p class="text-center mb-4">
+            Por inactividad, tu sesión se cerrará en {{remainingTime}} segundos. 
+            ¿Deseas continuar con tu sesión?
+        </p>
+
+        <div class="flex justify-content-center gap-3">
+            <p-button 
+                label="Continuar sesión" 
+                icon="pi pi-check"
+                (click)="continueSession()"
+                styleClass="p-button-raised">
+            </p-button>
+
+            <p-button 
+                label="Cerrar sesión" 
+                icon="pi pi-sign-out"
+                (click)="logout()"
+                severity="danger"
+                styleClass="p-button-raised"
+                [outlined]="true">
+            </p-button>
+        </div>
+    </div>
+
+    <div class="progress-container mt-4">
+        <p-progressBar 
+            [value]="progress" 
+            [showValue]="false"
+            styleClass="custom-progress-bar"
+            [style]="{
+                'height': '8px',
+                'border-radius': '4px',
+                'background': 'var(--surface-ground)'
+            }">
+        </p-progressBar>
+    </div>
+</p-dialog>

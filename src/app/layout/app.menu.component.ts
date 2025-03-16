@@ -42,7 +42,7 @@ export class AppMenuComponent implements OnInit {
                     if (opcion.optSub === "S" && opcion.childrens.length > 0) {
                         return {
                             label: opcion.optDes,
-                            icon: opcion.molId === 1 ? 'pi pi-fw pi-shield' : 'pi pi-fw pi-circle', // Icono ejemplo
+                            icon: opcion.optIcon,
                             items: opcion.childrens.map(child => ({
                                 label: child.name,
                                 icon: child.icon,
@@ -53,7 +53,7 @@ export class AppMenuComponent implements OnInit {
                     // Si no tiene subopciones
                     return {
                         label: opcion.optDes,
-                        icon: opcion.molId === 1 ? 'pi pi-fw pi-shield' : 'pi pi-fw pi-circle', // Icono ejemplo
+                        icon: module.molIcon, // Icono ejemplo
                         routerLink: [`./${opcion.optLink}`]
                     };
                 })

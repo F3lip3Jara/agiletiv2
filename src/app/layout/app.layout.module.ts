@@ -36,7 +36,10 @@ import { DialogModule } from 'primeng/dialog';
 import { AutoCompleteModule } from 'primeng/autocomplete';
 import { OverlayPanelModule } from 'primeng/overlaypanel';
 import { ToastModule } from 'primeng/toast';
-
+import { AppWaitComponent } from './app.wait.component';
+import { ProgressBarModule } from 'primeng/progressbar';
+import { AppBreadcrumbComponent } from './app.breadcrumb.component';
+import { BreadcrumbModule } from 'primeng/breadcrumb';
 @NgModule({
     declarations: [
         AppMenuitemComponent,
@@ -47,7 +50,9 @@ import { ToastModule } from 'primeng/toast';
         AppLayoutComponent,
         ProgresoComponent,
         ScrollToTopButtonComponent,
-        LogoComponent
+        LogoComponent,
+        AppWaitComponent,
+        AppBreadcrumbComponent
     ],
     imports: [
         BrowserModule,
@@ -70,7 +75,10 @@ import { ToastModule } from 'primeng/toast';
         DialogModule,
         AutoCompleteModule,
         OverlayPanelModule,
-        ToastModule
+        ToastModule,
+        ButtonModule,
+        ProgressBarModule,
+        BreadcrumbModule
     ],
     exports: [AppLayoutComponent]
 })

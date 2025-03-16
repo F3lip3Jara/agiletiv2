@@ -6,7 +6,11 @@ import { UpUsuariosComponent } from './usuarios/up-usuarios/up-usuarios.componen
 import { RolesComponent } from './roles/roles.component';
 import { InsRolesComponent } from './roles/ins-roles/ins-roles.component';
 import { UpRolesComponent } from './roles/up-roles/up-roles.component';
-
+import { ModuloComponent } from './modulo/modulo.component';
+import { InsModuloComponent } from './modulo/ins-modulo/ins-modulo.component';
+import { UpModuloComponent } from './modulo/up-modulo/up-modulo.component';
+import { SubModuloComponent } from './modulo/sub-modulo/sub-modulo.component';
+import { InsSubModuloComponent } from './modulo/sub-modulo/ins-sub-modulo/ins-sub-modulo.component';
 const routes: Routes = [
   {
     path: '',
@@ -39,6 +43,26 @@ const routes: Routes = [
         path: 'roles/uproles/:roles',
        component:UpRolesComponent
       },     
+      {
+        path: 'modulos',
+        component:ModuloComponent 
+      },
+      {
+        path: 'modulos/insmodulo',
+        component:InsModuloComponent
+      },
+      {
+        path: 'modulos/upmodulo/:modulo',
+        component:UpModuloComponent
+      },
+      {
+        path: 'modulos/submodulos/:modulo',
+        component:SubModuloComponent
+      },
+      {
+        path: 'modulos/inssubmodulo/:modulo',
+        component:InsSubModuloComponent
+      },
         
         { path: 'administracion', loadChildren: () => import('./administracion/administracion.module').then(m => m.AdministracionModule) }
         

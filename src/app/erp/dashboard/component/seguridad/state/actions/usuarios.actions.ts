@@ -26,8 +26,7 @@ export const createUsuarioRequest = createAction(
 
 // Acción para indicar la creación exitosa de un nuevo elemento usuario    
 export const createUsuarioSuccess = createAction(
-    "[Usuarios] Create Usuarios Success",  // Identificador del tipo de acción
-    props<{ usuario: Usuario }>()         // Carga útil que contiene el usuario creado
+    "[Usuarios] Create Usuarios Success"
 )
 
 
@@ -63,5 +62,14 @@ export const desactivarUsuarioRequest = createAction(
 export const desactivarUsuarioSuccess = createAction(
     "[Usuarios] Desactivar Usuario Success"
 )
+
+export const reiniciarUsuarioRequest = createAction(
+    "[Usuarios] Reiniciar Usuario Request",  // Identificador del tipo de acción
+    props<{usuario: any }>()   // Carga útil que contiene el id del usuario a desactivar
+)
+export const reiniciarUsuarioSuccess = createAction(
+    "[Usuarios] Reiniciar Usuario Success"
+)
+
 
 

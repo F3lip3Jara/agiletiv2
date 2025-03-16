@@ -12,7 +12,8 @@ import { selectAcciones } from '../../state/selectors/acciones.selectors';
 import { incrementarRequest } from '../../../state/actions/estado.actions';
 import { MenuItem } from 'primeng/api';
 import { Table } from 'primeng/table';
-import { getAccionesRequest } from '../../state/actions/acciones.actions';
+import { accionesDeleteRequest, accionesDeleteSuccess, getAccionesRequest } from '../../state/actions/acciones.actions';
+import { Actions, ofType } from '@ngrx/effects';
 @Component({
   selector: 'app-acciones',
   templateUrl: './acciones.component.html',
@@ -32,18 +33,42 @@ export class AccionesComponent {
     subscription        : Subscription   = new Subscription();
     items: MenuItem[] | undefined;
     opcion: any;
+    selectedRow: any = null;
+    actionItems: MenuItem[] = [];
   
   
     constructor(
       private store: Store<AppState>,
       private router: Router,
       private excelService: ExcelService,
-      private route: ActivatedRoute
+      private route: ActivatedRoute,
+      private actions$ : Actions
     ) {
       // Inicializar el observable
       this.data$  = this.store.select(selectAcciones).pipe(
         map(acciones => Array.isArray(acciones) ? acciones : [])
       );
+
+      this.actionItems = [
+        {
+          label: 'Editar',
+          icon: 'pi pi-pencil',
+          command: () => {
+            if (this.selectedRow) {
+              this.edit(this.selectedRow);
+            }
+          }
+        },
+        {
+          label: 'Eliminar',
+          icon: 'pi pi-trash',
+          command: () => {
+            if (this.selectedRow) {
+              this.del(this.selectedRow);
+            }
+          }
+        }
+      ];
     }
   
     ngOnInit(): void {
@@ -81,7 +106,13 @@ export class AccionesComponent {
   
     del(data: any) {
       this.store.dispatch(incrementarRequest({request: 2}));
-    //  this.store.dispatch(deleteRolesRequest({roles: data}));
+      this.store.dispatch(accionesDeleteRequest({acciones: data}));
+      this.actions$.pipe(
+        ofType(accionesDeleteSuccess)
+      ).subscribe((response : any) => {
+        this.store.dispatch(getAccionesRequest({optId: this.opcion.optId}));
+      });
+     
     }
   
     ngOnDestroy(): void {
@@ -92,5 +123,20 @@ export class AccionesComponent {
       this.excelService.exportAsExcelFile(this.data, 'roles');
     }
   
-  
+    refresh() {
+      this.store.dispatch(incrementarRequest({request: 1}));
+      this.store.dispatch(getAccionesRequest({optId: this.opcion.optId}));
+    }
+
+    onRowSelect(event: any) {
+      this.selectedRow = event.data;
+    }
+
+    onRowUnselect(event: any) {
+      this.selectedRow = null;
+    }
+
+    onActionClick(item: any) {
+      this.selectedRow = item;
+    }
 }

@@ -11,13 +11,15 @@ import { AppState } from '../../../app.state';
 import { Store } from '@ngrx/store';
 import {  selectRoles, selectRolesById } from '../../state/selectors/roles.selectors';
 import { CreateUsuario, UpdateUsuario, Usuario } from '../../state/interface/usuarios.interface';
-import { dataUsuarioRequest, updateUsuarioRequest } from '../../state/actions/usuarios.actions';
+import { dataUsuarioRequest, updateUsuarioRequest, updateUsuarioSuccess, usuariosError } from '../../state/actions/usuarios.actions';
 import localeEs from '@angular/common/locales/es';
 import { ImageCroppedEvent } from 'ngx-image-cropper';
 import { getRolesRequest } from '../../state/actions/roles.actions';
 import { selectUsuarioAvatar } from '../../state/selectors/usuarios.selectors';
 import { incrementarRequest } from '../../../state/actions/estado.actions';
-
+import { ofType } from '@ngrx/effects';
+import { Actions } from '@ngrx/effects';
+import { MessageService } from 'primeng/api';
 registerLocaleData(localeEs);
 
 
@@ -63,7 +65,8 @@ export class UpUsuariosComponent {
   constructor(fgUser             : FormBuilder,
             private router       : Router,
             private route        : ActivatedRoute,
-         
+            private actions$: Actions,
+            private messageService: MessageService,
             private store: Store<AppState>,
 ) {
 
@@ -96,7 +99,8 @@ export class UpUsuariosComponent {
       this.usuario = JSON.parse(atob(dato));
       let name     = this.usuario.name;
       let id       = this.usuario.id;
-   
+      this.store.dispatch(incrementarRequest({request: 2}));
+    
       this.store.dispatch(getRolesRequest())
       // llama a la acción para obtener los todos
       this.roles$ = this.store.select(selectRoles).pipe(
@@ -120,8 +124,7 @@ export class UpUsuariosComponent {
         id: this.usuario.id,
         gerId:0,
         emploAvatar: ''
-      }
-     
+      }     
         // Despacha la acción para obtener los datos del usuario
         this.store.dispatch(dataUsuarioRequest({ usuario: usuariox }));
         this.subscription.add(
@@ -129,10 +132,10 @@ export class UpUsuariosComponent {
             filter(user => !!user), // Filtra para asegurarte de que hay un usuario
             take(1) // Se suscribe solo una vez
           ).subscribe((user) => {
-            //console.log(user);
-            if(user.emploAvatar.length > 0){
+            console.log(user);
+            if(user.emploAvatar !== null){
               this.avatar = user.emploAvatar;         
-              }else{
+            }else{
                   this.label = name.substring(0,2);
               }
           })
@@ -163,7 +166,6 @@ export class UpUsuariosComponent {
         this.updatePassword2ValidationClasses();
     });
 
-    this.store.dispatch(incrementarRequest({request: 2}));
   }
 
   fileChangeEvent(event: any): void {   
@@ -233,9 +235,25 @@ export class UpUsuariosComponent {
         'empId'         : 0,
         'password'      : password,
         'mantenerPassword': this.checked ? 1 : 0,
-    }
+    } 
+    this.val = true;
     this.store.dispatch(incrementarRequest({request:1}));
     this.store.dispatch(updateUsuarioRequest({usuario:usuariox}));     
+
+    this.actions$.pipe(
+      ofType(updateUsuarioSuccess)
+    ).subscribe(() => {
+        setTimeout(() => {
+          this.val = false;
+          this.router.navigate(['/desk/seguridad/usuarios']);
+        }, 1000);
+    });
+
+    this.actions$.pipe(
+      ofType(usuariosError)
+    ).subscribe((error) => {
+      this.messageService.add({severity:'error', summary:'Error', detail:error.error});
+    });
   }
 
   acceptCrop(): void {

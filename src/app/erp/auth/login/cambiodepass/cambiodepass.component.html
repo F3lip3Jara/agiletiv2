@@ -1,0 +1,98 @@
+<div class="password-change-container">
+    <div class="password-change-background"></div>
+    <div class="password-change-card-container">
+        <div class="password-change-card">
+            <div class="card-header">
+                <i class="pi pi-lock text-4xl text-primary"></i>
+                <h2>Cambio de Contraseña</h2>
+                <p class="subtitle">Por seguridad, necesitas actualizar tu contraseña para continuar</p>
+            </div>
+
+            <form [formGroup]="changePasswordForm" (ngSubmit)="onSubmit()" class="password-form">
+                <div class="form-group">
+                    <label for="currentPassword">
+                        <i class="pi pi-key"></i>
+                        <span>Contraseña Actual</span>
+                    </label>
+                    <p-password id="currentPassword" 
+                               formControlName="currentPassword"
+                               [toggleMask]="false"
+                               [feedback]="false"
+                               placeholder="Ingresa tu contraseña actual"
+                               styleClass="w-full">
+                    </p-password>
+                    
+                </div>
+
+                <div class="form-group">
+                    <label for="newPassword">
+                        <i class="pi pi-lock"></i>
+                        <span>Nueva Contraseña</span>
+                    </label>
+                    <p-password id="newPassword" 
+                               formControlName="newPassword"
+                               [toggleMask]="true"
+                               placeholder="Ingresa tu nueva contraseña"
+                               styleClass="w-full">
+                        <ng-template pTemplate="footer">
+                            <div class="password-strength">
+                                <div class="strength-meter">
+                                    <div class="strength-bar" [ngClass]="getPasswordStrengthClass()"></div>
+                                </div>
+                                <span class="strength-text" [ngClass]="getPasswordStrengthClass()">
+                                    {{getPasswordStrengthText()}}
+                                </span>
+                            </div>
+                            <p-divider></p-divider>
+                            <div class="password-requirements">
+                                <p>La contraseña debe contener:</p>
+                                <ul>
+                                    <li [ngClass]="{'requirement-met': hasMinLength(changePasswordForm.get('newPassword')?.value)}">
+                                        <i class="pi" [ngClass]="{'pi-check-circle': hasMinLength(changePasswordForm.get('newPassword')?.value), 'pi-times-circle': !hasMinLength(changePasswordForm.get('newPassword')?.value)}"></i>
+                                        Mínimo 8 caracteres
+                                    </li>
+                                    <li [ngClass]="{'requirement-met': hasUpperCase(changePasswordForm.get('newPassword')?.value)}">
+                                        <i class="pi" [ngClass]="{'pi-check-circle': hasUpperCase(changePasswordForm.get('newPassword')?.value), 'pi-times-circle': !hasUpperCase(changePasswordForm.get('newPassword')?.value)}"></i>
+                                        Al menos una mayúscula
+                                    </li>
+                                    <li [ngClass]="{'requirement-met': hasNumber(changePasswordForm.get('newPassword')?.value)}">
+                                        <i class="pi" [ngClass]="{'pi-check-circle': hasNumber(changePasswordForm.get('newPassword')?.value), 'pi-times-circle': !hasNumber(changePasswordForm.get('newPassword')?.value)}"></i>
+                                        Al menos un número
+                                    </li>
+                                </ul>
+                            </div>
+                        </ng-template>
+                    </p-password>
+                </div>
+
+                <div class="form-group">
+                    <label for="confirmPassword">
+                        <i class="pi pi-lock"></i>
+                        <span>Confirmar Contraseña</span>
+                    </label>
+                    <p-password id="confirmPassword" 
+                               formControlName="confirmPassword"
+                               [toggleMask]="true"
+                               [feedback]="false"
+                               placeholder="Confirma tu nueva contraseña"
+                               styleClass="w-full">
+                    </p-password>
+                    <small class="text-error" *ngIf="changePasswordForm.hasError('mismatch') && changePasswordForm.get('confirmPassword')?.touched">
+                        Las contraseñas no coinciden
+                    </small>
+                </div>
+
+                <button pButton 
+                        type="submit"
+                        label="Actualizar Contraseña"
+                        icon="pi pi-check"
+                        [loading]="loading"
+                        [disabled]="!changePasswordForm.valid || loading"
+                        class="submit-button">
+                </button>
+            </form>
+        </div>
+    </div>
+</div>
+
+<p-toast position="top-right"></p-toast>

@@ -3,7 +3,12 @@ import { AppState } from '../../../../app.state';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Store } from '@ngrx/store';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { accionesUpdateRequest } from '../../../state/actions/acciones.actions';
+import { accionesUpdateRequest, accionesUpdateSuccess } from '../../../state/actions/acciones.actions';
+import { incrementarRequest } from '../../../../state/actions/estado.actions';
+import { ofType } from '@ngrx/effects';
+import { MessageService } from 'primeng/api';
+import { Actions } from '@ngrx/effects';
+import { accionesError } from '../../../state/actions/acciones.actions';
 
 @Component({
   selector: 'app-up-acciones',
@@ -14,12 +19,15 @@ export class UpAccionesComponent {
   acciones: any;
   up: FormGroup;
   opcion: any;
+  val: boolean = false;
 
   constructor(
     private route: ActivatedRoute,
     private store: Store<AppState>,
     private fb: FormBuilder,
-    private router: Router
+    private router: Router,
+    private actions$: Actions,
+    private messageService: MessageService
   ) {}
 
   ngOnInit() {
@@ -49,8 +57,33 @@ export class UpAccionesComponent {
       accId: this.acciones.accId,
       optId: this.opcion.optId
     }
-    
+    this.val = true;
+    this.store.dispatch(incrementarRequest({request:1}));
     this.store.dispatch(accionesUpdateRequest({acciones: parametros}));
+
+    this.actions$.pipe(
+      ofType(accionesUpdateSuccess)
+  ).subscribe(() => {    
+    
+     
+      setTimeout(() => {
+          this.val = false;
+          this.router.navigate(['/desk/seguridad/administracion/opciones/acciones/' + btoa(JSON.stringify(this.opcion))]);
+      }, 1000);
+  });
+  // Suscribirse a la acción de error
+  this.actions$.pipe(
+      ofType(accionesError)
+  ).subscribe((error) => {
+      this.val = false;
+      this.messageService.add({
+          severity: 'error',
+          summary: 'Error',
+          detail: 'Error al guardar la acción'
+      });
+  });
+
+
   }
 
   volver() {

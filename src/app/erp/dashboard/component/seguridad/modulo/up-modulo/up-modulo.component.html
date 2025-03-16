@@ -1,0 +1,152 @@
+<div class="grid">
+    <div class="col-12">
+        <p-toast></p-toast>
+        <p-fieldset legend="Actualización de Módulo">
+            <form [formGroup]="upd">
+                <!-- Información básica del módulo -->
+                <div class="grid p-fluid">
+                    <div class="col-12 md:col-6">
+                        <div class="field">
+                            <span class="p-float-label">
+                                <input id="float-input" type="text" pInputText formControlName="descripcion" 
+                                [ngClass]="(upd.controls['descripcion'].hasError('required')) ? 'was-validated' :'is-valid'">
+                                <label for="descripcion">Descripción del Módulo</label>
+                            </span>
+                            <div *ngIf="upd.controls['descripcion'].hasError('required')">
+                                <small class="p-error">Campo obligatorio!</small>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-12 md:col-6">
+                        <div class="field">
+                            <div class="p-inputgroup">
+                                <input pInputText id="icono" type="text" formControlName="icono" readonly placeholder="Seleccione un icono"
+                                    [ngClass]="(upd.controls['icono'].hasError('required')) ? 'was-validated' :'is-valid'">
+                                <span class="p-inputgroup-addon cursor-pointer" (click)="openIconDialog()">
+                                    <i [class]="selectedIcon"></i>
+                                </span>
+                            </div>
+                            <div *ngIf="upd.controls['icono'].hasError('required')">
+                                <small class="p-error">Campo obligatorio!</small>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Asignación de Opciones -->
+                <div class="grid mt-1">
+                    <div class="col-12">
+                        <div class="card-header">
+                            <h5>Opciones del Módulo</h5>
+                            <p>Seleccione las opciones que estarán disponibles en este módulo</p>
+                        </div>
+                        <p-pickList [source]="sourceOpciones" [target]="targetOpciones"
+                            sourceHeader="Opciones Disponibles" targetHeader="Opciones Asignadas"
+                            [showSourceControls]="false" [showTargetControls]="false"
+                            sourceFilterPlaceholder="Buscar opción..."
+                            targetFilterPlaceholder="Buscar opción..."
+                            [dragdrop]="true" [responsive]="true"
+                            [sourceStyle]="{'height':'300px'}" [targetStyle]="{'height':'300px'}"
+                            filterBy="optDes"
+                            [keepSelection]="true"
+                            [trackBy]="trackByOpcionId"
+                            (onMoveToTarget)="onMoveToTarget($event)"
+                            (onMoveToSource)="onMoveToSource($event)">
+                            <ng-template let-opcion pTemplate="item">
+                                <div class="flex align-items-center gap-2">
+                                    <i class="pi pi-bars"></i>
+                                    <div>
+                                        <span class="font-bold">{{opcion.optDes}}</span>
+                                        <div class="text-sm text-500">{{opcion.optLink || 'Sin ruta definida'}}</div>
+                                    </div>
+                                </div>
+                            </ng-template>
+                        </p-pickList>
+                    </div>
+                </div>
+
+                <!-- Asignación de Roles -->
+                <div class="grid mt-1">
+                    <div class="col-12">
+                        <div class="card-header">
+                            <h5>Roles con Acceso</h5>
+                            <p>Seleccione los roles que tendrán acceso a este módulo</p>
+                        </div>
+                        <p-pickList [source]="sourceRoles" [target]="targetRoles"
+                            sourceHeader="Roles Disponibles" targetHeader="Roles Asignados"
+                            [showSourceControls]="false" [showTargetControls]="false"
+                            sourceFilterPlaceholder="Buscar rol..."
+                            targetFilterPlaceholder="Buscar rol..."
+                            [dragdrop]="true" [responsive]="true"
+                            [sourceStyle]="{'height':'300px'}" [targetStyle]="{'height':'300px'}"
+                            filterBy="rolDes"
+                            [keepSelection]="true"
+                            [trackBy]="trackByRolId"
+                            (onMoveToTarget)="onMoveToTarget($event)"
+                            (onMoveToSource)="onMoveToSource($event)">
+                            <ng-template let-rol pTemplate="item">
+                                <div class="flex align-items-center gap-2">
+                                    <i class="pi pi-users"></i>
+                                    <div>
+                                        <span class="font-bold">{{rol.rolDes}}</span>
+                                        <div class="text-sm text-500" *ngIf="rol.created_at">
+                                            Creado: {{rol.created_at | date:'dd/MM/yyyy'}}
+                                        </div>
+                                    </div>
+                                </div>
+                            </ng-template>
+                        </p-pickList>
+                    </div>
+                </div>
+
+                <!-- Botones de acción -->
+                <div class="flex justify-content-end gap-2 mt-4">
+                    <p-button 
+                        icon="pi pi-arrow-left" 
+                        label="Volver"
+                        (onClick)="volver()"
+                        styleClass="p-button-secondary">
+                    </p-button>
+
+                    <p-button 
+                        icon="pi pi-refresh" 
+                        label="Restaurar" 
+                        severity="secondary"
+                        [disabled]="!cambiosPendientes"
+                        (onClick)="restaurarCambios()"
+                        styleClass="p-button-outlined">
+                    </p-button>
+
+                    <p-button 
+                        icon="pi pi-save" 
+                        label="Actualizar" 
+                        severity="success"
+                        [loading]="loading"
+                        [disabled]="!upd.valid || !cambiosPendientes"
+                        (onClick)="actualizarModulo(upd.value.icono, upd.value.descripcion, targetOpciones, targetRoles)">
+                    </p-button>
+                </div>
+            </form>
+        </p-fieldset>
+    </div>
+</div>
+
+<!-- Diálogo de selección de iconos -->
+<p-dialog header="Seleccionar Icono" [(visible)]="showIconDialog" 
+    [modal]="true" [style]="{width: '50vw'}" [maximizable]="true"
+    [closeOnEscape]="true" [dismissableMask]="true">
+    <p-scrollPanel [style]="{width: '100%', height: '400px'}">
+        <div class="grid">
+            @for (icon of primeIcons; track icon) {
+                <div class="col-6 sm:col-4 md:col-3 xl:col-2 text-center">
+                    <div class="icon-item cursor-pointer p-3" 
+                        (click)="selectIcon(icon)" 
+                        [class.selected]="selectedIcon === icon">
+                        <i [class]="icon + ' text-xl'"></i>
+                        <div class="text-xs mt-2">{{icon.replace('pi pi-', '')}}</div>
+                    </div>
+                </div>
+            }
+        </div>
+    </p-scrollPanel>
+</p-dialog>

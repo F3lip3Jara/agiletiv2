@@ -32,6 +32,7 @@
         "@ngrx/effects": "^19.0.0",
         "@ngrx/store": "^19.0.0",
         "@ngrx/store-devtools": "^19.0.0",
+        "angular-user-idle": "^4.0.0",
         "chart.js": "^3.3.2",
         "file-saver": "^2.0.5",
         "framer-motion": "^12.4.10",
