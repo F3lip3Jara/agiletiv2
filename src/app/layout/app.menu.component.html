@@ -3,18 +3,17 @@
     <li class="user-profile mb-4">
         <div class="flex flex-column align-items-center p-3">
             <div class="avatar-container">
-                <p-avatar *ngIf="img.length === 0" 
+                <p-avatar *ngIf="!img || img.length === 0" 
                     label="{{label}}" 
                     size="xlarge" 
                     shape="circle"
                     [style]="{ 'transition': 'all 0.3s ease'}"
                     styleClass="cursor-pointer shadow-4">
                 </p-avatar>
-                <p-avatar *ngIf="img.length > 0" 
+                <p-avatar *ngIf="img && img.length > 0" 
                     image="{{img}}" 
                     size="xlarge" 
                     shape="circle"
-                  
                     styleClass="cursor-pointer shadow-4">
                 </p-avatar>
             </div>

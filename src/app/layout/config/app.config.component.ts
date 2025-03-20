@@ -109,7 +109,6 @@ export class AppConfigComponent {
     ) {}
 
     ngOnInit() {
-       
         const storedConfig = localStorage.getItem(this.getStorageKey());
 
         if(storedConfig){
@@ -119,17 +118,20 @@ export class AppConfigComponent {
             this.selectedThemeVariant = this.themes.find(t => t.name === 'lara')?.variants[0];
         }
         
-        this.nombreUsr = this.UserService.getUser().usuario;        
-        this.rol       = this.UserService.getUser().rol;
-        this.img       = this.UserService.getUser().img;
-       // console.log(this.img);
-        this.nombreEmp = this.UserService.getUser().empNom + ' ' + this.UserService.getUser().empApe;
-        this.empresa   = this.UserService.getUser().empresa;
-       
-        if(this.img.length === 0){
-            this.label = this.nombreUsr.substring(0,1);
+        const user = this.UserService.getUser();
+        if (user) {
+            this.nombreUsr = user.usuario || '';
+            this.rol = user.rol || '';
+            this.img = user.img || '';
+            this.nombreEmp = (user.empNom || '') + ' ' + (user.empApe || '');
+            this.empresa = user.empresa || '';
+            
+            if (!this.img || this.img.length === 0) {
+                this.label = this.nombreUsr ? this.nombreUsr.substring(0,1) : '';
+            }
         }
-        this.token      = this.UserService.getToken();           
+
+        this.token = this.UserService.getToken();
         // Cargar configuración guardada
         this.loadSavedConfig();
      //   this.store.dispatch(getIndicadorRequest());

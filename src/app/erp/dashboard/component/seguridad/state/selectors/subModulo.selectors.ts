@@ -1,5 +1,5 @@
 import { createSelector, createFeatureSelector } from '@ngrx/store';
-import { SubModuloState } from '../reducers/subModulo.reducer';
+import { SubModuloState } from '../reducers/submodulo.reducer';
 
 export const selectState = createFeatureSelector<SubModuloState>('subModulo');
 
@@ -16,4 +16,5 @@ export const selectSubModuloById = createSelector(
     selectState,
     (state, props: { id: number }) => state.subModulo?.find((item) => item.subModuloId === props.id)
 );
+
 

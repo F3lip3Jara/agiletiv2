@@ -1,7 +1,8 @@
 import { createReducer, on } from '@ngrx/store';
-import { SubModulo } from '../interface/subModulo.interface';
-import * as SubModuloActions from '../actions/subModulo.actions';
+import { SubModulo } from '../interface/submodulo.interface';
 import { DataStateSubModulo } from '../../../app.state';
+import { subModuloError } from  '../actions/submodulo.actions';
+import { getSubModuloSuccess } from '../actions/submodulo.actions';
 
 export interface SubModuloState {
     subModulo: SubModulo[];
@@ -17,11 +18,11 @@ export const initialSubModuloState: DataStateSubModulo = {
 
 export const _subModuloReducer = createReducer(
     initialSubModuloState,
-    on(SubModuloActions.getSubModuloSuccess, (state, { subModulo }) => ({
+    on(getSubModuloSuccess, (state, { subModulo }) => ({
         ...state,
         subModulo
     })),
-    on(SubModuloActions.subModuloError, (state, { error }) => ({
+    on(subModuloError, (state, { error }) => ({
         ...state,
         error
     }))

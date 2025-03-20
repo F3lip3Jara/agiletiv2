@@ -45,7 +45,9 @@ import { PickListModule } from 'primeng/picklist';
 import { ScrollPanelModule } from 'primeng/scrollpanel';
 import { UpModuloComponent } from './modulo/up-modulo/up-modulo.component';
 import { SubModuloComponent } from './modulo/sub-modulo/sub-modulo.component';
-import { InsSubModuloComponent } from './modulo/sub-modulo/ins-sub-modulo/ins-sub-modulo.component';
+import { SeguridadComponent } from './seguridad/seguridad.component';
+import { InsSubmoduloComponent } from './modulo/sub-modulo/ins-submodulo/ins-submodulo.component';
+import { UpSubModuloComponent } from './modulo/sub-modulo/up-sub-modulo/up-sub-modulo.component';
 @NgModule({
   declarations: [
     UsuariosComponent,
@@ -58,7 +60,9 @@ import { InsSubModuloComponent } from './modulo/sub-modulo/ins-sub-modulo/ins-su
     InsModuloComponent,
     UpModuloComponent,
     SubModuloComponent,
-    InsSubModuloComponent
+    InsSubmoduloComponent,  
+    UpSubModuloComponent,
+    SeguridadComponent
   ],
   imports: [
     CommonModule,

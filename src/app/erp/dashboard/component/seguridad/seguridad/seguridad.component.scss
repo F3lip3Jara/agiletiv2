@@ -1,0 +1,130 @@
+:root {
+  --primary-color-rgb: 33, 150, 243; /* Color azul primario en formato RGB */
+}
+
+.card {
+  background: var(--surface-card);
+  border-radius: var(--border-radius);
+  padding: 1.5rem;
+  margin-bottom: 1rem;
+  box-shadow: var(--card-shadow);
+}
+
+:host ::ng-deep {
+  .p-card {
+    .p-card-body {
+      padding: 1.25rem;
+    }
+  }
+
+  .p-tag {
+    &.p-tag-success {
+      background: var(--green-100);
+      color: var(--green-900);
+    }
+    &.p-tag-warning {
+      background: var(--yellow-100);
+      color: var(--yellow-900);
+    }
+    &.p-tag-danger {
+      background: var(--red-100);
+      color: var(--red-900);
+    }
+    &.p-tag-info {
+      background: var(--blue-100);
+      color: var(--blue-900);
+    }
+  }
+
+  .p-table {
+    .p-datatable-header {
+      background: transparent;
+      border: none;
+      padding: 0;
+    }
+
+    th {
+      background: transparent;
+      border-width: 0 0 1px 0;
+      color: var(--text-color-secondary);
+      font-weight: 600;
+    }
+
+    td {
+      border-width: 0 0 1px 0;
+      padding: 1rem;
+    }
+  }
+
+  .bg-blue-100 {
+    background-color: var(--blue-100);
+    position: relative;
+    border-radius: var(--border-radius);
+    overflow: hidden;
+    
+    &::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: -100%;
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(
+        90deg,
+        transparent,
+        rgba(59, 130, 246, 0.2),
+        transparent
+      );
+      animation: shimmer 2s ease-in-out infinite;
+    }
+
+    &::after {
+      content: '';
+      position: absolute;
+      inset: 0;
+      border-radius: inherit;
+      padding: 1px;
+      background: linear-gradient(90deg, var(--blue-200), var(--blue-400));
+      -webkit-mask: 
+        linear-gradient(#fff 0 0) content-box, 
+        linear-gradient(#fff 0 0);
+      -webkit-mask-composite: xor;
+      mask-composite: exclude;
+      opacity: 0.5;
+    }
+  }
+
+  @keyframes shimmer {
+    0% {
+      transform: translateX(-100%);
+    }
+    100% {
+      transform: translateX(100%);
+    }
+  }
+}
+
+.text-xl {
+  font-size: 1.5rem;
+}
+
+.text-500 {
+  color: var(--text-color-secondary);
+}
+
+.text-900 {
+  color: var(--text-color);
+}
+
+.text-blue-500 {
+  color: var(--blue-500);
+}
+
+.text-green-500 {
+  color: var(--green-500);
+}
+
+canvas {
+  width: 100% !important;
+  max-height: 300px !important;
+}

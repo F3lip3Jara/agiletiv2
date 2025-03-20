@@ -3,6 +3,7 @@ import { CommonModule } from '@angular/common';
 import { DashBoardRoutingModule } from './dashboard-routing.module';
 import { MenubarModule } from 'primeng/menubar';
 import { HomeComponent } from './home/home.component';
+import { GoogleMapsModule } from '@angular/google-maps';
 
 @NgModule({
   declarations: [
@@ -11,7 +12,8 @@ import { HomeComponent } from './home/home.component';
   imports: [
     CommonModule,
     DashBoardRoutingModule,
-    MenubarModule
+    MenubarModule,
+    GoogleMapsModule
   ]
 })
 export class DashboardModule { }

@@ -1,5 +1,5 @@
 import { createReducer, on } from "@ngrx/store";
-import {  getProductosRequest, getProductoSuccess, productoError} from "../acctions/producto.actions";
+import {  getProductosRequest, getProductoSuccess, productoError} from "../actions/producto.actions";
 import { DataStateProductos } from "../../../app.state";
 
 

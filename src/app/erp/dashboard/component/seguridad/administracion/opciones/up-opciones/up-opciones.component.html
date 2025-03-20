@@ -19,7 +19,7 @@
                         <span class="p-float-label">
                             <input id="float-input" type="text" pInputText formControlName="optDes" 
                             [ngClass]="(up.controls['optDes'].hasError('required'))
-              ? '           was-validated' : 'is-valid'" oninput="this.value = this.value.toUpperCase()">
+              ? '           was-validated' : 'is-valid'" >
                             <label for="float-input" >Descripción</label>
                         </span>
                         <div *ngIf= "up.controls['optDes'].hasError('required')">
@@ -30,7 +30,7 @@
                         <span class="p-float-label">
                             <input id="float-input" type="text" pInputText formControlName="optLink" 
                             [ngClass]="(up.controls['optLink'].hasError('required'))
-              ? '           was-validated' : 'is-valid'" oninput="this.value = this.value.toUpperCase()">
+              ? '           was-validated' : 'is-valid'" >
                             <label for="float-input" >Link</label>
                         </span>
                         <div *ngIf= "up.controls['optLink'].hasError('required')">

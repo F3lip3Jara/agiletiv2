@@ -1,5 +1,4 @@
-
-import { Component, ElementRef, ViewChild } from '@angular/core';
+import { Component, ElementRef, ViewChild, NgZone } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { Store } from '@ngrx/store';
@@ -14,8 +13,14 @@ import { createEmpresaRequest, createEmpresaSuccess, empresaError } from '../../
 import { ofType } from '@ngrx/effects';
 import { MessageService } from 'primeng/api';
 import { Actions } from '@ngrx/effects';
-  
-  
+import { Environment } from 'src/app/erp/service/environment.service';
+
+declare global {
+    interface Window {
+        google: typeof google;
+    }
+}
+
 @Component({
   selector: 'app-ins-empresa',
   templateUrl: './ins-empresa.component.html',
@@ -36,13 +41,21 @@ export class InsEmpresaComponent {
     display: boolean = false;
     label: string = '';
     @ViewChild('inputAvatar', { static: false }) inputAvatar: ElementRef;
+    @ViewChild('map') mapElement!: ElementRef;
+    @ViewChild('empDir') searchElement!: ElementRef;
+    
+    map: google.maps.Map | null = null;
+    marker: any = null;
+    autocomplete: google.maps.places.Autocomplete | null = null;
   
     constructor(
       private store: Store<AppState>,
       private router: Router,
       private fb: FormBuilder,
       private actions$: Actions,
-      private messageService: MessageService
+      private messageService: MessageService,
+      private ngZone: NgZone,
+      private environment: Environment
     ) {}
   
     ngOnInit() {
@@ -73,6 +86,13 @@ export class InsEmpresaComponent {
       ).subscribe(control => {      
         this.label = control.substring(0,1);
       });
+
+      this.loadGoogleMaps();
+    }
+  
+    ngAfterViewInit() {
+        this.initMap();
+        this.initAutocomplete();
     }
   
     validarRut(rut: string) {
@@ -191,6 +211,108 @@ export class InsEmpresaComponent {
         }
     }
 
+    private loadGoogleMaps() {
+        if (typeof google !== 'undefined' && google.maps) {
+            this.initMap();
+            this.initAutocomplete();
+            return;
+        }
 
-   
-  } 
+        const script = document.createElement('script');
+        script.src = this.environment.keygoogle;
+        script.async = true;
+        script.defer = true;
+        script.onload = () => {
+            this.initMap();
+            this.initAutocomplete();
+        };
+        document.body.appendChild(script);
+    }
+
+    private initMap() {
+        if (!this.mapElement?.nativeElement) {
+            setTimeout(() => this.initMap(), 100);
+            return;
+        }
+
+        const defaultLocation = { lat: -33.4489, lng: -70.6693 }; // Santiago, Chile
+        this.map = new google.maps.Map(this.mapElement.nativeElement, {
+            mapId: "8f12f5c66213fef5",
+            center: defaultLocation,
+            zoom: 12,
+            styles: [
+                {
+                    featureType: 'poi',
+                    elementType: 'labels',
+                    stylers: [{ visibility: 'off' }]
+                }
+            ]
+        });
+    }
+
+    private initAutocomplete() {
+        if (!this.searchElement?.nativeElement) {
+            setTimeout(() => this.initAutocomplete(), 100);
+            return;
+        }
+
+        this.autocomplete = new google.maps.places.Autocomplete(this.searchElement.nativeElement, {
+            fields: ['address_components', 'geometry', 'name'],
+            types: ['address'],
+            componentRestrictions: { country: 'CL' }
+        });
+
+        this.autocomplete.addListener('place_changed', () => {
+            const place = this.autocomplete?.getPlace();
+            if (place && place.geometry) {
+                this.ngZone.run(() => {
+                    this.ins.patchValue({
+                        empDir: this.searchElement.nativeElement.value,
+                        empLat: place.geometry.location?.lat().toString() || '',
+                        empLng: place.geometry.location?.lng().toString() || ''
+                    });
+                });
+
+                if (this.map && place.geometry.location) {
+                    const position = {
+                        lat: place.geometry.location.lat(),
+                        lng: place.geometry.location.lng()
+                    };
+
+                    if (this.marker) {
+                        if ('setMap' in this.marker) {
+                            this.marker.setMap(null);
+                        } else {
+                            this.marker.map = null;
+                        }
+                    }
+
+                    if (google.maps.marker && 'AdvancedMarkerElement' in google.maps.marker) {
+                        const markerView = new google.maps.marker.PinElement({
+                            background: '#4285F4',
+                            borderColor: '#FBBC04',
+                            glyphColor: '#FFFFFF'
+                        });
+
+                        this.marker = new google.maps.marker.AdvancedMarkerElement({
+                            map: this.map,
+                            position: position,
+                            title: this.ins.get('empDes')?.value,
+                            content: markerView.element
+                        });
+                    } else {
+                        this.marker = new google.maps.Marker({
+                            position: position,
+                            map: this.map,
+                            title: this.ins.get('empDes')?.value
+                        });
+                    }
+
+                    this.map.setCenter(position);
+                    this.map.setZoom(15);
+                }
+            }
+        });
+    }
+
+} 

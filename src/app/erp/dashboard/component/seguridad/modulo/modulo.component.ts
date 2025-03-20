@@ -50,6 +50,16 @@ export class ModuloComponent implements OnInit, OnDestroy {
           }
         }
       },
+    
+      {
+        label: 'Sub Módulos',
+        icon: 'pi pi-sitemap',
+        command: () => {
+         
+            this.subModulos(this.selectedRow);
+          
+        }
+      },
       {
         label: 'Eliminar',
         icon: 'pi pi-trash',
@@ -59,15 +69,6 @@ export class ModuloComponent implements OnInit, OnDestroy {
           }
         }
       },
-      {
-        label: 'Sub Módulos',
-        icon: 'pi pi-sitemap',
-        command: () => {
-         
-            this.subModulos(this.selectedRow);
-          
-        }
-      }
     ];
   }
 

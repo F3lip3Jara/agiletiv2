@@ -21,16 +21,17 @@ export class AppMenuComponent implements OnInit {
     constructor(public layoutService: LayoutService, private UserService: UsersService) { }
 
     ngOnInit() {
-        this.menu      = this.transformModulesToMenu(this.UserService.getUser().menu);
-        this.model     = this.menu;
-        this.nombreUsr = this.UserService.getUser().usuario;
-        this.img       = this.UserService.getUser().img;
+        const user = this.UserService.getUser();
+        if (user) {
+            this.menu = this.transformModulesToMenu(user.menu || []);
+            this.model = this.menu;
+            this.nombreUsr = user.usuario || '';
+            this.img = user.img || '';
 
-        if(this.img.length === 0){
-            this.label = this.nombreUsr.substring(0,1);
+            if (!this.img || this.img.length === 0) {
+                this.label = this.nombreUsr ? this.nombreUsr.substring(0,1) : '';
+            }
         }
-           
-        
     }
 
      transformModulesToMenu(modules) {

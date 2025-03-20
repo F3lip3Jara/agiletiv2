@@ -1,0 +1,86 @@
+:host {
+    .p-fieldset {
+        background: var(--surface-card);
+        border-radius: 8px;
+        box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    }
+
+    .p-fieldset-legend {
+        background: var(--primary-color);
+        color: var(--primary-color-text);
+        border-radius: 6px 6px 0 0;
+        padding: 1rem;
+        font-weight: 600;
+    }
+
+    .field {
+        margin-bottom: 1.5rem;
+
+        label {
+            display: block;
+            margin-bottom: 0.5rem;
+            color: var(--text-color);
+            font-weight: 500;
+        }
+
+        input, .p-inputnumber, .p-dropdown, .p-calendar {
+            width: 100%;
+        }
+
+        &.w-95 {
+            .p-dropdown, .p-calendar {
+                width: 95%;
+            }
+        }
+
+        .p-selectbutton {
+            .p-button {
+                padding: 0.5rem;
+                min-width: 3rem;
+                border-radius: 4px;
+                margin: 0 0.2rem;
+                
+                &.p-highlight {
+                    background: var(--primary-color);
+                    border-color: var(--primary-color);
+                }
+            }
+        }
+    }
+
+    .map-container {
+        height: 300px;
+        width: 100%;
+        border: 1px solid var(--surface-border);
+        border-radius: 6px;
+        box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    }
+
+    .flex {
+        display: flex;
+    }
+
+    .justify-content-end {
+        justify-content: flex-end;
+    }
+
+    .mt-4 {
+        margin-top: 1.5rem;
+    }
+
+    .mr-2 {
+        margin-right: 0.5rem;
+    }
+
+    .text-xl {
+        font-size: 1.25rem;
+    }
+
+    .font-bold {
+        font-weight: 600;
+    }
+
+    .mb-4 {
+        margin-bottom: 1.5rem;
+    }
+}

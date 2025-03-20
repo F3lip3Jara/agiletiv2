@@ -1,0 +1,46 @@
+export interface Proveedor {
+    "id": number,
+    "rut": string,
+    "nombre": string,
+    "nombre_fantasia": string,
+    "giro": string,
+    "pais": string,
+    "pais_id": number,  
+    "region": string,
+    "region_id": number,
+    "comuna": string,
+    "comuna_id": number,
+    "ciudad": string,
+    "ciudad_id": number,    
+    "direccion": string,
+    "numero": string,
+    "telefono": string,
+    "es_cliente": string,
+    "es_proveedor": string,
+    "mail": string,
+    "activado": string
+}
+
+export const PROVEEDOR_KEYS = [
+    "id",
+    "rut",
+    "nombre",
+    "nombre_fantasia",
+    "giro",
+    "pais",
+    "pais_id",  
+    "region",
+    "region_id",
+    "comuna",
+    "comuna_id",
+    "ciudad",
+    "ciudad_id",
+    "direccion",
+    "numero",
+    "telefono",
+    "es_cliente",
+    "es_proveedor",
+    "mail",
+    "activado"
+    // Agrega más keys según necesites
+];

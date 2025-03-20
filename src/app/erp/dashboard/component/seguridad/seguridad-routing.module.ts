@@ -10,15 +10,53 @@ import { ModuloComponent } from './modulo/modulo.component';
 import { InsModuloComponent } from './modulo/ins-modulo/ins-modulo.component';
 import { UpModuloComponent } from './modulo/up-modulo/up-modulo.component';
 import { SubModuloComponent } from './modulo/sub-modulo/sub-modulo.component';
-import { InsSubModuloComponent } from './modulo/sub-modulo/ins-sub-modulo/ins-sub-modulo.component';
+import { InsSubmoduloComponent } from './modulo/sub-modulo/ins-submodulo/ins-submodulo.component';
+import { SeguridadComponent } from './seguridad/seguridad.component';
+import { UpSubModuloComponent } from './modulo/sub-modulo/up-sub-modulo/up-sub-modulo.component';
+
+interface DashboardSeguridad {
+  estadisticasUsuarios: {
+    totalUsuarios: number;
+    usuariosActivos: number;
+    usuariosInactivos: number;
+    distribucionRoles: Array<{
+      rol: string;
+      cantidad: number;
+    }>;
+  };
+  
+  estadisticasActividad: {
+    sesionesUltimaSemana: number;
+    tiempoPromedioSesion: string;
+    usuariosMasActivos: Array<{
+      usuario: string;
+      sesiones: number;
+    }>;
+  };
+  
+  estadisticasSeguridad: {
+    intentosFallidos: number;
+    ubicacionesAcceso: Array<{
+      ubicacion: string;
+      cantidad: number;
+    }>;
+    erroresPlataforma: number;
+  };
+}
+
 const routes: Routes = [
   {
     path: '',
     data: {
-      title: 'Seguridad',
+      title: 'Seguridad'
+    
+    
     },
     children: [
-    
+      {
+        path: '',
+        component:SeguridadComponent
+      },
       {
         path: 'usuarios',
        component:UsuariosComponent
@@ -60,8 +98,12 @@ const routes: Routes = [
         component:SubModuloComponent
       },
       {
-        path: 'modulos/inssubmodulo/:modulo',
-        component:InsSubModuloComponent
+        path: 'modulos/submodulos/inssubmodulo/:modulo',
+        component:InsSubmoduloComponent
+      },
+      {
+        path: 'modulos/submodulos/upsubmodulo/:submodulo',
+        component:UpSubModuloComponent
       },
         
         { path: 'administracion', loadChildren: () => import('./administracion/administracion.module').then(m => m.AdministracionModule) }

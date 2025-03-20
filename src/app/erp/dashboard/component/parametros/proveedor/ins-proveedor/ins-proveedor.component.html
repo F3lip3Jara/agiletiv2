@@ -1,0 +1,200 @@
+<!-- Contenedor principal con fondo y sombra suave -->
+    <div class="col-12 p-fluid">
+        <p-fieldset legend="Ingreso de Proveedor">
+            <form [formGroup]="ins" (ngSubmit)="guardar()">
+                <div class="grid">
+                    <!-- Información Básica -->
+                    <div class="col-12 md:col-6">
+                        <div class="p-2 border-round">
+                            <h3 class="text-xl font-bold mb-4">Información Básica</h3>
+                            <div class="field mb-5">
+                                <span class="p-float-label">
+                                    <input id="prvRut" type="text" pInputText formControlName="prvRut"
+                                        [ngClass]="(ins.controls['prvRut'].hasError('required')) ? 'was-validated' : 'is-valid'">
+                                    <label for="prvRut">RUT</label>
+                                </span>
+                                <div *ngIf="ins.controls['prvRut'].hasError('required') && ins.controls['prvRut'].touched">
+                                    <span class="text-danger">Campo obligatorio!</span>
+                                </div>
+                            </div>
+                            <div class="field mb-5">
+                                <span class="p-float-label">
+                                    <input id="prvNom" type="text" pInputText formControlName="prvNom"
+                                        [ngClass]="(ins.controls['prvNom'].hasError('required')) ? 'was-validated' : 'is-valid'">
+                                    <label for="prvNom">Nombre</label>
+                                </span>
+                                <div *ngIf="ins.controls['prvNom'].hasError('required') && ins.controls['prvNom'].touched">
+                                    <span class="text-danger">Campo obligatorio!</span>
+                                </div>
+                            </div>
+                            <div class="field mb-5">
+                                <span class="p-float-label">
+                                    <input id="prvNom2" type="text" pInputText formControlName="prvNom2">
+                                    <label for="prvNom2">Nombre Alternativo</label>
+                                </span>
+                            </div>
+                            <div class="field mb-5">
+                                <span class="p-float-label">
+                                    <input id="prvGiro" type="text" pInputText formControlName="prvGiro"
+                                        [ngClass]="(ins.controls['prvGiro'].hasError('required')) ? 'was-validated' : 'is-valid'">
+                                    <label for="prvGiro">Giro</label>
+                                </span>
+                                <div *ngIf="ins.controls['prvGiro'].hasError('required') && ins.controls['prvGiro'].touched">
+                                    <span class="text-danger">Campo obligatorio!</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Información de Contacto -->
+                    <div class="col-12 md:col-6">
+                        <div class="p-2 border-round">
+                            <h3 class="text-xl font-bold mb-4">Información de Contacto</h3>
+                            <div class="field mb-5">
+                                <span class="p-float-label">
+                                    <input id="prvTel" type="text" pInputText formControlName="prvTel"
+                                        [ngClass]="(ins.controls['prvTel'].hasError('required') || ins.controls['prvTel'].hasError('pattern')) ? 'was-validated' : 'is-valid'">
+                                    <label for="prvTel">Teléfono</label>
+                                </span>
+                                <div *ngIf="ins.controls['prvTel'].touched">
+                                    <span class="text-danger" *ngIf="ins.controls['prvTel'].hasError('required')">Campo obligatorio!</span>
+                                    <span class="text-danger" *ngIf="ins.controls['prvTel'].hasError('pattern')">Debe tener 9 dígitos!</span>
+                                </div>
+                            </div>
+                            <div class="field mb-5">
+                                <span class="p-float-label">
+                                    <input id="prvMail" type="email" pInputText formControlName="prvMail"
+                                        [ngClass]="(ins.controls['prvMail'].hasError('required') || ins.controls['prvMail'].hasError('email')) ? 'was-validated' : 'is-valid'">
+                                    <label for="prvMail">Email</label>
+                                </span>
+                                <div *ngIf="ins.controls['prvMail'].touched">
+                                    <span class="text-danger" *ngIf="ins.controls['prvMail'].hasError('required')">Campo obligatorio!</span>
+                                    <span class="text-danger" *ngIf="ins.controls['prvMail'].hasError('email')">Email inválido!</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Ubicación -->
+                    <div class="col-12">
+                        <div class="p-2 border-round">
+                            <h3 class="text-xl font-bold mb-4">Ubicación</h3>
+                            <div class="grid">
+                                <div class="col-12 md:col-6 lg:col-3">
+                                    <div class="field mb-5">
+                                        <span class="p-float-label w-95">
+                                            <p-dropdown [options]="paises" formControlName="paiId"
+                                                optionLabel="label" optionValue="value"
+                                                [ngClass]="(ins.controls['paiId'].hasError('required')) ? 'was-validated' : 'is-valid'">
+                                            </p-dropdown>
+                                            <label for="paiId">País</label>
+                                        </span>
+                                        <div *ngIf="ins.controls['paiId'].hasError('required') && ins.controls['paiId'].touched">
+                                            <span class="text-danger">Campo obligatorio!</span>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="col-12 md:col-6 lg:col-3">
+                                    <div class="field mb-5">
+                                        <span class="p-float-label w-95">
+                                            <p-dropdown [options]="regiones" formControlName="regId"
+                                                optionLabel="label" optionValue="value"
+                                                [ngClass]="(ins.controls['regId'].hasError('required')) ? 'was-validated' : 'is-valid'">
+                                            </p-dropdown>
+                                            <label for="regId">Región</label>
+                                        </span>
+                                        <div *ngIf="ins.controls['regId'].hasError('required') && ins.controls['regId'].touched">
+                                            <span class="text-danger">Campo obligatorio!</span>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="col-12 md:col-6 lg:col-3">
+                                    <div class="field mb-5">
+                                        <span class="p-float-label w-95">
+                                            <p-dropdown [options]="comunas" formControlName="comId"
+                                                optionLabel="label" optionValue="value"
+                                                [ngClass]="(ins.controls['comId'].hasError('required')) ? 'was-validated' : 'is-valid'">
+                                            </p-dropdown>
+                                            <label for="comId">Comuna</label>
+                                        </span>
+                                        <div *ngIf="ins.controls['comId'].hasError('required') && ins.controls['comId'].touched">
+                                            <span class="text-danger">Campo obligatorio!</span>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="col-12 md:col-6 lg:col-3">
+                                    <div class="field mb-5">
+                                        <span class="p-float-label w-95">
+                                            <p-dropdown [options]="ciudades" formControlName="ciuId"
+                                                optionLabel="label" optionValue="value"
+                                                [ngClass]="(ins.controls['ciuId'].hasError('required')) ? 'was-validated' : 'is-valid'">
+                                            </p-dropdown>
+                                            <label for="ciuId">Ciudad</label>
+                                        </span>
+                                        <div *ngIf="ins.controls['ciuId'].hasError('required') && ins.controls['ciuId'].touched">
+                                            <span class="text-danger">Campo obligatorio!</span>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="col-12">
+                                    <div class="field mb-5">
+                                        <label for="prvDir">Dirección</label>
+                                        <input #prvDir id="prvDir" type="text" pInputText formControlName="prvDir" class="w-full" placeholder="Ingrese una dirección">
+                                    </div>
+                                    <div class="map-container">
+                                        <div #map style="width: 100%; height: 300px;" class="border-round"></div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Tipo -->
+                    <div class="col-12">
+                        <div class="p-2 border-round">
+                            <h3 class="text-xl font-bold mb-4">Tipo</h3>
+                            <div class="grid">
+                                <div class="col-12 md:col-6">
+                                    <div class="field-checkbox">
+                                        <p-checkbox formControlName="prvCli" [binary]="true" inputId="prvCli"></p-checkbox>
+                                        <label for="prvCli" class="ml-2">Es Cliente</label>
+                                    </div>
+                                </div>
+                                <div class="col-12 md:col-6">
+                                    <div class="field-checkbox">
+                                        <p-checkbox formControlName="prvPrv" [binary]="true" inputId="prvPrv"></p-checkbox>
+                                        <label for="prvPrv" class="ml-2">Es Proveedor</label>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Botones de Acción -->
+                <div class="flex flex-wrap gap-2 align-items-center mt-3">
+                    <p-button type="submit" label="Guardar" icon="pi pi-check" size="small" *ngIf="ins.valid && prvDir.value.length > 0"
+                        [loading]="val"/>
+                    <p-button label="Volver" icon="pi pi-arrow-down" size="small" (click)="onCancel()" severity="secondary"/>
+                </div>
+            </form>
+        </p-fieldset>
+    </div>
+
+<style>
+:host {
+  
+    .map-container {
+        height: 300px;
+        width: 100%;
+        border: 1px solid var(--surface-border);
+        border-radius: 6px;
+        box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    }
+
+}
+</style>

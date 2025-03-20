@@ -625,6 +625,7 @@ html {
         
         .p-inputtext{
           font-size:10px;
+          max-height: 30px;
         }
         .p-button {
           width: 30px;
@@ -666,3 +667,19 @@ html {
   }
 }
 // ... existing code ...
+
+
+.p-fieldset {
+  background: var(--surface-card);
+  border-radius: 8px;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+.p-fieldset-legend {
+  background: var(--primary-color);
+  color: var(--primary-color-text);
+  border-radius: 6px 6px 0 0;
+  padding: 1rem;
+  font-weight: 400;
+  opacity: 0.7;
+}

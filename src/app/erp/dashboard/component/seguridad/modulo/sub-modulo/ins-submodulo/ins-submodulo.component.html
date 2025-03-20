@@ -1,0 +1,107 @@
+<div class="grid">
+    <div class="col-12">
+        <p-toast></p-toast>
+        <p-fieldset legend="Ingreso de Sub-Módulo">
+            <form [formGroup]="ins">
+                <!-- Información básica del submódulo -->
+                <div class="grid p-fluid">
+                    <div class="col-12 md:col-6">
+                        <div class="field">
+                            <span class="p-float-label">
+                                <input id="float-input" type="text" pInputText formControlName="molsDes" 
+                                [ngClass]="(ins.controls['molsDes'].hasError('required')) ? 'was-validated' :'is-valid'">
+                                <label for="molsDes">Descripción del Sub-Módulo</label>
+                            </span>
+                            <div *ngIf="ins.controls['molsDes'].hasError('required')">
+                                <small class="p-error">Campo obligatorio!</small>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-12 md:col-6">
+                        <div class="field">
+                            <div class="p-inputgroup">
+                                <input pInputText id="modulo-input" type="text" [value]="modulo?.molDes" readonly>
+                                <span class="p-inputgroup-addon">
+                                    <i [class]="modulo?.molIcon"></i>
+                                </span>
+                            </div>
+                            <label for="modulo">Módulo Principal</label>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Asignación de Opciones -->
+                <div class="grid mt-1">
+                    <div class="col-12">
+                        <div class="card-header">
+                            <h5>Opciones del Sub-Módulo</h5>
+                            <p>Seleccione las opciones que estarán disponibles en este sub-módulo</p>
+                        </div>
+                        <p-pickList #pl 
+                            [source]="sourceOpciones" 
+                            [target]="targetOpciones"
+                            sourceHeader="Opciones Disponibles" 
+                            targetHeader="Opciones Asignadas"
+                            [showSourceControls]="false" 
+                            [showTargetControls]="false"
+                            [showSourceFilter]="true"
+                            [showTargetFilter]="true"
+                            [metaKeySelection]="false"
+                            [dragdrop]="true"
+                            [responsive]="true"
+                            [sourceStyle]="{'height':'300px'}" 
+                            [targetStyle]="{'height':'300px'}"
+                            filterBy="optDes"
+                            sourceFilterPlaceholder="Buscar opción..."
+                            targetFilterPlaceholder="Buscar opción..."
+                            [trackBy]="trackByOpcionId"
+                            (onMoveToTarget)="onMoveToTarget($event)"
+                            (onMoveToSource)="onMoveToSource($event)"
+                            (onMoveAllToTarget)="onMoveAllToTarget($event)"
+                            (onMoveAllToSource)="onMoveAllToSource($event)">
+                            <ng-template let-opcion pTemplate="item">
+                                <div class="flex align-items-center gap-2 cursor-move">
+                                    <i class="pi pi-bars"></i>
+                                    <div class="flex-grow-1">
+                                        <div class="flex align-items-center justify-content-between">
+                                            <span class="font-bold">{{opcion.optDes}}</span>
+                                        </div>
+                                        <div class="text-sm text-500">Opción de sistema</div>
+                                    </div>
+                                </div>
+                            </ng-template>
+                        </p-pickList>
+                    </div>
+                </div>
+
+                <!-- Botones de acción -->
+                <div class="flex justify-content-end gap-2 mt-4">
+                    <p-button 
+                        icon="pi pi-arrow-left" 
+                        label="Volver"
+                        (onClick)="volver()"
+                        styleClass="p-button-secondary">
+                    </p-button>
+
+                    <p-button 
+                        icon="pi pi-refresh" 
+                        label="Restaurar" 
+                        severity="secondary"
+                        [disabled]="!cambiosPendientes"
+                        (onClick)="restaurarCambios()"
+                        styleClass="p-button-outlined">
+                    </p-button>
+
+                    <p-button 
+                        icon="pi pi-save" 
+                        label="Guardar" 
+                        severity="success"
+                        [loading]="loading"
+                        [disabled]="!ins.valid || !cambiosPendientes"
+                        (onClick)="guardarSubModulo(ins.value.molsDes, targetOpciones)">
+                    </p-button>
+                </div>
+            </form>
+        </p-fieldset>
+    </div>
+</div>

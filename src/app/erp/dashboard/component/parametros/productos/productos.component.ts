@@ -3,7 +3,7 @@ import {  selectProductosPending } from '../state/selectors/producto.selectors';
 import { Store } from '@ngrx/store';
 import { Observable } from 'rxjs';
 import { Producto, PRODUCTOS_KEYS } from '../state/interface/producto.interface';
-import { getProductosRequest } from '../state/acctions/producto.actions';
+import { getProductosRequest } from '../state/actions/producto.actions';
 import { Table } from 'primeng/table';
 import { AppState } from '../../app.state';
 

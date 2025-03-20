@@ -109,10 +109,13 @@ export class AppTopBarComponent {
 
     ngOnInit() {
         // Obtener información del usuario
-        this.nombreUsr               = this.userService.getUser().usuario;
-        this.img                     = this.userService.getUser().img;
-        this.empresaLetra            = this.userService.getUser().empresa.substring(0,1);
-        this.empresaNombreFormateado = this.userService.getUser().empresa.replace(/-/g, ' ');
+        const user = this.userService.getUser();
+        if (user) {
+            this.nombreUsr = user.usuario || '';
+            this.img = user.img || '';
+            this.empresaLetra = user.empresa ? user.empresa.substring(0,1) : '';
+            this.empresaNombreFormateado = user.empresa ? user.empresa.replace(/-/g, ' ') : '';
+        }
 
         // Suscripción al estado de la aplicación
         this.store.select(selectEstado).subscribe((estado) => {
@@ -131,8 +134,8 @@ export class AppTopBarComponent {
             this.isDarkMode = this.layoutService.config().colorScheme === 'dark';
         }
         
-        if(this.img.length === 0) {
-            this.label = this.nombreUsr.substring(0,1);
+        if(!this.img || this.img.length === 0) {
+            this.label = this.nombreUsr ? this.nombreUsr.substring(0,1) : '';
         }
 
         // Inicializar el estado del tema
@@ -223,12 +226,13 @@ export class AppTopBarComponent {
 
         if (currentThemeFamily) {
             // Buscar la variante oscura correspondiente
-            const darkVariant = currentThemeFamily.variants.find(variant =>             
+            const darkVariant : any = currentThemeFamily.variants.find(variant =>             
               variant.isDark == this.isDarkMode && variant.value.split('-').pop() == lastWord
             );    
-
-            if (darkVariant) {
+                       
+            if ( darkVariant !== undefined ) {
                 // Actualizar la configuración con el tema oscuro correspondiente
+                          
                 this.layoutService.config.update((config) => ({
                     ...config,
                     theme: darkVariant.value,
@@ -237,6 +241,17 @@ export class AppTopBarComponent {
                 // Guardar la configuración
                 this.saveThemeConfig(darkVariant.value);
                 this.layoutService.disparador2.emit(true);
+            }else{
+             
+                this.messageService.add({
+                    key: 'notification-toast',
+                    severity: 'info',
+                    summary: 'Nueva notificación',
+                    detail: 'No se encontró un tema oscuro correspondiente',
+                    life: 5000,
+                    styleClass: 'notification-toast'
+                });
+                this.isDarkMode = false;
             }
         }
     }

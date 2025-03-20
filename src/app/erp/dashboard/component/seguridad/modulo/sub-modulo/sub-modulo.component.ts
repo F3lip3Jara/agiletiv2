@@ -1,6 +1,6 @@
 import { Component, OnInit, OnDestroy, ViewChild } from '@angular/core';
 import { Subscription, Observable } from 'rxjs';
-import { map } from 'rxjs/operators';
+import { map, take } from 'rxjs/operators';
 import { Store } from '@ngrx/store';
 import { Router, ActivatedRoute } from '@angular/router';
 import { incrementarRequest } from '../../../state/actions/estado.actions';
@@ -9,7 +9,11 @@ import { Table } from 'primeng/table';
 import { MenuItem } from 'primeng/api';
 import { ExcelService } from 'src/app/erp/dashboard/service/excel.service';
 import { MessageService } from 'primeng/api';
-
+import { deleteSubModuloRequest, deleteSubModuloSuccess, getSubModuloRequest } from '../../state/actions/submodulo.actions';
+import { selectSubModulo } from '../../state/selectors/submodulo.selectors';
+import { ofType } from '@ngrx/effects';
+import { Actions } from '@ngrx/effects';
+import { SubModulo } from '../../state/interface/submodulo.interface';
 @Component({
   selector: 'app-sub-modulo',
   templateUrl: './sub-modulo.component.html',
@@ -32,11 +36,12 @@ export class SubModuloComponent {
     private router: Router,
     private excelService: ExcelService,
     private messageService: MessageService,
-    private route: ActivatedRoute
+    private route: ActivatedRoute,  
+    private actions$: Actions
   ) {
- /*   this.data$ = this.store.select(selectsub-modulo).pipe(
-      map(sub-modulo => Array.isArray(sub-modulo) ? sub-modulo : [])
-    );*/
+   this.data$ = this.store.select(selectSubModulo).pipe(
+      map(subModulo => Array.isArray(subModulo) ? subModulo : [])
+    );  
 
     this.actionItems = [
       {
@@ -44,7 +49,7 @@ export class SubModuloComponent {
         icon: 'pi pi-pencil',
         command: () => {
           if (this.selectedRow) {
-        //    this.edit(this.selectedRow);
+            this.edit(this.selectedRow);
           }
         }
       },
@@ -65,22 +70,23 @@ export class SubModuloComponent {
       this.modulo = JSON.parse(atob(params['modulo']));
       
     });
-    /*this.store.dispatch(incrementarRequest({request: 1}));
-    this.store.dispatch(getsub-moduloRequest());
+    this.store.dispatch(incrementarRequest({request: 1}));
+    this.store.dispatch(getSubModuloRequest({modulo: this.modulo}));
     this.subscription.add(
-      this.data$.subscribe(sub-modulo => {
-        this.data = sub-modulo || [];
+      this.data$.subscribe(subModulo => {
+        this.data = subModulo || [];
       })
-    );*/
+    );
   }
 
   openNew() {  
-    this.router.navigate(['desk/seguridad/sub-modulo/inssub-modulo']);
+    const dato = btoa(JSON.stringify(this.modulo));    
+    this.router.navigate(['desk/seguridad/modulos/submodulos/inssubmodulo/'+ dato]);
   }
 
   edit(submodulo: any) {  
-   // const dato = btoa(JSON.stringify(sub-modulo));    
-   /// this.router.navigate(['desk/seguridad/sub-modulo/upsub-modulo/'+ dato]);
+    const dato = btoa(JSON.stringify({submodulo: submodulo, modulo: this.modulo}));    
+    this.router.navigate(['desk/seguridad/modulos/submodulos/upsubmodulo/'+ dato]);
   }
 
   onGlobalFilter(table: Table, event: Event) {
@@ -89,7 +95,24 @@ export class SubModuloComponent {
 
   del(data: any) {
     this.store.dispatch(incrementarRequest({request: 2}));
-   // this.store.dispatch(deletesub-moduloRequest({sub-modulo: data}));
+  
+    const submodulo: SubModulo = {
+      molsId: data.molsId,
+      molId: data.molId,
+      molsDes: data.molsDes,
+      empId: data.empId,
+      opt: data.opt,
+      modulo: this.modulo
+    }; 
+    this.store.dispatch(deleteSubModuloRequest({submodulo: submodulo}));
+    this.actions$.pipe(
+      ofType(deleteSubModuloSuccess),
+      take(1)
+    ).subscribe((resp) => {
+   
+      this.store.dispatch(getSubModuloRequest({modulo: this.modulo}));
+    });
+    
   }
 
   ngOnDestroy(): void {
@@ -102,7 +125,7 @@ export class SubModuloComponent {
 
   refresh() {
     this.store.dispatch(incrementarRequest({request: 1}));
-    //this.store.dispatch(getsub-moduloRequest());
+    this.store.dispatch(getSubModuloRequest({modulo: this.modulo}));
   }
 
   onActionClick(item: any) {

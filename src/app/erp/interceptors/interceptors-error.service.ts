@@ -25,6 +25,9 @@ private excludedUrl  : any [] = [
 
 
 ]; 
+private excludedLoad : any [] = [
+  'regPai'
+]; 
 
 constructor(   private router : Router, private store: Store ) {
    
@@ -32,47 +35,40 @@ constructor(   private router : Router, private store: Store ) {
 
 
   intercept(req: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
-   
    let count = 0;   
-   this.excludedUrl.forEach((element : any) => { 
+
+   this.excludedLoad.forEach((element : any) => { 
     if (req.url === element.url) {
        count ++;
     }
    });
 
-   if(count > 0 ){  
-      return next.handle(req);  
-   }else{
 
     const cloneReq = req.clone({ url: this.servidor + req.url });
     return next.handle(cloneReq).pipe(
       tap(event => {
-        this.handleHttpEvent(event);
-        let altura = document.getElementsByTagName('body')[0].offsetHeight + 100;
+        this.handleHttpEvent(event , count);
+        let altura = document.getElementsByTagName('body')[0].offsetHeight + 70;
         this.store.dispatch(setAltura({ altura: altura }));
       }),
       catchError(error => this.handleError(error))
     );
-
-    
-
-   }
-  
-
    
   }
   
-  private handleHttpEvent(event: HttpEvent<any>): void {
+  private handleHttpEvent(event: HttpEvent<any> , count: number): void {
     if (event.type === HttpEventType.DownloadProgress || event.type === HttpEventType.Response) {
     }
     if (event instanceof HttpResponse) {
-      this.handleHttpResponse(event);
+      this.handleHttpResponse(event , count);
     }
   }
   
-  private handleHttpResponse(response: HttpResponse<any>): void {
+  private handleHttpResponse(response: HttpResponse<any> , count: number): void {
+   
+    if(count === 0 ){
     this.store.dispatch(decrementarRequest());
-    
+    }
     switch (response.status) {
       case 200:      
         break;

@@ -3,8 +3,9 @@ export interface SubModulo {
     molId: number;
     molsDes: string;
     empId: number;
-    created_at: string;
-    updated_at: string;
+    opt:any,
+    modulo:any
+   
 }
 
 export const _KEYS = [

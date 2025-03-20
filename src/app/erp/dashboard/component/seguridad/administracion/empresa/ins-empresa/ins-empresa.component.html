@@ -31,7 +31,7 @@
                     <div class="col-12 mb-2 lg:col-6 lg:mb-0  p-3">
                         <span class="p-float-label">
                             <input id="float-input" type="text" pInputText formControlName="empDes" 
-                            [ngClass]="(ins.controls['empDes'].hasError('required')  ) ? 'was-validated' :'is-valid'">
+                            [ngClass]="(ins.controls['empDes'].hasError('required')) ? 'was-validated' :'is-valid'">
                             <label for="empDes">Nombre</label>
                         </span>
                         <div *ngIf="ins.controls['empDes'].hasError('required')">
@@ -42,7 +42,7 @@
                     <div class="col-12 mb-2 lg:col-6 lg:mb-0  p-3">
                         <span class="p-float-label">
                             <input id="float-input" type="text" pInputText formControlName="empFono" 
-                            [ngClass]="(ins.controls['empFono'].hasError('required')  ) ? 'was-validated' :'is-valid'"> 
+                            [ngClass]="(ins.controls['empFono'].hasError('required')) ? 'was-validated' :'is-valid'"> 
                             <label for="empFono">Teléfono</label>
                         </span>
                         <div *ngIf="ins.controls['empFono'].hasError('required')">
@@ -53,7 +53,7 @@
                     <div class="col-12 md:col-6 mb-2 lg:mb-0 p-3">
                         <span class="p-float-label">
                             <input id="empGiro" type="text" pInputText formControlName="empGiro"
-                                   [ngClass]="(ins.controls['empGiro'].hasError('required')  ) ? 'was-validated' :'is-valid'">
+                                   [ngClass]="(ins.controls['empGiro'].hasError('required')) ? 'was-validated' :'is-valid'">
                             <label for="empGiro">Giro Comercial</label>
                         </span>
                         <div *ngIf="ins.controls['empGiro'].hasError('required')">
@@ -61,14 +61,26 @@
                         </div>
                     </div>
 
-                    <div class="col-12 md:col-6 mb-2 lg:mb-0 p-3">
-                        <span class="p-float-label">
-                            <input id="empDir" type="text" pInputText formControlName="empDir"
-                                   [ngClass]="(ins.controls['empDir'].hasError('required')  ) ? 'was-validated' :'is-valid'">
-                            <label for="empDir">Dirección</label>
-                        </span>
-                        <div *ngIf="ins.controls['empDir'].hasError('required')">
-                            <small class="p-error">Campo obligatorio!</small>
+                    <div class="col-12 mt-4">
+                        <div class="p-2 border-round">
+                              <div class="grid">
+                                <div class="col-12">
+                                    <div class="field mb-5">
+                                        <span class="p-float-label">
+                                            <input #empDir id="empDir" type="text" pInputText formControlName="empDir"
+                                                class="w-full" placeholder="Buscar dirección"
+                                                [ngClass]="(ins.controls['empDir'].hasError('required')) ? 'was-validated' :'is-valid'">
+                                            <label for="empDir">Dirección</label>
+                                        </span>
+                                        <div *ngIf="ins.controls['empDir'].hasError('required')">
+                                            <small class="p-error">Campo obligatorio!</small>
+                                        </div>
+                                    </div>
+                                    <div class="map-container mb-4">
+                                        <div #map style="width: 100%; height: 300px;" class="border-round"></div>
+                                    </div>
+                                </div>
+                            </div>
                         </div>
                     </div>
 
@@ -128,3 +140,15 @@
         </p-footer>
     </p-dialog>
 </div> 
+
+<style>
+:host {
+    .map-container {
+        height: 300px;
+        width: 100%;
+        border: 1px solid var(--surface-border);
+        border-radius: 6px;
+        box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    }
+}
+</style> 

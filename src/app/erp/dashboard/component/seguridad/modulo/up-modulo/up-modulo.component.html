@@ -55,9 +55,12 @@
                             <ng-template let-opcion pTemplate="item">
                                 <div class="flex align-items-center gap-2">
                                     <i class="pi pi-bars"></i>
-                                    <div>
-                                        <span class="font-bold">{{opcion.optDes}}</span>
-                                        <div class="text-sm text-500">{{opcion.optLink || 'Sin ruta definida'}}</div>
+                                    <div class="flex-grow-1">
+                                        <div class="flex align-items-center justify-content-between">
+                                            <span class="font-bold">{{opcion.optDes}}</span>
+                                             <p-tag *ngIf="opcion.isSubmodulo" severity="info" value="Submódulo" [rounded]="true"></p-tag>
+                                        </div>
+                                        <div class="text-sm text-500">Opción de sistema</div>
                                     </div>
                                 </div>
                             </ng-template>

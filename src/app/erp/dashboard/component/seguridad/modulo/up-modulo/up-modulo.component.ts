@@ -37,7 +37,8 @@ export class UpModuloComponent implements OnInit {
   loading: boolean = false;
   cambiosPendientes: boolean = false;
   moduloId: number = 0;
-   modulo: any;
+  modulo: any;
+  submodulos: any[] = [];
   
   // Lista de iconos de PrimeIcons
   primeIcons: string[] = [
@@ -75,7 +76,6 @@ export class UpModuloComponent implements OnInit {
     // Obtener el ID del módulo de los parámetros de la ruta
     this.route.params.subscribe(params => {
       this.modulo = JSON.parse(atob(params['modulo']));
-      console.log(this.modulo);
       this.moduloId = this.modulo.molId;
       this.upd.patchValue({
         descripcion: this.modulo.molDes,
@@ -87,10 +87,20 @@ export class UpModuloComponent implements OnInit {
     });
 
     // Suscribirse a la respuesta del módulo
-   this.actions$.pipe(
+    this.actions$.pipe(
       ofType(getOpcionesModuloByIdSuccess)
     ).subscribe((response : any) => {
       this.targetOpciones = [...response.opciones.opt];
+      this.submodulos = response.opciones.sub || [];
+      
+      // Agregar submódulos a las opciones target
+      if (this.submodulos.length > 0) {
+        const submodulosComoOpciones = this.submodulos.map(sub => ({
+          optDes: sub.molsDes,
+          isSubmodulo: true
+        }));
+        this.targetOpciones = [...this.targetOpciones, ...submodulosComoOpciones];
+      }
     });
 
     this.actions$.pipe(
@@ -152,6 +162,35 @@ export class UpModuloComponent implements OnInit {
 
   onMoveToSource(event: any) {
     if (event.items) {
+      // Verificar si hay submódulos intentando moverse
+      const hasSubmodulos = event.items.some((item: any) => this.isSubmodulo(item));
+      
+      if (hasSubmodulos) {
+        // Mostrar mensaje de advertencia
+        this.messageService.add({
+          severity: 'warn',
+          summary: 'Advertencia',
+          detail: 'Los submódulos no pueden ser desasignados desde aquí'
+        });
+        
+        // Revertir el movimiento manteniendo el estado actual
+        if (event.items[0].optDes) {
+          // Filtrar los submódulos que se intentaron mover
+          const submodulosAMantener = event.items.filter((item: any) => this.isSubmodulo(item));
+          
+          // Eliminar los submódulos del sourceOpciones (lista de desasignados)
+          this.sourceOpciones = this.sourceOpciones.filter(opt => 
+            !submodulosAMantener.some(sub => sub.optDes === opt.optDes)
+          );
+          
+          // Asegurarse que los submódulos permanezcan en targetOpciones
+          const opcionesNoSubmodulos = this.targetOpciones.filter(opt => !this.isSubmodulo(opt));
+          this.targetOpciones = [...opcionesNoSubmodulos, ...submodulosAMantener];
+        }
+        return;
+      }
+      
+      // Si no hay submódulos, proceder normalmente
       this.cambiosPendientes = true;
       if (event.items[0].optDes) {
         this.targetOpciones = [...this.targetOpciones];
@@ -182,20 +221,23 @@ export class UpModuloComponent implements OnInit {
   actualizarModulo(molIcon: string, molDes: string, opt: any[], rol: any[]) {
     this.loading = true;
     
+    // Filtrar submódulos antes de enviar
+    const opcionesFiltradas = opt.filter(opcion => !this.isSubmodulo(opcion));
+    
     let modulo: any = {
       molId: this.moduloId,
-      opt: opt,
+      opt: opcionesFiltradas,
       molDes: molDes,
       molIcon: molIcon,
       ok: 'S',
       roles: rol
     }
 
-   this.store.dispatch(updateModuloRequest({modulo: modulo}));
-  this.actions$.pipe(
-     ofType(updateModuloSuccess)
-   ).subscribe(response => {
-    setTimeout(() => {
+    this.store.dispatch(updateModuloRequest({modulo: modulo}));
+    this.actions$.pipe(
+      ofType(updateModuloSuccess)
+    ).subscribe(response => {
+      setTimeout(() => {
         this.loading = false;
         this.volver();
       }, 1000);
@@ -208,5 +250,9 @@ export class UpModuloComponent implements OnInit {
     this.store.dispatch(getOpcionesNoAsignadasModuloByIdRequest({ id: this.moduloId }));
     this.store.dispatch(getModuloRolByIdRequest({ id: this.moduloId }));
     this.store.dispatch(getOpcionesModuloByIdRequest({ id: this.moduloId }));
+  }
+
+  isSubmodulo(opcion: any): boolean {
+    return opcion.isSubmodulo === true;
   }
 }

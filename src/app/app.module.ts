@@ -25,6 +25,20 @@ import { MensajeEffects } from './erp/dashboard/component/state/effects/mensaje.
 import { EmpresaEffects } from './erp/dashboard/component/seguridad/state/effects/empresa.effects';
 import { UserIdleConfig } from 'angular-user-idle';
 import { ModuloEffects } from './erp/dashboard/component/seguridad/state/effects/modulo.effects';
+import { SubModuloEffects } from './erp/dashboard/component/seguridad/state/effects/submodulo.effects';
+import { MonedaEffects } from './erp/dashboard/component/parametros/state/effects/moneda.effects';
+import { CiudadEffects } from './erp/dashboard/component/parametros/state/effects/ciudad.effects';
+import { RegionEffects } from './erp/dashboard/component/parametros/state/effects/region.effects';
+import { CentroEffects } from './erp/dashboard/component/parametros/state/effects/centro.effects';
+import { GrupoEffects } from './erp/dashboard/component/parametros/state/effects/grupo.effects';
+import { SubgrupoEffects } from './erp/dashboard/component/parametros/state/effects/subgrupo.effects';
+import { ColorEffects } from './erp/dashboard/component/parametros/state/effects/color.effects';
+import { PaisEffects } from './erp/dashboard/component/parametros/state/effects/pais.effects';
+import { ComunaEffects } from './erp/dashboard/component/parametros/state/effects/comuna.effects';
+import { UnidadEffects } from './erp/dashboard/component/parametros/state/effects/unidad.effects';
+import { ClaseEffects } from './erp/dashboard/component/parametros/state/effects/clase.effects';
+import { TipospagosEffects } from './erp/dashboard/component/parametros/state/effects/tipospagos.effects';
+import { ProveedorEffects } from './erp/dashboard/component/parametros/state/effects/proveedor.effects';
 @NgModule({
     declarations: [AppComponent, NotfoundComponent],
     imports: [  AppRoutingModule, 
@@ -38,7 +52,21 @@ import { ModuloEffects } from './erp/dashboard/component/seguridad/state/effects
                     IndicadorEffects,
                     MensajeEffects,
                     EmpresaEffects,
-                    ModuloEffects
+                    ModuloEffects,
+                    SubModuloEffects,
+                    MonedaEffects,
+                    CiudadEffects,
+                    RegionEffects,
+                    CentroEffects,
+                    GrupoEffects,
+                    SubgrupoEffects,
+                    ColorEffects,
+                    PaisEffects,
+                    ComunaEffects,
+                    UnidadEffects,
+                    ClaseEffects,
+                    TipospagosEffects,
+                    ProveedorEffects
                 ]),
                 StoreDevtoolsModule.instrument(),
                 FontAwesomeModule,

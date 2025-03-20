@@ -3,7 +3,7 @@ import { Actions, createEffect, ofType } from '@ngrx/effects';
 import { of } from 'rxjs';
 import { catchError, exhaustMap, map, mergeMap } from 'rxjs/operators';
 import { ProductoService } from '../service/producto.services'; // Ajusta la ruta
-import {  getProductoSuccess, productoError, getProductosRequest } from '../acctions/producto.actions';
+import {  getProductoSuccess, productoError, getProductosRequest } from '../actions/producto.actions';
 
 @Injectable()
 export class ProductoEffects {
