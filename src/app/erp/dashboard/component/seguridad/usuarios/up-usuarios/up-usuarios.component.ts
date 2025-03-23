@@ -132,7 +132,7 @@ export class UpUsuariosComponent {
             filter(user => !!user), // Filtra para asegurarte de que hay un usuario
             take(1) // Se suscribe solo una vez
           ).subscribe((user) => {
-            console.log(user);
+          
             if(user.emploAvatar !== null){
               this.avatar = user.emploAvatar;         
             }else{

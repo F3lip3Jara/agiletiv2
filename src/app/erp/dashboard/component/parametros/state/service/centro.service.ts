@@ -35,26 +35,21 @@ export class CentroServices {
     );
   }
 
- /* createCentro(centro: any): Observable<any> {
-    let centro = {
-      centroDes: centro
-    }
+  createCentro(centro: any): Observable<any> {
+   
+    console.log(centro);
+    
     return this.rest.post('insCentro', this.token, centro).pipe(
       map((data: any) => data)
     );
   }
 
   updateCentro(centro: any): Observable<any> {
- 
+    console.log(centro.cenHoraApertura);
+    console.log(centro.cenHoraCierre);
     return this.rest.post('updCentro', this.token,centro).pipe(
       map((data: any) => data)
     );  
   }
 
-  deleteCentro(centro: any): Observable<any> {
-
-    return this.rest.post('delCentro', this.token, centro).pipe(
-      map((data: any) => data)
-    );  
-  }*/
 }

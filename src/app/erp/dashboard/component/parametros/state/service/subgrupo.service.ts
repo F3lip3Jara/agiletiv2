@@ -18,11 +18,12 @@ export class SubgrupoServices {
               private rest    : RestService,
               private userSer : UsersService,
               private store   : Store<AppState>
-  ) {  }
+  ) { 
+    this.token = this.userSer.getToken();
+   }
 
    getSubgrupo(): Observable<any> {
-    this.token = this.userSer.getToken();
-    
+       
        return this.rest.get('trabSubGrupo', this.token, this.parametros).pipe(
         map(
           (data: any) => data
@@ -30,24 +31,21 @@ export class SubgrupoServices {
       ) 
     );
   }
-/*
-  createSubgrupo(subgrupo: any): Observable<any> {
-    let subgrupo = {
-      subgrupoDes: subgrupo
-    }
-    return this.rest.post('insSubgrupo', this.token, subgrupo).pipe(
+
+  createSubgrupo(subgrupo: any): Observable<any> {    
+    return this.rest.post('insSubGrupo', this.token, subgrupo).pipe(
       map((data: any) => data)
     );
   }
 
   updateSubgrupo(subgrupo: any): Observable<any> {
  
-    return this.rest.post('updSubgrupo', this.token,subgrupo).pipe(
+    return this.rest.post('updSubGrupo', this.token,subgrupo).pipe(
       map((data: any) => data)
     );  
   }
 
-  deleteSubgrupo(subgrupo: any): Observable<any> {
+/*  deleteSubgrupo(subgrupo: any): Observable<any> {
 
     return this.rest.post('delSubgrupo', this.token, subgrupo).pipe(
       map((data: any) => data)

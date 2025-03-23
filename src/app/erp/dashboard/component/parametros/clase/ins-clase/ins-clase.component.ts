@@ -10,7 +10,8 @@ import { Router } from '@angular/router';
 import { incrementarRequest } from '../../../state/actions/estado.actions';
 import { ofType } from '@ngrx/effects';
 import { Actions } from '@ngrx/effects';
-
+import { Clase } from '../../state/interface/clase.interface';
+import { createClaseRequest, createClaseSuccess } from '../../state/actions/clase.actions';
 @Component({
   selector: 'app-ins-clase',
   templateUrl: './ins-clase.component.html',
@@ -21,6 +22,10 @@ export class InsClaseComponent {
     ins : FormGroup;
     val : boolean = false;
     faArrowTurnDown = faArrowDown;
+    clasTip = [
+        {label: 'Entrada', value: 'E'},
+        {label: 'Salida', value: 'S'},
+    ]
 
     constructor(private store: Store<AppState>,
                 private router: Router,
@@ -31,28 +36,24 @@ export class InsClaseComponent {
 
     ngOnInit() {
       this.ins = this.fb.group({
-            id: ['', Validators.required],
+        clasTip : ['', Validators.required],
+        clasTipDes : ['', Validators.required],
       });     
     }
 
-    public guardar( id: string ){
+    public guardar( ){
+      if(this.ins.valid){
       this.val = true;
       this.store.dispatch(incrementarRequest({request:1}));
-      this.store.dispatch(createClaseRequest({{ id: id }}));
-    
-      this.actions$.pipe(
+      this.store.dispatch(createClaseRequest({clase: this.ins.value}));
+       this.actions$.pipe(
         ofType(createClaseSuccess)
       ).subscribe(() => {
         setTimeout(() => {
           this.val = false;
-          this.router.navigate(['/desk/seguridad/clase']);
+          this.router.navigate(['/desk/parametros/clase']);
         }, 1000);
       });
-
-      this.actions$.pipe(
-        ofType(ClaseError)
-      ).subscribe((error) => {
-        this.val = false;
-      });
     }
+  }
 }

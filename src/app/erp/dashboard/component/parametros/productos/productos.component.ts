@@ -6,7 +6,7 @@ import { Producto, PRODUCTOS_KEYS } from '../state/interface/producto.interface'
 import { getProductosRequest } from '../state/actions/producto.actions';
 import { Table } from 'primeng/table';
 import { AppState } from '../../app.state';
-
+import { Router } from '@angular/router'; 
 interface ProductoExtended extends Producto {
   imageLoaded?: boolean;
   imageError?: boolean;
@@ -19,8 +19,8 @@ interface ProductoExtended extends Producto {
 })
 export class ProductosComponent {
 
-  productos             : Observable<Producto[]> = new Observable;
-  loading               : Observable<any>        = new Observable;
+    productos             : Observable<Producto[]> = new Observable;
+    loading               : Observable<any>        = new Observable;
     productDialog       : boolean                = false;
     deleteProductDialog : boolean                = false;
     deleteProductsDialog: boolean                = false;
@@ -36,7 +36,7 @@ export class ProductosComponent {
     previewImageLoaded: boolean = false;
 
   constructor(
-    
+    private router: Router,
     private store: Store<AppState> // Inyecta el servicio Store de NgRx para gestionar el estado de la aplicación
   ) { }
   
@@ -52,7 +52,7 @@ export class ProductosComponent {
        }));      
      });
 
-     this.globalFilterFields = PRODUCTOS_KEYS;
+     this.globalFilterFields = Object.values(PRODUCTOS_KEYS);
      
     // obtiene los todos pendientes
   //  this.tasksInProgress = this.store.select(selectTodosInProgress) // obtiene los todos en progreso
@@ -60,8 +60,7 @@ export class ProductosComponent {
   }
 
 openNew() {  
-    this.submitted     = false;
-    this.productDialog = true;
+  this.router.navigate(['desk/parametros/productos/insproducto']);
 }
 
 deleteSelectedProducts() {
@@ -69,7 +68,8 @@ deleteSelectedProducts() {
 }
 
 editProduct(product: Producto) {
-  
+   let producto = btoa(JSON.stringify(product));
+    this.router.navigate(['desk/parametros/productos/upproducto',producto]);  
 }
 
 deleteProduct(product: Producto) {

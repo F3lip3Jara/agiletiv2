@@ -87,7 +87,7 @@
                             <label>Días Laborales</label>
                             <div class="w-95">
                                 <p-selectButton [options]="diasSemana" formControlName="diasLaborales" [multiple]="true"
-                                    optionLabel="label" optionValue="value"
+                                    optionLabel="label" optionValue="value" id="diasLaborales"
                                     [ngClass]="(ins.controls['diasLaborales'].hasError('required')) ? 'was-validated' : 'is-valid'">
                                     <ng-template let-item>
                                         <div class="flex flex-column align-items-center">

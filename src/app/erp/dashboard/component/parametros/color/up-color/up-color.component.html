@@ -1,1 +1,82 @@
-<p>up-color works!</p>
+<div class="col-12 p-fluid">
+    <p-fieldset legend="Actualización de color para productos">
+        <div class="col-12">
+            <form [formGroup]="up" (ngSubmit)="actualizar()">
+                <div class="grid formgrid">
+                    <!-- Campo ID oculto -->
+                    <input type="hidden" formControlName="colId">
+                    
+                    <!-- Descripción -->
+                    <div class="col-12 mb-4">
+                        <span class="p-float-label">
+                            <input id="float-input" type="text" pInputText formControlName="colDes" 
+                                oninput="this.value = this.value.toUpperCase()"
+                                [ngClass]="(up.controls['colDes'].hasError('required')) ? 'was-validated' : 'is-valid'">
+                            <label for="float-input">Descripción</label>
+                        </span>
+                        <div *ngIf="up.controls['colDes'].hasError('required')">
+                            <span class="text-danger">Campo obligatorio!</span>
+                        </div>
+                    </div>
+
+                    <!-- Selector de Color -->
+                    <div class="col-12 mb-4">
+                        <div class="flex align-items-center gap-3">
+                            <div class="color-preview" [style.background-color]="up.get('colCod')?.value || '#ffffff'"
+                                (click)="showColorDialog()">
+                                <i class="pi pi-palette"></i>
+                            </div>
+                            <div class="flex-grow-1">
+                                <span class="p-float-label">
+                                    <input id="color-input" type="text" pInputText [value]="up.get('colCod')?.value || ''"
+                                        readonly (click)="showColorDialog()">
+                                    <label for="color-input">Código de Color (HEX)</label>
+                                </span>
+                            </div>
+                            <button pButton type="button" icon="pi pi-pencil" 
+                                class="p-button-rounded p-button-warning"
+                                pTooltip="Seleccionar color de la pantalla" 
+                                [disabled]="!isEyeDropperSupported"
+                                (click)="openEyeDropper()">
+                            </button>
+                        </div>
+                        <div *ngIf="up.controls['colCod'].hasError('required')">
+                            <span class="text-danger">Campo obligatorio!</span>
+                        </div>
+                        <div *ngIf="!isEyeDropperSupported" class="mt-1">
+                            <small class="text-warning">El selector de color</small>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Botones de Acción -->
+                <div class="flex flex-wrap gap-2 align-items-center mt-3">                   
+                    <p-button type="submit" label="Guardar" icon="pi pi-check" size="small" *ngIf="up.valid"
+                        [loading]="val" severity="warning" />
+                    <p-button label="Volver" icon="pi pi-arrow-down" size="small" routerLink="/desk/parametros/color" severity="secondary" />
+                </div>
+            </form>
+        </div>
+    </p-fieldset>
+</div>
+
+<!-- Modal del Selector de Color -->
+<p-dialog header="Seleccionar Color" [(visible)]="displayColorPicker" [modal]="true" [style]="{width: '400px'}"
+    [draggable]="false" [resizable]="false">
+    <div class="color-picker-container">
+        <p-colorPicker formControlName="colCod" [inline]="true" [format]="'hex'" 
+            [style]="{'width': '100%'}" (onChange)="onColorChange($event)">
+        </p-colorPicker>
+        <div class="color-info mt-3">
+            <div class="color-value">
+                <span class="font-bold">Valor HEX:</span>
+                <span class="color-hex">{{up.get('colCod')?.value || '#ffffff'}}</span>
+            </div>
+            <div class="color-name" *ngIf="selectedColorInfo != null">
+                <p-progressSpinner ariaLabel="Cargando..." *ngIf="valColor" [style]="{width: '30px', height: '30px'}" />
+                <span class="font-bold">Nombre:</span>
+                <span class="color-name-value">{{selectedColorInfo.colorInfo.name}}</span>
+            </div>
+        </div>
+    </div>
+</p-dialog>

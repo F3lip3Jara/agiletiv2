@@ -18,11 +18,12 @@ export class GrupoServices {
               private rest    : RestService,
               private userSer : UsersService,
               private store   : Store<AppState>
-  ) {  }
+  ) { 
 
-   getGrupo(): Observable<any> {
     this.token = this.userSer.getToken();
-    
+   }
+
+   getGrupo(): Observable<any> {   
        return this.rest.get('trabGrupo', this.token, this.parametros).pipe(
         map(
           (data: any) => data
@@ -30,11 +31,9 @@ export class GrupoServices {
       ) 
     );
   }
-/*
+
   createGrupo(grupo: any): Observable<any> {
-    let grupo = {
-      grupoDes: grupo
-    }
+   
     return this.rest.post('insGrupo', this.token, grupo).pipe(
       map((data: any) => data)
     );
@@ -52,5 +51,5 @@ export class GrupoServices {
     return this.rest.post('delGrupo', this.token, grupo).pipe(
       map((data: any) => data)
     );  
-  }*/
+  }
 }

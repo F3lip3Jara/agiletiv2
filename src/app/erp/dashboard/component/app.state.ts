@@ -24,6 +24,7 @@ import { _unidadReducer } from "./parametros/state/reducers/unidad.reducer";
 import { _claseReducer } from "./parametros/state/reducers/clase.reducer";
 import { _tipospagosReducer } from "./parametros/state/reducers/tipospagos.reducer";
 import { _proveedorReducer } from "./parametros/state/reducers/proveedor.reducer";
+import { _tallaReducer } from "./parametros/state/reducers/talla.reducer";
 export interface AppState {
     usuarios    : DataStateUsuarios,
     productos   : DataStateProductos,
@@ -48,7 +49,8 @@ export interface AppState {
     unidad      : DataStateUnidad,
     clase       : DataStateClase,
     tipospagos   : DataStateTipoPagos,
-    proveedor    : DataStateProveedor
+    proveedor    : DataStateProveedor,
+    talla        : DataStateTalla
 }
 
 export interface DataStateUsuarios {
@@ -198,6 +200,12 @@ export interface DataStateProveedor {
     loading: boolean,
 }
 
+export interface DataStateTalla {
+    talla: any[],
+    error?: string,
+    loading: boolean,
+}
+
 export const ROOT_APP_REDUCER: ActionReducerMap<AppState> = {
     usuarios    : _usuarioReducer, 
     productos   :_productoReducer,
@@ -222,5 +230,6 @@ export const ROOT_APP_REDUCER: ActionReducerMap<AppState> = {
     unidad      : _unidadReducer,
     clase       : _claseReducer,
     tipospagos  : _tipospagosReducer,
-    proveedor   : _proveedorReducer
+    proveedor   : _proveedorReducer,
+    talla       : _tallaReducer
   };

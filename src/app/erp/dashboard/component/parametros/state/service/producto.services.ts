@@ -30,24 +30,16 @@ export class ProductoService {
     );
   }
 
-  createTodo(producto: Producto): Observable<Object> {
-    this.parametros = producto;
-    return this.rest.post('insProducto', this.token, this.parametros).pipe(
-      map((data: any) => data.data) // Asegúrate de importar 'map' de 'rxjs/operators'
-  );
+  createProducto(producto: Producto): Observable<any> {
+    return this.rest.post('insProducto', this.token, producto).pipe(
+      map((data: any) => data)
+    );
   }
 
- /* deleteTodo(id: string): Observable<Object> {
-    //return this.http.delete(`${this.API}/delete/${id}`)
+  updateProducto(producto: Producto): Observable<any> {
+    return this.rest.post('updProducto', this.token, producto).pipe(
+      map((data: any) => data)
+    );
   }
-
-  updateTodo(id: string, todo: UpdateTodo): Observable<Object> {
-
-    //return this.http.put(`${this.API}/update/${id}`, todo)
-  }
-
-  updateStatus(nuevoEstado: number, id: string): Observable<Object> {
-    //return this.http.put(`${this.API}/update-status/${id}`, { statusId: nuevoEstado })
-  }*/
 
 }

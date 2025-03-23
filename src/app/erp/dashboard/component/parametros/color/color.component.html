@@ -36,7 +36,7 @@
                         <tr>
                             <th>Id</th>
                             <th>Descripcion</th>
-                            <th>Codigo</th>
+                            <th>Color</th>
                             <th>Creado</th>
                             <th class="text-center">Acciones</th>
                         </tr>
@@ -48,7 +48,12 @@
                             <td>
                                 <span class="font-medium">{{item.colDes}}</span>
                             </td>
-                            <td>{{item.colCod}}</td>
+                            <td>
+                                <div class="flex align-items-center gap-2">
+                                    <div class="color-box" [style.background-color]="item.colCod"></div>
+                                    <span>{{item.colCod}}</span>
+                                </div>
+                            </td>
                             <td>{{item.created_at}}</td>
                             <td>
                                 <div class="actions-column" (click)="onActionClick(item)">

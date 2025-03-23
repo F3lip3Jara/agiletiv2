@@ -19,14 +19,15 @@ export class InterceptorsErrorService implements HttpInterceptor  {
 
 
 //private servidor: string = 'https://app.back.agileti.cl/';
-//private servidor: string = 'http://127.0.0.1:8000/';
-private servidor: string = 'https://app.back.qa.agileti.cl/';
+private servidor: string = 'http://127.0.0.1:8000/';
+//private servidor: string = 'https://app.back.qa.agileti.cl/';
 private excludedUrl  : any [] = [
-
+  
 
 ]; 
 private excludedLoad : any [] = [
-  'regPai'
+  'regPai',
+  'colorInfo'
 ]; 
 
 constructor(   private router : Router, private store: Store ) {

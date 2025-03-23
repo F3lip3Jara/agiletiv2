@@ -1,21 +1,29 @@
 <div class="col-12 p-fluid" >
-    <p-fieldset legend="Ingreso de Administraci�n de grupos de productos">
+    <p-fieldset legend="Ingreso de grupos de productos">
         <div class="col-12">
             <form
             [formGroup] = "ins"
-            (ngSubmit)  = "guardar(                  
-                             ins.controls['id'].value 
-                      )">
-           
+            (ngSubmit)  = "guardar()">           
                 <div class="grid formgrid">
+                    <div class="col-12 mb-4" >
+                        <span class="p-float-label">
+                            <input id="float-input" type="text" pInputText formControlName="grpCod" oninput="this.value = this.value.toUpperCase()" 
+                            [ngClass]="(ins.controls['grpCod'].hasError('required'))
+                            ? 'was-validated' : 'is-valid'" >
+                            <label for="float-input">Código</label>
+                        </span>
+                        <div *ngIf= "ins.controls['grpCod'].hasError('required')">
+                            <span class="text-danger">Campo obligatorio!</span>
+                        </div>                    
+                    </div>
                     <div class="col-12 " >
                         <span class="p-float-label">
-                            <input id="float-input" type="text" pInputText formControlName="id" oninput="this.value = this.value.toUpperCase()" 
-                            [ngClass]="(ins.controls['id'].hasError('required'))
-              ? '           was-validated' : 'is-valid'" >
+                            <input id="float-input" type="text" pInputText formControlName="grpDes"  
+                            [ngClass]="(ins.controls['grpDes'].hasError('required'))
+                            ? 'was-validated' : 'is-valid'" >
                             <label for="float-input">Descripción</label>
                         </span>
-                        <div *ngIf= "ins.controls['id'].hasError('required')">
+                        <div *ngIf= "ins.controls['grpDes'].hasError('required')">
                             <span class="text-danger">Campo obligatorio!</span>
                         </div>                    
                     </div>

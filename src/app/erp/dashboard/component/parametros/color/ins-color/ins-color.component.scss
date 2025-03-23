@@ -1,0 +1,78 @@
+.color-preview {
+    width: 40px;
+    height: 40px;
+    border-radius: 8px;
+    border: 2px solid var(--surface-200);
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.2s;
+
+    &:hover {
+        border-color: var(--primary-color);
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    }
+
+    i {
+        font-size: 1.2rem;
+        color: var(--surface-900);
+        opacity: 0.7;
+    }
+}
+
+.flex-grow-1 {
+    flex: 1;
+}
+
+.color-picker-container {
+    padding: 1rem;
+    
+    .color-info {
+        display: flex;
+        flex-direction: column;
+        gap: 0.5rem;
+
+        .color-value, .color-name {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            padding: 0.5rem;
+            background-color: var(--surface-100);
+            border-radius: 6px;
+        }
+
+        .color-hex {
+            font-family: monospace;
+            font-size: 1.1rem;
+            color: var(--primary-color);
+        }
+
+        .color-name-value {
+            font-weight: 500;
+            color: var(--text-color);
+        }
+    }
+}
+
+:host ::ng-deep {
+    .p-dialog {
+        .p-dialog-header {
+            padding: 1rem;
+            background-color: var(--surface-50);
+        }
+
+        .p-dialog-content {
+            padding: 0;
+        }
+    }
+
+    input[readonly] {
+        background-color: var(--surface-50);
+        cursor: pointer;
+
+        &:hover {
+            border-color: var(--primary-color);
+        }
+    }
+}

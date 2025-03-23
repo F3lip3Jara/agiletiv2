@@ -76,7 +76,7 @@ export class CentroComponent  {
 
   edit(data: any) {  
     const dato = btoa(JSON.stringify(data));    
-//   this.router.navigate(['desk/seguridad/centro/upcentro/'+ dato]);
+     this.router.navigate(['desk/parametros/centro/upcentro/'+ dato]);
   }
 
   onGlobalFilter(table: Table, event: Event) {

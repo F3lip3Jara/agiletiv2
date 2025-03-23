@@ -88,4 +88,13 @@ reiniciarUsuario(usuario: any): Observable<any> {
   );
 }
 
+upconfiguser(usuario: any): Observable<any> {
+  let xuser = {'user':btoa(JSON.stringify(usuario))};
+  return this.rest.post('upUsuario2', this.token, xuser).pipe(
+    map(
+      (data: any) => data // Se devuelve el resultado de la llamada a la API
+    )
+  );
+}
+
 }

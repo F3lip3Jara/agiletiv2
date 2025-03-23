@@ -39,10 +39,14 @@ import { UnidadEffects } from './erp/dashboard/component/parametros/state/effect
 import { ClaseEffects } from './erp/dashboard/component/parametros/state/effects/clase.effects';
 import { TipospagosEffects } from './erp/dashboard/component/parametros/state/effects/tipospagos.effects';
 import { ProveedorEffects } from './erp/dashboard/component/parametros/state/effects/proveedor.effects';
+import { ConfiguracionuserComponent } from './layout/configuracionuser/configuracionuser.component';
+import { ConfiguracionuserModule } from './layout/configuracionuser/configuracionuser.module';
+import { TallaEffects } from './erp/dashboard/component/parametros/state/effects/talla.effects';
 @NgModule({
-    declarations: [AppComponent, NotfoundComponent],
+    declarations: [AppComponent, NotfoundComponent ],
     imports: [  AppRoutingModule, 
-                AppLayoutModule ,               
+                AppLayoutModule ,   
+                ConfiguracionuserModule,
                 StoreModule.forRoot(ROOT_APP_REDUCER),
                 EffectsModule.forRoot([ProductoEffects,
                     UserEffects , 
@@ -66,7 +70,8 @@ import { ProveedorEffects } from './erp/dashboard/component/parametros/state/eff
                     UnidadEffects,
                     ClaseEffects,
                     TipospagosEffects,
-                    ProveedorEffects
+                    ProveedorEffects,
+                    TallaEffects
                 ]),
                 StoreDevtoolsModule.instrument(),
                 FontAwesomeModule,

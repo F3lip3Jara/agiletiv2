@@ -1,1 +1,184 @@
-<p>up-centro works!</p>
+<div class="col-12 p-fluid">
+    <p-fieldset legend="Actualización de centro">
+        <form [formGroup]="upd" (ngSubmit)="onUpdate()">
+            <div class="grid">
+                <!-- Información Básica -->
+                <div class="col-12 md:col-6">
+                    <div class="p-2 border-round">
+                        <h3 class="text-xl font-bold mb-4">Información Básica</h3>
+                        <div class="field mb-5 mb-5">
+                            <span class="p-float-label">
+                                <input id="cenDes" type="text" pInputText formControlName="cenDes" 
+                                    oninput="this.value = this.value.toUpperCase()"
+                                    [ngClass]="(upd.controls['cenDes'].hasError('required')) ? 'was-validated' : 'is-valid'">
+                                <label for="cenDes">Nombre del Centro</label>
+                            </span>
+                            <div *ngIf="upd.controls['cenDes'].hasError('required') && upd.controls['cenDes'].touched">
+                                <span class="text-danger">Campo obligatorio!</span>
+                            </div>
+                        </div>
+                        <div class="field mb-5">
+                            <span class="p-float-label">
+                                <p-inputNumber id="cenCap" formControlName="cenCap" [showButtons]="true" 
+                                    [ngClass]="(upd.controls['cenCap'].hasError('required')) ? 'was-validated' : 'is-valid'">
+                                </p-inputNumber>
+                                <label for="cenCap">Capacidad</label>
+                            </span>
+                            <div *ngIf="upd.controls['cenCap'].hasError('required') && upd.controls['cenCap'].touched">
+                                <span class="text-danger">Campo obligatorio!</span>
+                            </div>
+                        </div>
+                        <div class="field mb-5">
+                            <span class="p-float-label w-95">
+                                <p-dropdown id="cenEstado" [options]="estados" formControlName="cenEstado" 
+                                    optionLabel="label" optionValue="value" 
+                                    [ngClass]="(upd.controls['cenEstado'].hasError('required')) ? 'was-validated' : 'is-valid'">
+                                </p-dropdown>
+                                <label for="cenEstado">Estado</label>
+                            </span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Información de Contacto -->
+                <div class="col-12 md:col-6">
+                    <div class="p-2 border-round">
+                        <h3 class="text-xl font-bold mb-4">Información de Contacto</h3>
+                        <div class="field mb-5">
+                            <span class="p-float-label">
+                                <input id="cenContacto" type="text" pInputText formControlName="cenContacto"
+                                    [ngClass]="(upd.controls['cenContacto'].hasError('required')) ? 'was-validated' : 'is-valid'">
+                                <label for="cenContacto">Contacto Principal</label>
+                            </span>
+                            <div *ngIf="upd.controls['cenContacto'].hasError('required') && upd.controls['cenContacto'].touched">
+                                <span class="text-danger">Campo obligatorio!</span>
+                            </div>
+                        </div>
+                        <div class="field mb-5">
+                            <span class="p-float-label">
+                                <input id="cenTelefono" type="text" pInputText formControlName="cenTelefono"
+                                    [ngClass]="(upd.controls['cenTelefono'].hasError('required') || upd.controls['cenTelefono'].hasError('pattern')) ? 'was-validated' : 'is-valid'">
+                                <label for="cenTelefono">Teléfono</label>
+                            </span>
+                            <div *ngIf="upd.controls['cenTelefono'].touched">
+                                <span class="text-danger" *ngIf="upd.controls['cenTelefono'].hasError('required')">Campo obligatorio!</span>
+                                <span class="text-danger" *ngIf="upd.controls['cenTelefono'].hasError('pattern')">Formato inválido!</span>
+                            </div>
+                        </div>
+                        <div class="field mb-5">
+                            <span class="p-float-label">
+                                <input id="centEmail" type="email" pInputText formControlName="centEmail"
+                                    [ngClass]="(upd.controls['centEmail'].hasError('required') || upd.controls['centEmail'].hasError('email')) ? 'was-validated' : 'is-valid'">
+                                <label for="centEmail">Email</label>
+                            </span>
+                            <div *ngIf="upd.controls['centEmail'].touched">
+                                <span class="text-danger" *ngIf="upd.controls['centEmail'].hasError('required')">Campo obligatorio!</span>
+                                <span class="text-danger" *ngIf="upd.controls['centEmail'].hasError('email')">Email inválido!</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Horarios -->
+                <div class="col-12 md:col-6">
+                    <div class="p-2 border-round">
+                        <h3 class="text-xl font-bold mb-4">Horarios de Operación</h3>
+                        <div class="field mb-6">
+                            <label>Días Laborales</label>
+                            <div class="w-95">
+                                <p-selectButton [options]="diasSemana" formControlName="diasLaborales" [multiple]="true"
+                                    optionLabel="label" optionValue="value" id="diasLaborales"
+                                    [ngClass]="(upd.controls['diasLaborales'].hasError('required')) ? 'was-validated' : 'is-valid'">
+                                    <ng-template let-item>
+                                        <div class="flex flex-column align-items-center">
+                                            <span>{{item.label}}</span>
+                                        </div>
+                                    </ng-template>
+                                </p-selectButton>
+                            </div>
+                            <div *ngIf="upd.controls['diasLaborales'].hasError('required') && upd.controls['diasLaborales'].touched">
+                                <span class="text-danger">Debe seleccionar al menos un día!</span>
+                            </div>
+                        </div>
+                        <div class="field mb-5">
+                            <span class="p-float-label w-95">
+                                <p-calendar id="cenHoraApertura" formControlName="cenHoraApertura" [timeOnly]="true"
+                                    [ngClass]="(upd.controls['cenHoraApertura'].hasError('required')) ? 'was-validated' : 'is-valid'">
+                                </p-calendar>
+                                <label for="cenHoraApertura">Hora de Apertura</label>
+                            </span>
+                            <div *ngIf="upd.controls['cenHoraApertura'].hasError('required') && upd.controls['cenHoraApertura'].touched">
+                                <span class="text-danger">Campo obligatorio!</span>
+                            </div>
+                        </div>
+                        <div class="field mb-5">
+                            <span class="p-float-label w-95">
+                                <p-calendar id="cenHoraCierre" formControlName="cenHoraCierre" [timeOnly]="true"
+                                    [ngClass]="(upd.controls['cenHoraCierre'].hasError('required')) ? 'was-validated' : 'is-valid'">
+                                </p-calendar>
+                                <label for="cenHoraCierre">Hora de Cierre</label>
+                            </span>
+                            <div *ngIf="upd.controls['cenHoraCierre'].hasError('required') && upd.controls['cenHoraCierre'].touched">
+                                <span class="text-danger">Campo obligatorio!</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Límites de Stock -->
+                <div class="col-12 md:col-6">
+                    <div class="p-2 border-round">
+                        <h3 class="text-xl font-bold mb-4">Límites de Stock</h3>
+                        <div class="field mb-5">
+                            <span class="p-float-label">
+                                <p-inputNumber id="cenStockLimitWeb" formControlName="cenStockLimitWeb" [showButtons]="true"
+                                    [ngClass]="(upd.controls['cenStockLimitWeb'].hasError('required')) ? 'was-validated' : 'is-valid'">
+                                </p-inputNumber>
+                                <label for="cenStockLimitWeb">Límite de bultos web diario</label>
+                            </span>
+                            <div *ngIf="upd.controls['cenStockLimitWeb'].hasError('required') && upd.controls['cenStockLimitWeb'].touched">
+                                <span class="text-danger">Campo obligatorio!</span>
+                            </div>
+                        </div>
+                        <div class="field mb-5">
+                            <span class="p-float-label">
+                                <p-inputNumber id="cenStockLimiteRepo" formControlName="cenStockLimiteRepo" [showButtons]="true"
+                                    [ngClass]="(upd.controls['cenStockLimiteRepo'].hasError('required')) ? 'was-validated' : 'is-valid'">
+                                </p-inputNumber>
+                                <label for="cenStockLimiteRepo">Límite de bultos de reposición diario</label>
+                            </span>
+                            <div *ngIf="upd.controls['cenStockLimiteRepo'].hasError('required') && upd.controls['cenStockLimiteRepo'].touched">
+                                <span class="text-danger">Campo obligatorio!</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Ubicación -->
+                <div class="col-12">
+                    <div class="p-2 border-round">
+                        <h3 class="text-xl font-bold mb-4">Ubicación</h3>
+                        <div class="grid">
+                            <div class="col-12 md:col-6">
+                                <div class="field mb-5">
+                                    <label for="cenDir">Dirección</label>
+                                    <input #cenDir id="cenDir" type="text" pInputText [(ngModel)]="centro.cenDir" [ngModelOptions]="{standalone: true}" class="w-full" placeholder="Ingrese una dirección">
+                                </div>
+                            </div>
+                            <div class="col-12 md:col-6">
+                                <div #map class="map-container"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Botones de Acción -->
+            <div class="flex flex-wrap gap-2 align-items-center mt-3">
+                <p-button type="submit" label="Actualizar" icon="pi pi-check" size="small" *ngIf="upd.valid && cenDir.value.length > 0"
+                    [loading]="val" />
+                <p-button label="Volver" icon="pi pi-arrow-down" size="small" routerLink="/desk/parametros/centro" severity="secondary" />
+            </div>
+        </form>
+    </p-fieldset>
+</div>

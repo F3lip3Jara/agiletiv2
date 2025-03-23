@@ -43,7 +43,28 @@ import { InsProveedorComponent } from './proveedor/ins-proveedor/ins-proveedor.c
 import { CheckboxModule } from 'primeng/checkbox';
 import { Environment } from '../../../service/environment.service';
 import { NgSelectModule } from '@ng-select/ng-select';
-
+import { UpCentroComponent } from './centro/up-centro/up-centro.component';
+import { InsClaseComponent } from './clase/ins-clase/ins-clase.component';
+import { UpClaseComponent } from './clase/up-clase/up-clase.component';
+import { InsColorComponent } from './color/ins-color/ins-color.component';
+import { ColorPickerModule } from 'primeng/colorpicker';
+import { UpColorComponent } from './color/up-color/up-color.component';
+import { ProgressSpinnerModule } from 'primeng/progressspinner';
+import { ParametrosComponent } from './parametros/parametros.component';
+import { MessageModule } from 'primeng/message';
+import { InsGrupoComponent } from './grupo/ins-grupo/ins-grupo.component';
+import { UpGrupoComponent } from './grupo/up-grupo/up-grupo.component';
+import { InsSubgrupoComponent } from './sub-grupo/ins-subgrupo/ins-subgrupo.component';
+import { UpSubgrupoComponent } from './sub-grupo/up-subgrupo/up-subgrupo.component';
+import { InsProductosComponent } from './productos/ins-productos/ins-productos.component';
+import { TallaComponent } from './talla/talla.component';
+import { InsTallaComponent } from './talla/ins-talla/ins-talla.component';
+import { UpTallaComponent } from './talla/up-talla/up-talla.component';
+import { EditorModule } from 'primeng/editor';
+import { ChipModule } from 'primeng/chip';
+import { TabViewModule } from 'primeng/tabview';
+import { DragDropModule } from '@angular/cdk/drag-drop';
+import { UpProductosComponent } from './productos/up-productos/up-productos.component';
 @NgModule({
   declarations: [
     ProductosComponent,
@@ -63,7 +84,22 @@ import { NgSelectModule } from '@ng-select/ng-select';
     ClaseComponent,
     TipoPagosComponent,
     ProveedorComponent,
-    InsProveedorComponent
+    InsProveedorComponent,
+    UpCentroComponent,
+    InsClaseComponent,
+    UpClaseComponent,
+    InsColorComponent,
+    UpColorComponent,
+    ParametrosComponent,
+    InsGrupoComponent,
+    UpGrupoComponent,
+    InsSubgrupoComponent,
+    UpSubgrupoComponent,
+    InsProductosComponent,
+    TallaComponent, 
+    InsTallaComponent,
+    UpTallaComponent,
+    UpProductosComponent
   ],
   imports: [
     CommonModule,
@@ -92,7 +128,14 @@ import { NgSelectModule } from '@ng-select/ng-select';
     SelectButtonModule,
     DialogModule,
     CheckboxModule,
-    NgSelectModule
+    NgSelectModule,
+    ColorPickerModule,
+    ProgressSpinnerModule,
+    MessageModule,
+    EditorModule,
+    ChipModule,
+    TabViewModule,
+    DragDropModule 
   ],
   providers: [
     Environment

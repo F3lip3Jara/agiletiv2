@@ -1,0 +1,156 @@
+<!-- Toast para notificaciones -->
+<p-toast position="bottom-right"></p-toast>
+
+<!-- Dashboard Cards -->
+<div class="grid">
+    <div class="col-12">
+        <div class="grid">
+            <div *ngFor="let card of cards" class="col-12 md:col-6 lg:col-3">
+                <div class="card mb-0">
+                    <div class="flex justify-content-between mb-3">
+                        <div>
+                            <span class="block text-500 font-medium mb-3">{{card.titulo}}</span>
+                            <div class="text-900 font-medium text-xl">{{card.valor}}</div>
+                        </div>
+                        <div class="flex align-items-center justify-content-center" [ngClass]="'bg-' + card.color + '-100'" [style.width.rem]="2.5" [style.height.rem]="2.5">
+                            <i [class]="card.icono" [ngClass]="'text-' + card.color + '-500'" class="text-xl"></i>
+                        </div>
+                    </div>
+                    <span class="text-green-500 font-medium">{{card.incremento}}</span>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Alertas -->
+<div class="grid mt-3">
+    <div class="col-12">
+        <div class="card">
+            <div class="flex justify-content-between align-items-center mb-3">
+                <h5 class="m-0">Alertas de Configuración</h5>
+                <span class="text-500">{{alertas.length}} alertas activas</span>
+            </div>
+            <div class="grid">
+                <div *ngFor="let alerta of alertas" class="col-12 md:col-6">
+                    <div class="alert-card" [ngClass]="alerta.tipo">
+                        <div class="alert-content">
+                            <div class="alert-icon">
+                                <i class="pi" [ngClass]="{
+                                    'pi-exclamation-circle': alerta.tipo === 'warning',
+                                    'pi-times-circle': alerta.tipo === 'danger',
+                                    'pi-info-circle': alerta.tipo === 'info'
+                                }"></i>
+                            </div>
+                            <div class="alert-details">
+                                <div class="alert-message">{{alerta.mensaje}}</div>
+                                <div class="alert-meta">
+                                    <span class="alert-date">{{alerta.fecha}}</span>
+                                    <span class="alert-status" [ngClass]="{'resolved': alerta.resuelta}">
+                                        {{alerta.resuelta ? 'Resuelto' : 'Pendiente'}}
+                                    </span>
+                                </div>
+                            </div>
+                            <div class="alert-actions">
+                                <button pButton pRipple 
+                                        [icon]="alerta.resuelta ? 'pi pi-undo' : 'pi pi-check'"
+                                        [class]="'p-button-rounded p-button-text ' + (alerta.resuelta ? 'p-button-secondary' : 'p-button-success')"
+                                        pTooltip="{{alerta.resuelta ? 'Reabrir' : 'Marcar como resuelto'}}"
+                                        tooltipPosition="left"
+                                        (click)="toggleAlertaEstado(alerta)">
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Tabla de Logs y Parámetros Populares -->
+<div class="grid">
+    <div class="col-12 lg:col-8">
+        <div class="card">
+            <p-table #dtLogs [value]="logs" 
+                     [rows]="5" 
+                     [paginator]="true"
+                     [showCurrentPageReport]="true"
+                     [rowsPerPageOptions]="[5,10,25,50]"
+                     currentPageReportTemplate="Mostrando {first} a {last} de {totalRecords} registros"
+                     styleClass="p-datatable-gridlines">
+                
+                <ng-template pTemplate="caption">
+                    <div class="flex align-items-center justify-content-between">
+                        <h5 class="m-0">Registro de Cambios</h5>
+                        <button pButton pRipple label="Excel" class="p-button-success mr-2" icon="pi pi-file-excel" (click)="exportExcelLogs(dtLogs)"></button>
+                    </div>
+                </ng-template>
+
+                <ng-template pTemplate="header">
+                    <tr>
+                        <th>Tipo</th>
+                        <th>Parámetro</th>
+                        <th>Valor Anterior</th>
+                        <th>Valor Nuevo</th>
+                        <th>Usuario</th>
+                        <th>Empresa</th>
+                        <th>Fecha</th>
+                    </tr>
+                </ng-template>
+
+                <ng-template pTemplate="body" let-log>
+                    <tr>
+                        <td>
+                            <p-tag [severity]="log.tipo === 'modificacion' ? 'warning' : 'success'" [value]="log.tipo"></p-tag>
+                        </td>
+                        <td>{{log.parametro}}</td>
+                        <td>{{log.valor_anterior}}</td>
+                        <td>{{log.valor_nuevo}}</td>
+                        <td>{{log.usuario}}</td>
+                        <td>{{log.empresa}}</td>
+                        <td>{{log.fecha}}</td>
+                    </tr>
+                </ng-template>
+            </p-table>
+        </div>
+    </div>
+
+    <div class="col-12 lg:col-4">
+        <div class="card">
+            <h5>Parámetros Más Usados</h5>
+            <ul class="list-none p-0 m-0">
+                <li *ngFor="let param of parametrosPopulares" class="flex align-items-center py-3 px-2 border-bottom-1 surface-border">
+                    <div class="flex-grow-1">
+                        <span class="font-medium text-900">{{param.nombre}}</span>
+                        <div class="text-500">{{param.descripcion}}</div>
+                        <div class="text-sm text-600">{{param.usos}} usos</div>
+                    </div>
+                    <div class="flex align-items-center">
+                        <i class="pi" [ngClass]="{
+                            'pi-arrow-up text-green-500': param.tendencia === 'up',
+                            'pi-arrow-down text-red-500': param.tendencia === 'down',
+                            'pi-minus text-blue-500': param.tendencia === 'stable'
+                        }"></i>
+                    </div>
+                </li>
+            </ul>
+        </div>
+    </div>
+</div>
+
+<!-- Gráficos -->
+<div class="grid mt-3">
+    <div class="col-12 lg:col-8">
+        <div class="card">
+            <h5>Cambios en Parámetros por Mes</h5>
+            <canvas id="graficoCambios"></canvas>
+        </div>
+    </div>
+    <div class="col-12 lg:col-4">
+        <div class="card">
+            <h5>Distribución de Configuraciones</h5>
+            <canvas id="graficoDistribucion"></canvas>
+        </div>
+    </div>
+</div>

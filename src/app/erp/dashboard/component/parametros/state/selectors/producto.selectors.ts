@@ -21,3 +21,10 @@ export const selectError = createSelector(
     // Función que devuelve la propiedad `error` del estado de los todos
     (state) => state.error
 );
+
+
+export const selectProductoById = createSelector(
+    selectTodoState,
+    (state, props: { id: number }) => state.productos.find((item) => item.id === props.id)
+  );
+

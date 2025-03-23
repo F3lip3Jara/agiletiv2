@@ -16,7 +16,21 @@ import { ClaseComponent } from './clase/clase.component';
 import { TipoPagosComponent } from './tipo-pagos/tipo-pagos.component';
 import { ProveedorComponent } from './proveedor/proveedor.component';
 import { InsProveedorComponent } from './proveedor/ins-proveedor/ins-proveedor.component';
-
+import { UpCentroComponent } from './centro/up-centro/up-centro.component';
+import { InsClaseComponent } from './clase/ins-clase/ins-clase.component';
+import { UpClaseComponent } from './clase/up-clase/up-clase.component';
+import { InsColorComponent } from './color/ins-color/ins-color.component';
+import { UpColorComponent } from './color/up-color/up-color.component';
+import { ParametrosComponent } from './parametros/parametros.component';
+import { InsGrupoComponent } from './grupo/ins-grupo/ins-grupo.component';
+import { UpGrupoComponent } from './grupo/up-grupo/up-grupo.component';
+import { InsSubgrupoComponent } from './sub-grupo/ins-subgrupo/ins-subgrupo.component';
+import { UpSubgrupoComponent } from './sub-grupo/up-subgrupo/up-subgrupo.component';
+import { InsProductosComponent } from './productos/ins-productos/ins-productos.component';
+import { TallaComponent } from './talla/talla.component';
+import { InsTallaComponent } from './talla/ins-talla/ins-talla.component';
+import { UpTallaComponent } from './talla/up-talla/up-talla.component';
+import { UpProductosComponent } from './productos/up-productos/up-productos.component';
 const routes: Routes = [
   {
     path: '',
@@ -24,10 +38,21 @@ const routes: Routes = [
       title: 'Parametros',
     },
     children: [
-    
+      {
+        path: '',
+        component: ParametrosComponent
+      },
       {
         path: 'productos',
         component: ProductosComponent
+      },
+      {
+        path: 'productos/insproducto',
+        component: InsProductosComponent
+      },
+      {
+        path: 'productos/upproducto/:producto',
+        component: UpProductosComponent
       },
       {
         path: 'moneda',
@@ -42,16 +67,44 @@ const routes: Routes = [
         component: InsCentroComponent
       },
       {
+        path: 'centro/upcentro/:centro',
+        component: UpCentroComponent
+      },
+      {
         path: 'grupo',
         component: GrupoComponent
+      },
+      {
+        path: 'grupo/insgrupo',
+        component: InsGrupoComponent  
+      },
+      {
+        path: 'grupo/upgrupo/:grupo',
+        component: UpGrupoComponent
       },
       {
         path: 'sub_grupo',
         component: SubGrupoComponent
       },
       {
+        path: 'sub_grupo/inssubgrupo',
+        component: InsSubgrupoComponent
+      },
+      {
+        path: 'sub_grupo/upsubgrupo/:subgrupo',
+        component: UpSubgrupoComponent
+      },
+      {
         path: 'color',
         component: ColorComponent
+      },
+      {
+        path: 'color/inscolor',
+        component: InsColorComponent
+      },
+      {
+        path: 'color/upcolor/:color',
+        component: UpColorComponent
       },
       {
         path: 'pais',
@@ -78,6 +131,14 @@ const routes: Routes = [
         component: ClaseComponent
       },
       {
+        path: 'clase/insclase',
+        component: InsClaseComponent
+      },
+      {
+        path: 'clase/upclase/:clase',
+        component: UpClaseComponent
+      },
+      {
         path: 'tipo_pago',
         component: TipoPagosComponent
       },
@@ -88,6 +149,18 @@ const routes: Routes = [
       {
         path: 'proveedor/insproveedor',
         component: InsProveedorComponent  
+      },
+      {
+        path: 'talla',
+        component: TallaComponent
+      },
+      {
+        path: 'talla/installa',
+        component: InsTallaComponent  
+      },
+      {
+        path: 'talla/uptalla/:talla',
+        component: UpTallaComponent
       }
     ]
   }

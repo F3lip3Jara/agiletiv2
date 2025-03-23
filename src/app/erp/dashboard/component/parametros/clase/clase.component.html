@@ -47,7 +47,7 @@
                             <td>
                                 <span class="font-medium">{{item.clasTipDes}}</span>
                             </td>
-                            <td>{{item.clasTip}}</td>
+                            <td>{{item.clasTip == 'E'? 'Entrada' : 'Salida'}}</td>
                             <td>{{item.created_at}}</td>
                             <td>
                                 <div class="actions-column" (click)="onActionClick(item)">

@@ -17,6 +17,7 @@ export interface Centro {
     cenTelefono: string;
     cenLat: string;
     cenLong: string;
+    cenDiasLaborales: string[];
     // Agrega más propiedades según necesites
 }
 

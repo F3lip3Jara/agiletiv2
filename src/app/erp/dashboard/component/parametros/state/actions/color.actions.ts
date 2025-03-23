@@ -14,3 +14,25 @@ export const colorError = createAction(
     '[Color] Color Error',
     props<{ error: string }>()
 );
+
+export const createColorRequest = createAction(
+    '[Color] Create Color Request',
+    props<{ color: Color }>()
+);
+
+
+export const createColorSuccess = createAction(
+    '[Color] Create Color Success'
+);
+
+export const updateColorRequest = createAction(
+    '[Color] Update Color Request',
+    props<{ color: Color }>()
+);
+
+export const updateColorSuccess = createAction(
+    '[Color] Update Color Success'
+);
+
+
+

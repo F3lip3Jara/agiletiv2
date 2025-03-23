@@ -43,6 +43,17 @@ export const accionesDeleteSuccess = createAction(
     '[Acciones] Del Acciones Success'
 );    
 
+export const getColorInfoRequest = createAction(
+    '[Color] Get Color Info Request',
+    props<{ colCod: string }>()
+);
+
+export const getColorInfoSuccess = createAction(
+    '[Color] Get Color Info Success',
+    props<{ colorInfo: any }>()
+);
+
+
 
 
 

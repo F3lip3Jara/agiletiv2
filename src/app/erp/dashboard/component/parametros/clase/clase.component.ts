@@ -71,12 +71,12 @@ export class ClaseComponent  {
   }
 
   openNew() {  
-    this.router.navigate(['desk/seguridad/clase/insclase']);
+    this.router.navigate(['desk/parametros/clase/insclase']);
   }
 
   edit(data: any) {  
     const dato = btoa(JSON.stringify(data));    
-   // this.router.navigate(['desk/seguridad/clase/upclase/'+ dato]);
+    this.router.navigate(['desk/parametros/clase/upclase/'+ dato]);
   }
 
   onGlobalFilter(table: Table, event: Event) {

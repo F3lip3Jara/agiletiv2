@@ -14,3 +14,27 @@ export const claseError = createAction(
     '[Clase] Clase Error',
     props<{ error: string }>()
 );
+
+export const createClaseRequest = createAction(
+    '[Clase] Create Clase Request',
+    props<{ clase: Clase }>()
+);
+
+export const createClaseSuccess = createAction(
+    '[Clase] Create Clase Success',
+   
+);
+
+export const updateClaseRequest = createAction(
+    '[Clase] Update Clase Request',
+    props<{ clase: Clase }>()
+);
+
+export const updateClaseSuccess = createAction(
+    '[Clase] Update Clase Success'  
+);
+
+
+
+
+

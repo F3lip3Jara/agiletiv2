@@ -1,6 +1,6 @@
 import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { Observable } from 'rxjs';
+import { Observable, take } from 'rxjs';
 import { Store } from '@ngrx/store';
 import { AppState } from '../../../app.state';
 import { Router } from '@angular/router';
@@ -8,7 +8,7 @@ import { incrementarRequest } from '../../../state/actions/estado.actions';
 import { Actions, ofType } from '@ngrx/effects';
 import { Environment } from 'src/app/erp/service/environment.service';
 import { Centro } from '../../state/interface/centro.interface';
-
+import { createCentroRequest, createCentroSuccess } from '../../state/actions/centro.actions';
 declare global {
     interface Window {
         google: typeof google;
@@ -71,7 +71,8 @@ export class InsCentroComponent implements OnInit {
             cenEstado: 'A',
             cenTelefono: '',
             cenLat: '',
-            cenLong: ''
+            cenLong: '',
+            cenDiasLaborales: []
         };
 
         // Obtener la hora actual
@@ -214,8 +215,30 @@ export class InsCentroComponent implements OnInit {
     onSave() {
         if (this.ins.valid) {
             this.val = true;
-            console.log(this.ins.value);
-            // Aquí iría la lógica para guardar
+         
+           const fechaFormateadaApertura = this.ins.value.cenHoraApertura.toISOString();
+           const fechaFormateadaCierre = this.ins.value.cenHoraCierre.toISOString();
+            this.centro.cenDiasLaborales = this.ins.value.diasLaborales;
+            this.centro.cenHoraApertura = fechaFormateadaApertura;
+            this.centro.cenHoraCierre = fechaFormateadaCierre;
+            this.centro.cenStockLimitWeb = this.ins.value.cenStockLimitWeb;
+            this.centro.cenStockLimiteRepo = this.ins.value.cenStockLimiteRepo;
+            this.centro.cenContacto = this.ins.value.cenContacto;
+            this.centro.centEmail = this.ins.value.centEmail;
+            this.centro.cenTelefono = this.ins.value.cenTelefono;
+            this.centro.cenEstado = this.ins.value.cenEstado;
+            this.centro.cenDes = this.ins.value.cenDes;
+            this.centro.cenCap = this.ins.value.cenCap;            
+            this.store.dispatch(incrementarRequest({request: 1}));
+            this.store.dispatch(createCentroRequest({ centro: this.centro }));
+            this.actions$.pipe(
+                ofType(createCentroSuccess),
+                take(1)
+            ).subscribe(() => {
+               setTimeout(() => {
+                this.router.navigate(['/desk/parametros/centro']);
+               }, 1000);
+            });
         }
     }
 

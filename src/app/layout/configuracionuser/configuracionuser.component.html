@@ -1,0 +1,133 @@
+<!-- Contenedor principal -->
+<div class="col-12 p-fluid" >
+    <p-fieldset legend="Configuración de Usuario">
+   
+            <div class="text-900 font-medium text-xl mb-3">Configuración de Perfil</div>
+            <p class="text-600 mb-4">Actualiza tu información personal y contraseña</p>
+    
+            <form [formGroup]="configForm" (ngSubmit)="onSubmit()">
+                <!-- Avatar Section -->
+                <div class="mb-5 flex flex-column align-items-center">
+                    <div class="avatar-container mb-3">
+                        <p-avatar *ngIf="!avatar" [label]="label" styleClass="mr-2" size="xlarge" shape="circle"></p-avatar>
+                        <p-avatar *ngIf="avatar" [image]="avatar" styleClass="mr-2" size="xlarge" shape="circle"></p-avatar>
+                    </div>
+                    <div class="flex gap-2">
+                        <input type="file" class="hidden" (change)="fileChangeEvent($event)" accept="image/*" #inputAvatar>
+                        <p-button type="button" icon="pi pi-camera" (onClick)="inputAvatar.click()" severity="secondary" [text]="true"></p-button>
+                        <p-button type="button" icon="pi pi-trash" (onClick)="clearAvatar()" severity="danger" [text]="true"></p-button>
+                    </div>
+                </div>
+    
+                <!-- Información Personal -->
+                <div class="grid formgrid">
+                    <div class="field col-12 md:col-6">
+                        <span class="p-float-label">
+                            <input id="nombre" type="text" pInputText formControlName="nombre" class="w-full">
+                            <label for="nombre">Nombre</label>
+                        </span>
+                        <small class="p-error" *ngIf="configForm.get('nombre')?.invalid && configForm.get('nombre')?.touched">
+                            El nombre es requerido
+                        </small>
+                    </div>
+    
+                    <div class="field col-12 md:col-6">
+                        <span class="p-float-label">
+                            <input id="apellido" type="text" pInputText formControlName="apellido" class="w-full">
+                            <label for="apellido">Apellido</label>
+                        </span>
+                        <small class="p-error" *ngIf="configForm.get('apellido')?.invalid && configForm.get('apellido')?.touched">
+                            El apellido es requerido
+                        </small>
+                    </div>
+    
+                  
+                </div>
+    
+                <!-- Toggle Cambio de Contraseña -->
+                <div class="field-checkbox mb-4">
+                    <p-checkbox [(ngModel)]="showPasswordSection" [binary]="true" 
+                              [ngModelOptions]="{standalone: true}" 
+                              inputId="showPassword"></p-checkbox>
+                    <label for="showPassword" class="ml-2">Cambiar contraseña</label>
+                </div>
+    
+                <!-- Sección de Contraseña -->
+                <div *ngIf="showPasswordSection" class="password-section">
+                    <div class="field mb-4">
+                        <span class="p-float-label">
+                            <p-password id="currentPassword" formControlName="currentPassword" 
+                                      [feedback]="false" [toggleMask]="true" 
+                                      styleClass="w-full"></p-password>
+                            <label for="currentPassword">Contraseña Actual</label>
+                        </span>
+                    </div>
+    
+                    <div class="field mb-4">
+                        <span class="p-float-label">
+                            <p-password id="newPassword" formControlName="newPassword" 
+                                      [toggleMask]="true" styleClass="w-full">
+                                <ng-template pTemplate="footer">
+                                    <p-divider></p-divider>
+                                    <p class="mt-2">La contraseña debe contener:</p>
+                                    <ul class="pl-2 ml-2 mt-0 text-xs">
+                                        <li>Al menos 8 caracteres</li>
+                                        <li>Al menos una mayúscula</li>
+                                        <li>Al menos un número</li>
+                                    </ul>
+                                </ng-template>
+                            </p-password>
+                            <label for="newPassword">Nueva Contraseña</label>
+                        </span>
+                    </div>
+    
+                    <div class="field mb-4">
+                        <span class="p-float-label">
+                            <p-password id="confirmPassword" formControlName="confirmPassword" 
+                                      [feedback]="false" [toggleMask]="true" 
+                                      styleClass="w-full"></p-password>
+                            <label for="confirmPassword">Confirmar Nueva Contraseña</label>
+                        </span>
+                        <small class="p-error" *ngIf="!passwordsMatch && configForm.get('confirmPassword')?.touched">
+                            Las contraseñas no coinciden
+                        </small>
+                    </div>
+                </div>
+    
+                <!-- Botones de Acción -->
+               
+                <div class="flex  flex-wrap gap-2 align-items-center mt-3">
+                    <p-button type="submit" label="Guardar"  icon="pi pi-check" [loading]="loading"
+                    [disabled]="!configForm.valid || (showPasswordSection && !passwordsMatch)" size="small"/>                      
+           
+               </div>
+            </form>
+     
+    </p-fieldset>
+</div>
+ 
+<div class="surface-ground px-4 py-5 md:px-6 lg:px-8">
+ 
+</div>
+
+<!-- Diálogo para recortar imagen -->
+<p-dialog [(visible)]="display" header="Recortar Imagen" 
+          [modal]="true" [style]="{width: '450px'}" 
+          styleClass="p-fluid">
+    <image-cropper
+        [imageChangedEvent]="imageChangedEvent"
+        [maintainAspectRatio]="true"
+        [aspectRatio]="1"
+        format="png"
+        (imageCropped)="imageCropped($event)"
+        >
+    </image-cropper>
+    <ng-template pTemplate="footer">
+        <p-button label="Cancelar" icon="pi pi-times" (onClick)="cancelCrop()" 
+                 styleClass="p-button-text"></p-button>
+        <p-button label="Guardar" icon="pi pi-check" (onClick)="acceptCrop()" 
+                 styleClass="p-button-text"></p-button>
+    </ng-template>
+</p-dialog>
+
+<p-toast></p-toast>

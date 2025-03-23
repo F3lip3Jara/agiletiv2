@@ -143,7 +143,7 @@ export class AppLayoutComponent implements OnDestroy , OnInit  {
     ngOnInit(): void {       
         this.store.select(selectEstado).subscribe((estado: any) => {          
            this.isLoading$ = estado.loading;
-           let altura = estado.altura
+           let altura = estado.altura + 50;
            if(altura > 1450){
             altura = 1400;
            }

@@ -30,23 +30,20 @@ export class ClaseServices {
       ) 
     );
   }
-/*
+
   createClase(clase: any): Observable<any> {
-    let clase = {
-      claseDes: clase
-    }
-    return this.rest.post('insClase', this.token, clase).pipe(
+    return this.rest.post('insSdClass', this.token, clase).pipe(
       map((data: any) => data)
     );
   }
 
   updateClase(clase: any): Observable<any> {
  
-    return this.rest.post('updClase', this.token,clase).pipe(
+    return this.rest.post('updSdClass', this.token,clase).pipe(
       map((data: any) => data)
     );  
   }
-
+/*
   deleteClase(clase: any): Observable<any> {
 
     return this.rest.post('delClase', this.token, clase).pipe(

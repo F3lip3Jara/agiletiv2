@@ -12,7 +12,7 @@ import { selectAcciones } from '../../state/selectors/acciones.selectors';
 import { incrementarRequest } from '../../../state/actions/estado.actions';
 import { MenuItem } from 'primeng/api';
 import { Table } from 'primeng/table';
-import { accionesDeleteRequest, accionesDeleteSuccess, getAccionesRequest } from '../../state/actions/acciones.actions';
+import { accionesDeleteRequest, accionesDeleteSuccess, getAccionesRequest, getAccionesSuccess } from '../../state/actions/acciones.actions';
 import { Actions, ofType } from '@ngrx/effects';
 @Component({
   selector: 'app-acciones',
@@ -45,9 +45,7 @@ export class AccionesComponent {
       private actions$ : Actions
     ) {
       // Inicializar el observable
-      this.data$  = this.store.select(selectAcciones).pipe(
-        map(acciones => Array.isArray(acciones) ? acciones : [])
-      );
+      
 
       this.actionItems = [
         {
@@ -81,11 +79,11 @@ export class AccionesComponent {
       this.store.dispatch(incrementarRequest({request: 1}));
       this.store.dispatch(getAccionesRequest({optId: this.opcion.optId}));
       // Suscribirse al observable
-      this.subscription.add(
-        this.data$.subscribe(acciones => {
-          this.data = acciones || []; // Asegurarse de que siempre sea un array
-        })
-      );
+      this.actions$.pipe(
+        ofType(getAccionesSuccess)
+      ).subscribe((response : any) => {
+        this.data = response.acciones;
+      });
     }
   
     openNew() {  

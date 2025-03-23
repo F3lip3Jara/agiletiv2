@@ -72,12 +72,12 @@ export class ColorComponent  {
   }
 
   openNew() {  
-    this.router.navigate(['desk/seguridad/color/inscolor']);
+    this.router.navigate(['desk/parametros/color/inscolor']);
   }
 
   edit(data: any) {  
     const dato = btoa(JSON.stringify(data));    
-   // this.router.navigate(['desk/seguridad/color/upcolor/'+ dato]);
+    this.router.navigate(['desk/parametros/color/upcolor/'+ dato]);
   }
 
   onGlobalFilter(table: Table, event: Event) {

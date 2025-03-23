@@ -71,5 +71,17 @@ export const reiniciarUsuarioSuccess = createAction(
     "[Usuarios] Reiniciar Usuario Success"
 )
 
+export const upconfiguserRequest = createAction(
+    "[Usuarios] Upconfiguser Request",  // Identificador del tipo de acción
+    props<{usuario: any }>()   // Carga útil que contiene el id del usuario a desactivar
+)
+
+export const upconfiguserSuccess = createAction(
+    "[Usuarios] Upconfiguser Success"
+)
+
+
+
+
 
 

@@ -1,1 +1,39 @@
-<p>up-clase works!</p>
+<div class="col-12 p-fluid" >
+    <p-fieldset legend="Ingreso  de clase documento">
+        <div class="col-12">
+            <form
+            [formGroup] = "up"
+            (ngSubmit)  = "guardar()">
+           
+                <div class="grid formgrid">
+                    <div class="col-12 mb-4">
+                        <span class="p-float-label">
+                            <input id="float-input" type="text" pInputText formControlName="clasTipDes" oninput="this.value = this.value.toUpperCase()" 
+                            [ngClass]="(up.controls['clasTipDes'].hasError('required'))
+              ? '           was-validated' : 'is-valid'" >
+                            <label for="float-input">Codigo</label>
+                        </span>
+                        <div *ngIf= "up.controls['clasTipDes'].hasError('required')">
+                            <span class="text-danger">Campo obligatorio!</span>
+                        </div>                    
+                    </div>
+                    <div class="col-12  w-90" >
+                        <span class="p-float-label">
+                            <p-dropdown id="clasTip" [options]="clasTip" formControlName="clasTip" 
+                                optionLabel="label" optionValue="value" 
+                                [ngClass]="(up.controls['clasTip'].hasError('required')) ? 'was-validated' : 'is-valid'">
+                            </p-dropdown>
+                            <label for="clasTip">Tipo</label>
+                        </span>                 
+                    </div>
+                </div>
+              
+               <div class="flex  flex-wrap gap-2 align-items-center mt-3">
+                    <p-button type="submit" label="Guardar" icon="pi pi-check" size="small" *ngIf="up.valid"
+                    [loading]="val"
+                        />
+                    <p-button label="Volver" icon="pi pi-arrow-down" size="small"  routerLink="/desk/parametros/clase" severity="secondary" />
+               </div>
+            </form>
+        </div>
+    </p-fieldset>

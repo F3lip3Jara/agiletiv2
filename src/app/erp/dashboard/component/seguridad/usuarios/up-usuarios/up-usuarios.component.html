@@ -103,15 +103,18 @@
                               </div>                     
                     </div>
                 </div>            
-               <div class="grid formgrid">  
+               <div class="formgrid">  
                 <p-fieldset legend="Avatar">                   
-                        <a pripple="" class="p-ripple p-element flex align-items-center cursor-pointer p-3 border-round text-700 hover:surface-100 transition-duration-150 transition-colors">
-                            <p-avatar *ngIf="this.avatar.length ===0"  label="{{label}}" size="large" shape="circle" class="shrink-0 p-avatar p-component p-avatar-circle p-avatar-lg p-avatar-image" data-pc-name="avatar" pc28=""></p-avatar>
-                            <p-avatar *ngIf="this.avatar.length > 0"   image="{{avatar}}"  size="large" shape="circle" class="shrink-0 p-avatar p-component p-avatar-circle p-avatar-lg p-avatar-image" data-pc-name="avatar" pc28=""></p-avatar>                         
-                        </a>                        
-                    <div class="flex  flex-wrap gap-2 align-items-center">                       
-                        <p-button label="Limpiar" icon="pi pi-check" size="secondary" size="small" (onClick)="clearAvatar()"/>
-                        <input type="file" class="p-ripple p-element p-button p-component p-button-sm" style="width: 300px;" (change)="fileChangeEvent($event)"  placeholder="Selecione" accept="image/*"  #inputAvatar/>                                             
+                    <div class="mb-5 flex flex-column align-items-center">
+                        <div class="avatar-container mb-3">
+                            <p-avatar *ngIf="!avatar" [label]="label" styleClass="mr-2" size="xlarge" shape="circle"></p-avatar>
+                            <p-avatar *ngIf="avatar" [image]="avatar" styleClass="mr-2" size="xlarge" shape="circle"></p-avatar>
+                        </div>
+                        <div class="flex gap-2">
+                            <input type="file" class="hidden" (change)="fileChangeEvent($event)" accept="image/*" #inputAvatar>
+                            <p-button type="button" icon="pi pi-camera" (onClick)="inputAvatar.click()" severity="secondary" [text]="true"></p-button>
+                            <p-button type="button" icon="pi pi-trash" (onClick)="clearAvatar()" severity="danger" [text]="true"></p-button>
+                        </div>
                     </div>
                 </p-fieldset>                       
                </div>

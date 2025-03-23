@@ -3,7 +3,7 @@ import { Actions, createEffect, ofType } from '@ngrx/effects';
 import { of } from 'rxjs';
 import { catchError, exhaustMap, map, mergeMap } from 'rxjs/operators';
 import { UsuariosService } from '../service/usuarios.services'; // Ajusta la ruta
-import {  updateUsuarioRequest ,getUsuariosRequest, usuariosError, getUsuariosSuccess, createUsuarioSuccess, createUsuarioRequest , updateUsuarioSuccess, dataUsuarioRequest, dataUsuarioSuccess, desactivarUsuarioRequest, desactivarUsuarioSuccess, reiniciarUsuarioRequest, reiniciarUsuarioSuccess } from '../actions/usuarios.actions';
+import {  updateUsuarioRequest ,getUsuariosRequest, usuariosError, getUsuariosSuccess, createUsuarioSuccess, createUsuarioRequest , updateUsuarioSuccess, dataUsuarioRequest, dataUsuarioSuccess, desactivarUsuarioRequest, desactivarUsuarioSuccess, reiniciarUsuarioRequest, reiniciarUsuarioSuccess, upconfiguserRequest, upconfiguserSuccess } from '../actions/usuarios.actions';
 import { getMensajesSuccess } from '../../../state/actions/mensajes.actions';
 
 @Injectable()
@@ -97,6 +97,20 @@ dataUsuario$ = createEffect(() => this.actions$.pipe(
         .pipe(
             map((resp: any) => dataUsuarioSuccess({ avatar: resp })),
             catchError(error => of(usuariosError({ error: error.message })))
+        )
+    )
+))
+
+upconfiguser$ = createEffect(() => this.actions$.pipe(
+    ofType(upconfiguserRequest), // Se escucha la acción createTodoRequest y esto desencadena el flujo
+    //exhaustMap evita las peticiones duplicadas
+    exhaustMap((usuario) =>
+        this.usuarioService.upconfiguser(usuario.usuario)// Se envía el todo proveniente de la acción al servicio
+        .pipe(
+            mergeMap(resp => [
+                        getMensajesSuccess({ mensaje: resp }),
+                         upconfiguserSuccess()
+                    ]),
         )
     )
 ))

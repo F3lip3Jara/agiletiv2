@@ -14,3 +14,29 @@ export const subgrupoError = createAction(
     '[Subgrupo] Subgrupo Error',
     props<{ error: string }>()
 );
+
+export const createSubgrupoRequest = createAction(
+    '[Subgrupo] Create Subgrupo Request',
+    props<{ subgrupo: Subgrupo }>()
+);
+
+
+export const createSubgrupoSuccess = createAction(
+    '[Subgrupo] Create Subgrupo Success'
+);
+
+export const updateSubgrupoRequest = createAction(
+    '[Subgrupo] Update Subgrupo Request',
+    props<{ subgrupo: Subgrupo }>()
+);
+
+export const updateSubgrupoSuccess = createAction(
+    '[Subgrupo] Update Subgrupo Success'
+);
+
+
+
+
+
+
+

@@ -16,7 +16,12 @@ export class AppFooterComponent {
 
     ngOnInit(): void {
         this.store.select(selectEstado).subscribe((estado : any) => {
-            this.progreso = estado.loading ? 100 : 0;       
+            let progreso = 0;
+            const loading = estado.loading;
+            const total = estado.total;
+            const current = estado.current;
+            progreso = Math.round((current / total) * 100);
+            this.progreso = progreso;
         });
     }
 

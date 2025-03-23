@@ -128,7 +128,9 @@ export class AppTopBarComponent {
         const storedConfig = localStorage.getItem(this.getStorageKey());
         
         if (storedConfig) {
-            const parsedConfig = JSON.parse(storedConfig);
+         //   console.log(storedConfig);            
+            const parsedConfig :any= JSON.parse(storedConfig);
+         //   console.log(parsedConfig);
             this.isDarkMode = parsedConfig.themeVariant.isDark;
         }else{
             this.isDarkMode = this.layoutService.config().colorScheme === 'dark';
@@ -146,7 +148,7 @@ export class AppTopBarComponent {
                 label: 'Mi Perfil',
                 icon: 'pi pi-user',
                 command: () => {
-                    // Implementar navegación al perfil
+                    this.router.navigate(['/desk/configuracion/user']);
                 }
             },
             {
@@ -156,6 +158,16 @@ export class AppTopBarComponent {
                     this.onNotificationButtonClick(event.originalEvent);
                 }
             },
+          
+          
+            {
+                label: (this.isDarkMode) ? 'Modo Oscuro' : 'Modo Claro',
+                icon: (this.isDarkMode) ? 'pi pi-moon' : 'pi pi-sun',
+                command: () => {
+                    this.toggleTheme();
+                }
+            },
+          
             { separator: true },
             {
                 label: 'Configuración',

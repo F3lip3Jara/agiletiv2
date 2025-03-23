@@ -71,12 +71,12 @@ export class GrupoComponent  {
   }
 
   openNew() {  
-    this.router.navigate(['desk/seguridad/grupo/insgrupo']);
+    this.router.navigate(['desk/parametros/grupo/insgrupo']);
   }
 
   edit(data: any) {  
     const dato = btoa(JSON.stringify(data));    
-    this.router.navigate(['desk/seguridad/grupo/upgrupo/'+ dato]);
+    this.router.navigate(['desk/parametros/grupo/upgrupo/'+ dato]);
   }
 
   onGlobalFilter(table: Table, event: Event) {

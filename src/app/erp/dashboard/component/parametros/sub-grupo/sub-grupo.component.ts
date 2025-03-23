@@ -71,12 +71,12 @@ export class SubGrupoComponent  {
   }
 
   openNew() {  
-    this.router.navigate(['desk/seguridad/sub-grupo/insSubgrupo']);
+    this.router.navigate(['desk/parametros/sub_grupo/inssubgrupo']);
   } 
 
   edit(data: any) {  
-  //  const dato = btoa(JSON.stringify(data));    
-   // this.router.navigate(['desk/seguridad/sub-grupo/upSubgrupo/'+ dato]);
+    const dato = btoa(JSON.stringify(data));    
+    this.router.navigate(['desk/parametros/sub_grupo/upsubgrupo/'+ dato]);
   }
 
   onGlobalFilter(table: Table, event: Event) {

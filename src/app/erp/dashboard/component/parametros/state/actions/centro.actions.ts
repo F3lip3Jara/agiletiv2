@@ -14,3 +14,28 @@ export const centroError = createAction(
     '[Centro] Centro Error',
     props<{ error: string }>()
 );
+
+export const createCentroRequest = createAction(
+    '[Centro] Create Centro Request',
+    props<{ centro: Centro }>()
+);
+
+export const createCentroSuccess = createAction(
+    '[Centro] Create Centro Success'
+);
+
+export const updateCentroRequest = createAction(
+    '[Centro] Update Centro Request',
+    props<{ centro: Centro }>()
+);
+
+export const updateCentroSuccess = createAction(
+    '[Centro] Update Centro Success'
+);
+
+
+
+
+
+
+

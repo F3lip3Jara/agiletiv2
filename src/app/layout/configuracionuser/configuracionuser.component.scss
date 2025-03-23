@@ -1,0 +1,82 @@
+:host ::ng-deep {
+    .avatar-container {
+        position: relative;
+        display: inline-block;
+
+        .p-avatar {
+            width: 120px;
+            height: 120px;
+            font-size: 2.5rem;
+            
+            &.p-avatar-image img {
+                object-fit: cover;
+            }
+        }
+    }
+
+    .p-password {
+        width: 100%;
+        
+        input {
+            width: 100%;
+        }
+    }
+
+    .p-calendar {
+        width: 100%;
+        
+        .p-inputtext {
+            width: 100%;
+        }
+    }
+
+    .password-section {
+        animation: fadeIn 0.3s ease-in-out;
+    }
+
+    .p-checkbox {
+        .p-checkbox-box {
+            &.p-highlight {
+                border-color: var(--primary-color);
+                background: var(--primary-color);
+            }
+        }
+    }
+
+    .p-button {
+        &.p-button-text {
+            &:enabled:hover {
+                background: rgba(var(--primary-color-rgb), 0.04);
+                color: var(--primary-color);
+            }
+        }
+    }
+
+    .p-float-label {
+        input:focus ~ label,
+        input.p-filled ~ label,
+        textarea:focus ~ label,
+        textarea.p-filled ~ label,
+        .p-inputwrapper-focus ~ label,
+        .p-inputwrapper-filled ~ label {
+            top: -0.75rem;
+            font-size: 12px;
+            color: var(--primary-color);
+        }
+    }
+}
+
+.hidden {
+    display: none;
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(-10px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}

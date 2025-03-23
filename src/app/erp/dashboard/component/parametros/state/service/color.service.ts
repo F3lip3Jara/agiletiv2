@@ -21,7 +21,6 @@ export class ColorServices {
   ) {  }
 
    getColor(): Observable<any> {
-    this.token = this.userSer.getToken();
     
        return this.rest.get('trabColor', this.token, this.parametros).pipe(
         map(
@@ -30,23 +29,27 @@ export class ColorServices {
       ) 
     );
   }
-/*
+
+  getColorInfo(colCod: string): Observable<any> {
+    let parametros = [{key: 'colCod', value: colCod}];
+    return this.rest.get('colorInfo', this.token, parametros).pipe(
+      map((data: any) => data)
+    );
+  } 
+
   createColor(color: any): Observable<any> {
-    let color = {
-      colorDes: color
-    }
+   
     return this.rest.post('insColor', this.token, color).pipe(
       map((data: any) => data)
     );
   }
 
-  updateColor(color: any): Observable<any> {
- 
+  updateColor(color: any): Observable<any> { 
     return this.rest.post('updColor', this.token,color).pipe(
       map((data: any) => data)
     );  
   }
-
+/*
   deleteColor(color: any): Observable<any> {
 
     return this.rest.post('delColor', this.token, color).pipe(

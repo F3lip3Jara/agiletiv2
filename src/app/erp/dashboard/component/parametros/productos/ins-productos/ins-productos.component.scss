@@ -1,0 +1,237 @@
+:host ::ng-deep {
+    .card {
+        background: var(--surface-card);
+        border: 1px solid var(--surface-border);
+        box-shadow: var(--card-shadow);
+        margin-bottom: 1.5rem;
+        padding: 1.5rem;
+        border-radius: var(--border-radius);
+        transition: all 0.3s ease;
+
+        &:hover {
+            box-shadow: var(--card-shadow-hover);
+        }
+
+        h5 {
+            margin: 0 0 1.5rem 0;
+            padding-bottom: 0.75rem;
+            border-bottom: 1px solid var(--surface-border);
+            font-size: 1.2rem;
+            font-weight: 600;
+            color: var(--text-color);
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+
+            i {
+                color: var(--primary-color);
+            }
+        }
+
+        h6 {
+            color: var(--text-color);
+            font-weight: 500;
+            margin-bottom: 1rem;
+        }
+    }
+
+    .field {
+        margin-bottom: 1.5rem;
+
+        label {
+            display: block;
+            margin-bottom: 0.5rem;
+            color: var(--text-color-secondary);
+            font-size: 0.875rem;
+            font-weight: 500;
+        }
+    }
+
+    .p-editor-container {
+        border-radius: var(--border-radius);
+        overflow: hidden;
+
+        .p-editor-toolbar {
+            background: var(--surface-ground);
+            border-color: var(--surface-border);
+        }
+
+        .p-editor-content {
+            border-color: var(--surface-border);
+            background: var(--surface-card);
+            color: var(--text-color);
+        }
+    }
+
+   
+
+    .p-dropdown {
+        width: 100%;
+        background: var(--surface-card);
+        
+        .p-dropdown-label {
+            padding: 0.75rem;
+            color: var(--text-color);
+        }
+    }
+
+    .p-button {
+        &.p-button-secondary {
+            background: var(--surface-ground);
+            border-color: var(--surface-border);
+            color: var(--text-color-secondary);
+
+            &:hover {
+                background: var(--surface-hover);
+                border-color: var(--surface-border);
+                color: var(--text-color);
+            }
+        }
+    }
+
+    .p-chip {
+        background: var(--surface-ground);
+        color: var(--text-color);
+        border-radius: var(--border-radius);
+        padding: 0.5rem 1rem;
+        cursor: move;
+        transition: all 0.2s ease;
+        border: 1px solid var(--surface-border);
+        user-select: none;
+
+        &:hover {
+            transform: translateY(-2px);
+            box-shadow: var(--card-shadow);
+            background: var(--surface-hover);
+        }
+
+        &.color-chip {
+            color: var(--text-color-inverse);
+            text-shadow: 0 1px 2px rgba(0,0,0,0.2);
+        }
+
+        &.p-draggable-dragging {
+            opacity: 0.5;
+        }
+
+        &.cdk-drag-preview {
+            box-shadow: 0 5px 15px rgba(0,0,0,0.15);
+            opacity: 0.8;
+        }
+
+        &.cdk-drag-placeholder {
+            opacity: 0;
+        }
+
+        &.cdk-drag-animating {
+            transition: transform 250ms cubic-bezier(0, 0, 0.2, 1);
+        }
+    }
+
+    .cdk-drop-list-dragging .p-chip:not(.cdk-drag-placeholder) {
+        transition: transform 250ms cubic-bezier(0, 0, 0.2, 1);
+    }
+}
+
+// Estilos para el sistema de atributos
+.attributes-container {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 1.5rem;
+    margin-top: 1rem;
+
+    @media (max-width: 768px) {
+        grid-template-columns: 1fr;
+    }
+
+    .attribute-section {
+        background: var(--surface-card);
+        border-radius: var(--border-radius);
+        padding: 1rem;
+        box-shadow: var(--card-shadow);
+
+        h6 {
+            margin-bottom: 1rem;
+            color: var(--text-color);
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+
+            i {
+                color: var(--primary-color);
+            }
+        }
+    }
+
+    .attribute-group {
+        margin-bottom: 1.5rem;
+
+        label {
+            display: block;
+            margin-bottom: 0.5rem;
+            color: var(--text-color-secondary);
+            font-weight: 500;
+        }
+
+        .attribute-target {
+            min-height: 3rem;
+            border: 2px dashed var(--surface-border);
+            border-radius: var(--border-radius);
+            padding: 0.5rem;
+            margin-bottom: 0.5rem;
+            transition: all 0.2s;
+
+            &.cdk-drop-list-dragging {
+                background: var(--primary-50);
+                border-color: var(--primary-color);
+            }
+
+            &.cdk-drop-list-receiving {
+                border-style: solid;
+                background: var(--surface-hover);
+            }
+        }
+
+        .attribute-chips {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.5rem;
+            padding: 0.5rem;
+            border: 1px solid var(--surface-border);
+            border-radius: var(--border-radius);
+            background: var(--surface-ground);
+
+            &.cdk-drop-list-dragging {
+                background: var(--surface-hover);
+            }
+        }
+    }
+}
+
+// Variables para modo oscuro
+:host-context(.dark-theme) {
+    --card-shadow: 0 2px 8px rgba(0,0,0,0.2);
+    --card-shadow-hover: 0 4px 12px rgba(0,0,0,0.3);
+}
+
+// Estilos específicos para el layout
+.grid {
+    margin: 0;
+    padding: 1rem;
+}
+
+.flex {
+    gap: 1rem;
+}
+
+// Responsive
+@media screen and (max-width: 960px) {
+    .flex {
+        flex-direction: column;
+    }
+
+    .col-8, .col-4 {
+        width: 100%;
+        padding: 0;
+    }
+} 
