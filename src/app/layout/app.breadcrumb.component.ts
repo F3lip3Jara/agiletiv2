@@ -10,7 +10,7 @@ import { filter } from 'rxjs/operators';
             <p-breadcrumb 
                 [model]="items" 
                 [home]="home"
-                [styleClass]="'custom-breadcrumb'"
+                [styleClass]="'custom-breadcrumb'"              
             ></p-breadcrumb>
         </div>
     `,
@@ -85,15 +85,18 @@ export class AppBreadcrumbComponent implements OnInit {
     items: MenuItem[] = [];
     home: MenuItem = { icon: 'pi pi-home', routerLink: '/desk/home' };
     isMobile: boolean = window.innerWidth < 768;
+    private readonly HISTORY_KEY = 'breadcrumb_history';
 
     constructor(private router: Router) {
         this.router.events
             .pipe(filter(event => event instanceof NavigationEnd))
-            .subscribe(() => {
+            .subscribe((event: NavigationEnd) => {
+                let url = decodeURIComponent(event.url);
+                this.updateHistory(url);
                 this.generateBreadcrumb();
             });
     }
-
+4
     ngOnInit() {
         this.generateBreadcrumb();
         window.addEventListener('resize', () => {
@@ -101,26 +104,72 @@ export class AppBreadcrumbComponent implements OnInit {
         });
     }
 
-    private generateBreadcrumb() {
-        const paths = this.router.url.split('/').filter(x => x);
-        this.items = [];
-        let fullPath = '';
+    private updateHistory(url: string) {
+        let history: {label: string, routerLink: string}[] = JSON.parse(localStorage.getItem(this.HISTORY_KEY) || '[]');
+         const paths = this.router.url.split('/').filter(x => x);
+        let label :string = '';
+        paths.forEach(path => {
+            if(path.length < 15){
+                label = this.formatLabel(path);
+            }
+            
+        });
+
+
+        // Si la URL ya existe en el historial, eliminamos todo lo que viene después
+     //   const existingIndex = history.indexOf();
+        let existingIndex =0;
+      /*  history.forEach(breadcrumb => {
+            if(breadcrumb.routerLink === url){
+                if(existingIndex === 0){
+                    existingIndex = history.indexOf(breadcrumb);
+                }
+            }
+        });*/     
         
-        // Si el último segmento tiene más de 10 caracteres, lo eliminamos
-        if (paths.length > 0 && paths[paths.length - 1].length > 10) {
-            paths.pop();
+        if (existingIndex > 1) {
+           history = history.slice(0, existingIndex );
+        } else {
+            // Si es una nueva URL, la agregamos al historial            
+            let breadcrumb = {label : label , routerLink : url}; 
+            history.push(breadcrumb);
+         }
+
+        // Limitamos el historial a las últimas 10 URLs
+        if (history.length > 15) {
+            history = history.slice(-15);
         }
 
-        paths.forEach(path => {
-            fullPath += '/' + path;
-            this.items.push({
-                label: this.formatLabel(path),
-                routerLink: fullPath
-            });
-        });
+        localStorage.setItem(this.HISTORY_KEY, JSON.stringify(history));
+    }
+
+    private generateBreadcrumb() {
+        const history: any[] = JSON.parse(localStorage.getItem(this.HISTORY_KEY) || '[]');
+        this.items = [];
+        const paths = this.router.url.split('/').filter(x => x);
+     
+       paths.forEach(path => {
+        if(path.length < 15){
+            let label = this.formatLabel(path);
+            let breadcrumb = history.find(breadcrumb => breadcrumb.label === label);
+            let currentPath = '';
+            currentPath += '/' + path;
+            
+            if(breadcrumb){
+                this.items.push(breadcrumb);
+            }else{
+                this.items.push({
+                    label: this.formatLabel(path),
+                    routerLink: ''
+                });
+            }
+        }
+       });
     }
 
     private formatLabel(path: string): string {
         return path.charAt(0).toUpperCase() + path.slice(1).toLowerCase();
     }
+
+    
 } 

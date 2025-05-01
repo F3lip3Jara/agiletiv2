@@ -51,7 +51,8 @@ export class UpModuloComponent implements OnInit {
     'pi pi-paperclip', 'pi pi-link', 'pi pi-share-alt', 'pi pi-search',
     'pi pi-angle-right', 'pi pi-angle-left', 'pi pi-angle-up', 'pi pi-angle-down',
     'pi pi-check', 'pi pi-times', 'pi pi-plus', 'pi pi-minus', 'pi pi-trash',
-    'pi pi-pencil', 'pi pi-save', 'pi pi-refresh', 'pi pi-sync', 'pi pi-print'
+    'pi pi-pencil', 'pi pi-save', 'pi pi-refresh', 'pi pi-sync', 'pi pi-print',
+    'pi pi-warehouse'
   ];
 
   constructor(

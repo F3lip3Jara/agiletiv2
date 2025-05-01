@@ -54,15 +54,16 @@
                             <label for="float-input">Fecha Nacimiento</label>
                        </span>
                     </div>
-                    <div class="col-12 mb-2 lg:col-6 lg:mb-0  p-3" formControlName="rol"> 
-                                
+                    <div class="col-12 mb-2 lg:col-6 lg:mb-0  p-3" > 
+                      
                               <ng-select  [items]="roles$ | async"
                                           bindLabel="rolDes"
                                           bindValue="rolId" 
                                           placeholder="Seleccione Rol"  
                                           [ngClass]="(ins.controls['rol'].hasError('required'))
                                              ? 'was-validated' : 'is-valid'"  
-                                          formControlName="rol"                                
+                                          formControlName="rol" 
+                                          [loading]="loading"
                                          >                                           
                               </ng-select >  
                               <div *ngIf = "ins.controls['rol'].hasError('required')">

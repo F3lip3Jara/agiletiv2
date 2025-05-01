@@ -24,5 +24,10 @@ export const _regionReducer = createReducer(
     on(RegionActions.regionError, (state, { error }) => ({
         ...state,
         error
+    })),
+
+    on(RegionActions.getRegionesPaisSuccess, (state, { region }) => ({
+        ...state,
+        region
     }))
 );

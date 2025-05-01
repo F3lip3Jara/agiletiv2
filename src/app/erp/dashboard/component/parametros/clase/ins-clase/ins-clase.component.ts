@@ -38,6 +38,7 @@ export class InsClaseComponent {
       this.ins = this.fb.group({
         clasTip : ['', Validators.required],
         clasTipDes : ['', Validators.required],
+        clasTipCod : ['', Validators.required],
       });     
     }
 

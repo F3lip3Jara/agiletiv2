@@ -1,4 +1,4 @@
-import { Component, OnInit, OnDestroy, ViewChild } from '@angular/core';
+import { Component, OnInit, OnDestroy, ViewChild, ElementRef } from '@angular/core';
 import { Subscription, Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { Store } from '@ngrx/store';
@@ -17,7 +17,7 @@ import { SUBGRUPO_KEYS } from '../state/interface/subgrupo.interface';
   templateUrl: './sub-grupo.component.html',
   styleUrl: './sub-grupo.component.scss'
 })
-export class SubGrupoComponent  {
+export class SubGrupoComponent implements OnInit {
   data$: Observable<any[]>;
   loading: boolean = false;
   data: any[] = [];
@@ -28,6 +28,9 @@ export class SubGrupoComponent  {
   selectedRow: any = null;
   actionItems: MenuItem[] = [];
   globalFilterFields  : string[]       = SUBGRUPO_KEYS;
+  showSearchDialog: boolean = false;
+  @ViewChild('searchInput') searchInput!: ElementRef;
+  dt!: Table;
   constructor(
     private store: Store<AppState>,
     private router: Router,
@@ -103,5 +106,14 @@ export class SubGrupoComponent  {
 
   onActionClick(item: any) {
     this.selectedRow = item;
+  }
+
+  onSearchValueChange(value: string) {
+    if (this.searchInput && this.searchInput.nativeElement) {
+      const inputElement = this.searchInput.nativeElement as HTMLInputElement;
+      inputElement.value = value;
+      const event = new Event('input', { bubbles: true });
+      inputElement.dispatchEvent(event);
+    }
   }
 }

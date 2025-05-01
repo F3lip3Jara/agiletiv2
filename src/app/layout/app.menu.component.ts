@@ -43,7 +43,7 @@ export class AppMenuComponent implements OnInit {
                     if (opcion.optSub === "S" && opcion.childrens.length > 0) {
                         return {
                             label: opcion.optDes,
-                            icon: opcion.optIcon,
+                            icon: module.molIcon, 
                             items: opcion.childrens.map(child => ({
                                 label: child.name,
                                 icon: child.icon,

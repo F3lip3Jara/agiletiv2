@@ -1,4 +1,4 @@
-import { Component, OnInit, OnDestroy, ViewChild } from '@angular/core';
+import { Component, OnInit, OnDestroy, ViewChild, ElementRef } from '@angular/core';
 import { Subscription, Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { Store } from '@ngrx/store';
@@ -17,7 +17,7 @@ import { getTipospagosRequest } from '../state/actions/tipospagos.actions';
   templateUrl: './tipo-pagos.component.html',
   styleUrl: './tipo-pagos.component.scss'
 })
-export class TipoPagosComponent  {
+export class TipoPagosComponent implements OnInit {
   data$: Observable<any[]>;
   loading: boolean = false;
   data: any[] = [];
@@ -28,6 +28,9 @@ export class TipoPagosComponent  {
   selectedRow: any = null;
   actionItems: MenuItem[] = [];
   globalFilterFields  : string[]       =TIPOPAGOS_KEYS;
+  showSearchDialog: boolean = false;
+  @ViewChild('searchInput') searchInput!: ElementRef;
+  dt!: Table;
   constructor(
     private store: Store<AppState>,
     private router: Router,
@@ -47,15 +50,6 @@ export class TipoPagosComponent  {
             this.edit(this.selectedRow);
           }
         }
-      },
-      {
-        label: 'Eliminar',
-        icon: 'pi pi-trash',
-        command: () => {
-          if (this.selectedRow) {
-            this.del(this.selectedRow);
-          }
-        }
       }
     ];
   }
@@ -65,20 +59,18 @@ export class TipoPagosComponent  {
     this.store.dispatch(getTipospagosRequest());
     this.subscription.add(
       this.data$.subscribe(data => {
-        console.log(data);
-        
-        this.data = data || [];
+               this.data = data || [];
       })
     );
   }
 
   openNew() {  
-    this.router.navigate(['desk/seguridad/tipo-pagos/instipo-pagos']);
+    this.router.navigate(['desk/parametros/tipo_pago/instipopagos']);
   }
 
   edit(data: any) {  
     const dato = btoa(JSON.stringify(data));    
-   // this.router.navigate(['desk/seguridad/tipo-pagos/uptipo-pagos/'+ dato]);
+   this.router.navigate(['desk/parametros/tipo_pago/uptipopagos/'+ dato]);
   }
 
   onGlobalFilter(table: Table, event: Event) {
@@ -105,5 +97,14 @@ export class TipoPagosComponent  {
 
   onActionClick(item: any) {
     this.selectedRow = item;
+  }
+
+  onSearchValueChange(value: string) {
+    if (this.searchInput && this.searchInput.nativeElement) {
+      const inputElement = this.searchInput.nativeElement as HTMLInputElement;
+      inputElement.value = value;
+      const event = new Event('input', { bubbles: true });
+      inputElement.dispatchEvent(event);
+    }
   }
 }

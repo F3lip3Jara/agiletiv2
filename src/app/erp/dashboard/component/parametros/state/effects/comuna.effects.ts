@@ -20,4 +20,12 @@ export class ComunaEffects {
                 catchError(error => of(ComunaActions.comunaError({ error: error.message })))
             ))
     ));
+
+    getComunaByCiudad = createEffect(() => this.actions.pipe(
+        ofType(ComunaActions.getComunaByCiudadRequest),
+        switchMap(({ ciudad  , region , pais}) => this.comunaService.getComunaByCiudad(ciudad, region, pais)
+            .pipe(
+                map(comuna => ComunaActions.getComunaByCiudadSuccess({ comuna: comuna })),
+            ))
+    )); 
 }

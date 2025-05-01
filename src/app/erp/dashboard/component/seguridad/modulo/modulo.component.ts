@@ -1,4 +1,4 @@
-import { Component, OnInit, OnDestroy, ViewChild } from '@angular/core';
+import { Component, OnInit, OnDestroy, ViewChild, ElementRef } from '@angular/core';
 import { Subscription, Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { Store } from '@ngrx/store';
@@ -28,6 +28,9 @@ export class ModuloComponent implements OnInit, OnDestroy {
   subscription: Subscription = new Subscription();
   selectedRow: any = null;
   actionItems: MenuItem[] = [];
+  showSearchDialog: boolean = false;
+  @ViewChild('searchInput') searchInput!: ElementRef;
+  dt!: Table;
 
   constructor(
     private store: Store<AppState>,
@@ -125,5 +128,14 @@ export class ModuloComponent implements OnInit, OnDestroy {
   subModulos(modulo: any) {
     const dato = btoa(JSON.stringify(modulo));    
     this.router.navigate(['desk/seguridad/modulos/submodulos/'+ dato]);
+  }
+
+  onSearchValueChange(value: string) {
+    if (this.searchInput && this.searchInput.nativeElement) {
+      const inputElement = this.searchInput.nativeElement as HTMLInputElement;
+      inputElement.value = value;
+      const event = new Event('input', { bubbles: true });
+      inputElement.dispatchEvent(event);
+    }
   }
 }

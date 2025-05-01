@@ -39,9 +39,12 @@ import { UnidadEffects } from './erp/dashboard/component/parametros/state/effect
 import { ClaseEffects } from './erp/dashboard/component/parametros/state/effects/clase.effects';
 import { TipospagosEffects } from './erp/dashboard/component/parametros/state/effects/tipospagos.effects';
 import { ProveedorEffects } from './erp/dashboard/component/parametros/state/effects/proveedor.effects';
-import { ConfiguracionuserComponent } from './layout/configuracionuser/configuracionuser.component';
 import { ConfiguracionuserModule } from './layout/configuracionuser/configuracionuser.module';
 import { TallaEffects } from './erp/dashboard/component/parametros/state/effects/talla.effects';
+import { AlmacenEffects } from './erp/dashboard/component/parametros/state/effects/almacen.effects';
+import { PedidonacEffects } from './erp/dashboard/component/produccion/state/effects/pedidonac.effects';
+import { OrdenesEffects } from './erp/dashboard/component/wms/state/effects/ordenes.effects';
+import { SectorEffects } from './erp/dashboard/component/parametros/state/effects/sector.effects';
 @NgModule({
     declarations: [AppComponent, NotfoundComponent ],
     imports: [  AppRoutingModule, 
@@ -71,7 +74,11 @@ import { TallaEffects } from './erp/dashboard/component/parametros/state/effects
                     ClaseEffects,
                     TipospagosEffects,
                     ProveedorEffects,
-                    TallaEffects
+                    TallaEffects,
+                    AlmacenEffects,
+                    PedidonacEffects,
+                    OrdenesEffects,
+                    SectorEffects
                 ]),
                 StoreDevtoolsModule.instrument(),
                 FontAwesomeModule,
@@ -80,7 +87,7 @@ import { TallaEffects } from './erp/dashboard/component/parametros/state/effects
     providers: [
         { provide: LocationStrategy,  useClass: HashLocationStrategy},
         IconService, NodeService,
-        { provide: LOCALE_ID, useValue: 'es-ES' },
+        { provide: LOCALE_ID, useValue: 'es' },
         { provide: HTTP_INTERCEPTORS,
           useClass: InterceptorsErrorService,
           multi: true

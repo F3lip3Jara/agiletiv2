@@ -1,5 +1,15 @@
 <div class="layout-topbar">
-   <p-toast position="top-right" key="notification-toast" [baseZIndex]="5000" id="notification-toast"></p-toast>
+   <p-toast position="top-right" key="notification-toast" [baseZIndex]="5000" id="notification-toast">
+    <ng-template let-message pTemplate="message">
+        <div class="p-toast-message-content">
+            <span class="p-toast-message-icon" [class]="'pi pi-' + message.severity"></span>
+            <div class="p-toast-message-text">
+                <span class="p-toast-summary">{{message.summary}}</span>
+                <div class="p-toast-detail" [innerHTML]="message.detail"></div>
+            </div>
+        </div>
+    </ng-template>
+</p-toast>
 
     <a class="layout-topbar-logo animate-fade-in" routerLink="">
         <div class="logo-letter"><span>{{empresaNombreFormateado.charAt(0)}}</span></div>
@@ -180,7 +190,7 @@
                                                 <span class="sender-name">Sistema</span>
                                                 <span class="notification-time">{{msg.time}}</span>
                                             </div>
-                                            <p class="notification-message">{{msg.mensaje}}</p>
+                                            <p class="notification-message" [innerHTML]="msg.mensaje"></p>
                                         </div>
                                         <div class="notification-status" *ngIf="!msg.read">
                                             <span class="unread-indicator"></span>
@@ -207,7 +217,7 @@
                                                 <span class="sender-name">Sistema</span>
                                                 <span class="notification-time">{{msg.time}}</span>
                                             </div>
-                                            <p class="notification-message">{{msg.mensaje}}</p>
+                                            <p class="notification-message" [innerHTML]="msg.mensaje"></p>
                                         </div>
                                     </div>
                                     <div class="empty-message" *ngIf="archivedMessages.length === 0">

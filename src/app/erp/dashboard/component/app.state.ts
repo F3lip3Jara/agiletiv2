@@ -25,6 +25,10 @@ import { _claseReducer } from "./parametros/state/reducers/clase.reducer";
 import { _tipospagosReducer } from "./parametros/state/reducers/tipospagos.reducer";
 import { _proveedorReducer } from "./parametros/state/reducers/proveedor.reducer";
 import { _tallaReducer } from "./parametros/state/reducers/talla.reducer";
+import { _pedidonacReducer } from "./produccion/state/reducers/pedidonac.reducer";
+import { _ordenesReducer } from "./wms/state/reducers/ordenes.reducer";
+import { _sectorReducer } from "./parametros/state/reducers/sector.reducer";
+
 export interface AppState {
     usuarios    : DataStateUsuarios,
     productos   : DataStateProductos,
@@ -50,7 +54,10 @@ export interface AppState {
     clase       : DataStateClase,
     tipospagos   : DataStateTipoPagos,
     proveedor    : DataStateProveedor,
-    talla        : DataStateTalla
+    talla        : DataStateTalla,
+    pedidonac    : DataStatePedidonac,
+    ordenes      : DataStateOrdenes,
+    sector      : DataStateSector
 }
 
 export interface DataStateUsuarios {
@@ -206,6 +213,31 @@ export interface DataStateTalla {
     loading: boolean,
 }
 
+export interface DataStatePedidonac {
+    pedidonac: any[],
+    error?: string,
+    loading: boolean,
+    empresa: any,
+    productos: any[]
+}
+
+export interface DataStateOrdenes{
+    ordenes: any[],
+    error?: string,
+    loading: boolean,
+    empresa: any,
+    productos: any[],
+    jobId: number,
+    status: string,
+    url: string
+}
+
+export interface DataStateSector {
+    sector: any[],
+    error?: string,
+    loading: boolean,
+}
+
 export const ROOT_APP_REDUCER: ActionReducerMap<AppState> = {
     usuarios    : _usuarioReducer, 
     productos   :_productoReducer,
@@ -231,5 +263,8 @@ export const ROOT_APP_REDUCER: ActionReducerMap<AppState> = {
     clase       : _claseReducer,
     tipospagos  : _tipospagosReducer,
     proveedor   : _proveedorReducer,
-    talla       : _tallaReducer
+    talla       : _tallaReducer,
+    pedidonac   : _pedidonacReducer,
+    ordenes     : _ordenesReducer,
+    sector      : _sectorReducer
   };

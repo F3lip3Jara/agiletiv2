@@ -1,4 +1,4 @@
-import { Component, OnInit, OnDestroy, HostListener } from '@angular/core';
+import { Component, OnInit, OnDestroy, HostListener, ViewChild, ElementRef } from '@angular/core';
 import { Table } from 'primeng/table';
 import { Subscription } from 'rxjs';
 import { Store } from '@ngrx/store';
@@ -32,6 +32,9 @@ export class EmpresaComponent implements OnInit, OnDestroy {
   items: MenuItem[] | undefined;
   selectedRow: any = null;
   actionItems: MenuItem[] = [];
+  showSearchDialog: boolean = false;
+  @ViewChild('searchInput') searchInput!: ElementRef;
+  dt!: Table;
 
   constructor(
     private store: Store<AppState>,
@@ -131,6 +134,15 @@ export class EmpresaComponent implements OnInit, OnDestroy {
     const target = event.target as HTMLElement;
     if (!target.closest('.p-datatable') && !target.closest('.p-splitbutton-panel')) {
       this.selectedRow = null;
+    }
+  }
+
+  onSearchValueChange(value: string) {
+    if (this.searchInput && this.searchInput.nativeElement) {
+      const inputElement = this.searchInput.nativeElement as HTMLInputElement;
+      inputElement.value = value;
+      const event = new Event('input', { bubbles: true });
+      inputElement.dispatchEvent(event);
     }
   }
 

@@ -1,0 +1,181 @@
+<div class="workflow-container">
+    <!-- Panel de Componentes -->
+    <div class="components-panel">
+        <h5>{{clase.clasTipDes}}</h5>
+        <p class="help-text">Arrastra los elementos al área de trabajo para diseñar tu flujo logístico</p>
+        
+        <div class="components-list">
+            <div class="component-group">
+                <h4>Sector</h4>
+                <ng-container *ngFor="let component of availableComponents">
+                    <div class="component-item"
+                         draggable="true"
+                         (dragstart)="onDragStart($event, component)"
+                         *ngIf="component.type === 'sector'"
+                         [pTooltip]="component.config?.description"
+                         tooltipPosition="right">
+                        <i [class]="component.icon"></i>
+                        <span>{{component.title}}</span>
+                    </div>
+                </ng-container>
+            </div>
+
+            <div class="component-group">
+                <h4>Procesos</h4>
+                <ng-container *ngFor="let component of availableComponents">
+                    <div class="component-item"
+                         draggable="true"
+                         (dragstart)="onDragStart($event, component)"
+                         *ngIf="component.type === 'process'"
+                         [pTooltip]="component.config?.description"
+                         tooltipPosition="right">
+                        <i [class]="component.icon"></i>
+                        <span>{{component.title}}</span>
+                    </div>
+                </ng-container>
+            </div>
+            
+            <div class="component-group">
+                <h4>Puntos de Decisión</h4>
+                <ng-container *ngFor="let component of availableComponents">
+                    <div class="component-item"
+                         draggable="true"
+                         (dragstart)="onDragStart($event, component)"
+                         *ngIf="component.type === 'decision'"
+                         [pTooltip]="component.config?.description"
+                         tooltipPosition="right">
+                        <i [class]="component.icon"></i>
+                        <span>{{component.title}}</span>
+                    </div>
+                </ng-container>
+            </div>
+
+            <div class="component-group">
+                <h4>Documentos</h4>
+                <ng-container *ngFor="let component of availableComponents">
+                    <div class="component-item"
+                         draggable="true"
+                         (dragstart)="onDragStart($event, component)"
+                         *ngIf="component.type === 'document'"
+                         [pTooltip]="component.config?.description"
+                         tooltipPosition="right">
+                        <i [class]="component.icon"></i>
+                        <span>{{component.title}}</span>
+                    </div>
+                </ng-container>
+            </div>
+        </div>
+    </div>
+
+    <!-- Área de Diseño del Proceso -->
+    <div class="process-design-area">
+        <div class="workflow-header">
+            <div>
+                <h5>Diseño proceso por clase de pedido</h5>
+                <p class="workflow-description">Diseña el flujo de trabajo arrastrando elementos y conectándolos</p>
+            </div>
+            <div class="workflow-actions">
+                
+                <p-button icon="pi pi-minus" 
+                         [outlined]="true"
+                         pTooltip="Reducir zoom"
+                         (onClick)="zoomOut()"
+                         class="mr-2"></p-button>
+                <p-button icon="pi pi-plus" 
+                         [outlined]="true"
+                         pTooltip="Aumentar zoom"
+                         (onClick)="zoomIn()"
+                         class="mr-2"></p-button>
+                <p-button icon="pi pi-refresh" 
+                         [outlined]="true"
+                         pTooltip="Restablecer zoom"
+                         (onClick)="resetZoom()"
+                         class="mr-2"></p-button>             
+                <p-button icon="pi pi-save" 
+                         label="Guardar"
+                         (onClick)="saveWorkflow()"
+                         class="mr-2"></p-button>
+               
+            </div>
+        </div>
+
+        <!-- Área de Drawflow -->
+        <div #drawflow class="drawflow-container"
+             (dragover)="$event.preventDefault()"
+             (drop)="onDrop($event)">
+        </div>
+    </div>
+
+    <!-- Panel de Configuración -->
+    <div class="config-panel" *ngIf="selectedNode">
+        <h3>Configuración del Elemento</h3>
+        <div class="config-content">
+            <div class="field">
+                <label>Nombre del Elemento</label>
+                <input pInputText [(ngModel)]="selectedNode.title" class="w-full"/>
+            </div>
+
+            <div class="field">
+                <label>Descripción</label>
+                <textarea pInputTextarea [(ngModel)]="selectedNode.config.description" 
+                          rows="3" 
+                          class="w-full"></textarea>
+            </div>
+
+            <div *ngIf="selectedNode.type === 'area'" class="area-config">
+                <h4>Configuración del Área</h4>
+                <div class="field">
+                    <label>Color de Fondo</label>
+                    <input pInputText type="color" [(ngModel)]="selectedNode.config.color" class="w-full"/>
+                </div>
+                <div class="field">
+                    <label>Nodos Contenidos</label>
+                    <div class="contained-nodes">
+                        <p-chip *ngFor="let node of selectedNode.config.containedNodes" 
+                               [label]="node.title"
+                               [removable]="true"
+                               (onRemove)="removeNodeFromArea(node)">
+                        </p-chip>
+                    </div>
+                </div>
+            </div>
+
+            <div *ngIf="selectedNode.type === 'process'" class="process-config">
+                <h4>Configuración del Proceso</h4>
+                <div class="field">
+                    <label>Tiempo Estimado (minutos)</label>
+                    <input pInputText type="number" [(ngModel)]="selectedNode.config.timeEstimate" class="w-full"/>
+                </div>
+                <div class="field">
+                    <label>Documentos Requeridos</label>
+                    <div *ngFor="let section of processSections" class="section-item">
+                        <p-checkbox [(ngModel)]="section.enabled" 
+                                  [binary]="true" 
+                                  [label]="section.title">
+                        </p-checkbox>
+                    </div>
+                </div>
+            </div>
+
+            <div *ngIf="selectedNode.type === 'decision'" class="decision-config">
+                <h4>Configuración de Decisión</h4>
+                <div class="field">
+                    <label>Condiciones</label>
+                    <div *ngFor="let condition of selectedNode.config.conditions; let i = index" class="condition-item">
+                        <input pInputText [(ngModel)]="selectedNode.config.conditions[i]" class="w-full"/>
+                        <button class="delete-btn" (click)="selectedNode.config.conditions.splice(i, 1)">
+                            <i class="pi pi-times"></i>
+                        </button>
+                    </div>
+                    <p-button label="Agregar Condición" 
+                             icon="pi pi-plus" 
+                             (onClick)="selectedNode.config.conditions.push('')"
+                             styleClass="p-button-text"></p-button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Diálogos y Notificaciones -->
+  
+</div> 

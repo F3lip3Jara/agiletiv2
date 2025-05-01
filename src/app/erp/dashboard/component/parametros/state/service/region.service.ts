@@ -32,9 +32,24 @@ export class RegionServices {
   }
 
   uploadRegion(pais: any): Observable<any> {
-    let data = [{key: 'paiId', value: pais.paiId}];
-    return this.rest.get('regPai', this.token, data).pipe(
+   
+    return this.rest.post('cargaMasivaReg', this.token, pais).pipe(
       map((data: any) => data)
     );
   }
+
+  getRegionesPais(pais: any): Observable<any> {
+    this.parametros = [{key: 'paiId', value: pais.paiId}];  
+    return this.rest.get('regPai', this.token, this.parametros).pipe(
+      map((data: any) => data  )
+    );
+  }
+
+  checkUploadStatus(jobId: number): Observable<any> {
+    this.parametros = [{key: 'regCargaId', value: jobId}];  
+    return this.rest.get('estadoCarga', this.token, this.parametros).pipe(
+      map((data: any) => data)
+    );
+  }
+
 }

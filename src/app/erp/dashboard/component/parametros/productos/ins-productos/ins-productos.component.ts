@@ -30,6 +30,10 @@ export class InsProductosComponent implements OnInit, OnDestroy {
     private destroy$ = new Subject<void>();
     ins: FormGroup;
     loading: boolean = false;
+    imageLoaded: boolean = false;
+    imageError: boolean = false;
+    previewVisible: boolean = false;
+    val: boolean = false;
     producto: Producto = {
         id: 0,
         cod_pareo: '',
@@ -368,6 +372,7 @@ export class InsProductosComponent implements OnInit, OnDestroy {
             this.producto.minimo = this.ins.value.minimo;
             this.producto.inventariable = this.ins.value.inventariable;
             this.producto.peso = this.ins.value.peso;
+            this.producto.url = this.ins.value.url;
             this.store.dispatch(incrementarRequest({request: 1}));
             this.store.dispatch(createProductoRequest({producto: this.producto}));
             this.loading = true;
@@ -407,7 +412,8 @@ export class InsProductosComponent implements OnInit, OnDestroy {
             sub_grupo: ['', [Validators.required]],
             color: ['', [Validators.required]],
             talla: ['', [Validators.required]],
-            medida: ['', [Validators.required]]
+            medida: ['', [Validators.required]],
+            url: ['', [Validators.pattern('(https?://)?([\\da-z.-]+)\\.([a-z.]{2,6})[/\\w .-]*/?')]]
         });
 
         // Suscribirse a cambios en las dimensiones
@@ -417,5 +423,33 @@ export class InsProductosComponent implements OnInit, OnDestroy {
                 this.calcularVolumen();
             });
         });
+    }
+
+    validarURL() {
+        const urlControl = this.ins.get('url');
+        if (urlControl?.valid) {
+            this.imageLoaded = true;
+            this.imageError = false;
+        }
+    }
+
+    onImageLoad() {
+        this.imageLoaded = true;
+        this.imageError = false;
+    }
+
+    onImageError() {
+        this.imageLoaded = false;
+        this.imageError = true;
+    }
+
+    showPreview() {
+        console.log(this.ins.get('url')?.value);
+        console.log(this.ins.get('url')?.valid);
+        console.log(this.imageError);
+        console.log(this.imageLoaded);
+        if (this.ins.get('url')?.valid && this.ins.get('url')?.value) {
+            this.previewVisible = true;
+        }
     }
 } 

@@ -1,4 +1,4 @@
-import { Component, OnInit, OnDestroy, ViewChild } from '@angular/core';
+import { Component, OnInit, OnDestroy, ViewChild, ElementRef } from '@angular/core';
 import { Subscription, Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { Store } from '@ngrx/store';
@@ -12,12 +12,13 @@ import { MessageService } from 'primeng/api';
 import { UNIDAD_KEYS } from '../state/interface/unidad.interface';
 import { selectUnidad } from '../state/selectors/unidad.selectors';
 import { getUnidadRequest } from '../state/actions/unidad.actions';
+
 @Component({
   selector: 'app-unidad',
   templateUrl: './unidad.component.html',
   styleUrl: './unidad.component.scss'
 })
-export class UnidadComponent  {
+export class UnidadComponent implements OnInit, OnDestroy {
   data$: Observable<any[]>;
   loading: boolean = false;
   data: any[] = [];
@@ -28,6 +29,10 @@ export class UnidadComponent  {
   selectedRow: any = null;
   actionItems: MenuItem[] = [];
   globalFilterFields  : string[] =UNIDAD_KEYS;
+  showSearchDialog: boolean = false;
+  @ViewChild('searchInput') searchInput!: ElementRef;
+  dt!: Table;
+
   constructor(
     private store: Store<AppState>,
     private router: Router,
@@ -103,5 +108,14 @@ export class UnidadComponent  {
 
   onActionClick(item: any) {
     this.selectedRow = item;
+  }
+
+  onSearchValueChange(value: string) {
+    if (this.searchInput && this.searchInput.nativeElement) {
+      const inputElement = this.searchInput.nativeElement as HTMLInputElement;
+      inputElement.value = value;
+      const event = new Event('input', { bubbles: true });
+      inputElement.dispatchEvent(event);
+    }
   }
 }

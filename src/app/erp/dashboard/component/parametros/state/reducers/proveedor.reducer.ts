@@ -4,7 +4,7 @@ import * as ProveedorActions from '../actions/proveedor.actions';
 import { DataStateProveedor } from '../../../app.state';
 
 export interface ProveedorState {
-    proveedor: Proveedor[];
+    proveedor: any[];
     error: string | null;
     loading: boolean;
 }
@@ -24,5 +24,11 @@ export const _proveedorReducer = createReducer(
     on(ProveedorActions.proveedorError, (state, { error }) => ({
         ...state,
         error
+    })),
+    on(ProveedorActions.validaProveedorSuccess, (state, { proveedor }) => ({
+        ...state,
+        proveedor
     }))
-);
+ );
+
+

@@ -127,3 +127,10 @@
       </div>
     </div>
   </div>
+
+<!-- Componente de búsqueda -->
+<app-search-dialog 
+    [(visible)]="showSearchDialog"
+    [data]="data"
+    (searchValueChange)="onSearchValueChange($event)">
+</app-search-dialog>

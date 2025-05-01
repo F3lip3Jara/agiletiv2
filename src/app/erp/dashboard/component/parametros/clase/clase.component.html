@@ -8,13 +8,20 @@
                 <div class="header-actions">
                     <span class="p-input-icon-left">
                         <i class="pi pi-search"></i>
-                        <input pInputText type="text" (input)="onGlobalFilter(dt, $event)" placeholder="Buscar..." class="p-inputtext-sm"/>
+                        <input #searchInput pInputText type="text" (input)="onGlobalFilter(dt, $event)" placeholder="Buscar... (Ctrl+Q)" class="p-inputtext-sm"/>
                     </span>
                     <button pButton pRipple label="Nuevo" icon="pi pi-plus" class="p-button-primary p-button-sm" (click)="openNew()"></button>
                     <button pButton pRipple label="Actualizar" icon="pi pi-refresh" class="p-button-info p-button-sm" (click)="refresh()"></button>
                     <button pButton pRipple label="Exportar" icon="pi pi-upload" class="p-button-outlined p-button-sm" (click)="exportCSV()"></button>
                 </div>
             </div>
+
+            <!-- Componente de búsqueda -->
+            <app-search-dialog 
+                [(visible)]="showSearchDialog"
+                [data]="data"
+                (searchValueChange)="onSearchValueChange($event)">
+            </app-search-dialog>
 
             <!-- Tabla -->
             <div class="admin-table">
@@ -34,7 +41,8 @@
                     <ng-template pTemplate="header">
                         <tr>
                             <th>Id</th>
-                            <th>Descripcion</th>
+                            <th>Código</th>
+                            <th>Descripción</th>
                             <th>Tipo</th>
                             <th>Created_at</th>
                             <th class="text-center">Acciones</th>
@@ -44,9 +52,9 @@
                     <ng-template pTemplate="body" let-item>
                         <tr [ngClass]="{'selected-row': selectedRow?.clasTipId === item.clasTipId}">
                             <td>{{item.clasTipId}}</td>
-                            <td>
-                                <span class="font-medium">{{item.clasTipDes}}</span>
-                            </td>
+                            <td><span class="font-medium">{{item.clasTipCod}}</span></td>
+                            <td>{{item.clasTipDes}}</td>
+                             
                             <td>{{item.clasTip == 'E'? 'Entrada' : 'Salida'}}</td>
                             <td>{{item.created_at}}</td>
                             <td>

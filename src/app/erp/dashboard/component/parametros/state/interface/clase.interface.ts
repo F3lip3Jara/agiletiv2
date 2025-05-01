@@ -2,6 +2,7 @@ export interface Clase {
     clasTipId: number;
     empId: number;
     clasTipDes: string;
+    clasTipCod: string;
     clasTip: string;
     created_at: string;
     updated_at: string;

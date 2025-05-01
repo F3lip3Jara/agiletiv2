@@ -124,6 +124,7 @@ export class AppTopBarComponent {
 
         this.store.select(selectMensaje).subscribe((mensaje : any) => {
             this.mensajes = mensaje;
+         
         });
         const storedConfig = localStorage.getItem(this.getStorageKey());
         
@@ -157,8 +158,7 @@ export class AppTopBarComponent {
                 command: (event) => {
                     this.onNotificationButtonClick(event.originalEvent);
                 }
-            },
-          
+            },    
           
             {
                 label: (this.isDarkMode) ? 'Modo Oscuro' : 'Modo Claro',
@@ -253,6 +253,8 @@ export class AppTopBarComponent {
                 // Guardar la configuración
                 this.saveThemeConfig(darkVariant.value);
                 this.layoutService.disparador2.emit(true);
+                // Actualizar el menú con el nuevo tema
+                this.updateMenuItems();
             }else{
              
                 this.messageService.add({
@@ -265,6 +267,15 @@ export class AppTopBarComponent {
                 });
                 this.isDarkMode = false;
             }
+        }
+    }
+
+    private updateMenuItems() {
+        // Actualizar el ítem del tema en el menú
+        const themeMenuItem = this.menuItems.find(item => item.icon && (item.icon === 'pi pi-moon' || item.icon === 'pi pi-sun'));
+        if (themeMenuItem) {
+            themeMenuItem.label = this.isDarkMode ? 'Modo Claro' : 'Modo Oscuro';
+            themeMenuItem.icon = this.isDarkMode ? 'pi pi-sun' : 'pi pi-moon';
         }
     }
 

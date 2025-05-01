@@ -1,0 +1,2 @@
+<input #searchInput pInputText type="text" (input)="dt.filterGlobal($event.target.value, 'contains')" placeholder="Buscar... (Ctrl+Q)" class="w-full sm:w-auto" />
+<app-search-dialog [visible]="showSearchDialog" [data]="data" (searchValueChange)="onSearchValueChange($event)"></app-search-dialog> 

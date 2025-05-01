@@ -1,4 +1,4 @@
-import { Component, OnInit, OnDestroy, ViewChild } from '@angular/core';
+import { Component, OnInit, OnDestroy, ViewChild, ElementRef } from '@angular/core';
 import { Subscription, Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { Store } from '@ngrx/store';
@@ -17,7 +17,7 @@ import { CENTRO_KEYS } from '../state/interface/centro.interface';
   templateUrl: './centro.component.html',
   styleUrl: './centro.component.scss'
 })
-export class CentroComponent  {
+export class CentroComponent implements OnInit {
   data$: Observable<any[]>;
   loading: boolean = false;
   data: any[] = [];
@@ -28,6 +28,10 @@ export class CentroComponent  {
   selectedRow: any = null;
   actionItems: MenuItem[] = [];
   globalFilterFields  : string[]       = CENTRO_KEYS;
+  showSearchDialog: boolean = false;
+  @ViewChild('searchInput') searchInput!: ElementRef;
+  dt!: Table;
+
   constructor(
     private store: Store<AppState>,
     private router: Router,
@@ -46,6 +50,16 @@ export class CentroComponent  {
           if (this.selectedRow) {
             this.edit(this.selectedRow);
           }
+        }
+      },
+      {
+        label: 'Almacenes',
+        icon: 'pi pi-sitemap',
+        command: () => {
+            if (this.selectedRow) {
+              let centro = btoa(JSON.stringify(this.selectedRow));
+              this.router.navigate(['desk/parametros/centro/almacen/' + centro]);
+            }
         }
       },
       {
@@ -98,10 +112,20 @@ export class CentroComponent  {
 
   refresh() {
     this.store.dispatch(incrementarRequest({request: 1}));
-    //this.store.dispatch(get{INTERFACE_NAME}Request());
+    this.store.dispatch(getCentroRequest());
   }
 
   onActionClick(item: any) {
     this.selectedRow = item;
+  }
+
+  onSearchValueChange(value: string) {
+    if (this.searchInput && this.searchInput.nativeElement) {
+      const inputElement = this.searchInput.nativeElement as HTMLInputElement;
+      inputElement.value = value;
+      // Disparar el evento input para activar el filtro
+      const event = new Event('input', { bubbles: true });
+      inputElement.dispatchEvent(event);
+    }
   }
 }

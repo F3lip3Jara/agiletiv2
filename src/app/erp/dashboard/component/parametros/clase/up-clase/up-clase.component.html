@@ -1,5 +1,5 @@
 <div class="col-12 p-fluid" >
-    <p-fieldset legend="Ingreso  de clase documento">
+    <p-fieldset legend="Actualizar de clase documento">
         <div class="col-12">
             <form
             [formGroup] = "up"
@@ -8,10 +8,21 @@
                 <div class="grid formgrid">
                     <div class="col-12 mb-4">
                         <span class="p-float-label">
+                            <input id="float-input" type="text" pInputText formControlName="clasTipCod" oninput="this.value = this.value.toUpperCase()" 
+                            [ngClass]="(up.controls['clasTipCod'].hasError('required'))
+              ? '           was-validated' : 'is-valid'" >
+                            <label for="float-input">Código</label>
+                        </span>
+                        <div *ngIf= "up.controls['clasTipCod'].hasError('required')">
+                            <span class="text-danger">Campo obligatorio!</span>
+                        </div>                    
+                    </div>
+                    <div class="col-12 mb-4">
+                        <span class="p-float-label">
                             <input id="float-input" type="text" pInputText formControlName="clasTipDes" oninput="this.value = this.value.toUpperCase()" 
                             [ngClass]="(up.controls['clasTipDes'].hasError('required'))
               ? '           was-validated' : 'is-valid'" >
-                            <label for="float-input">Codigo</label>
+                            <label for="float-input">Descripción</label>
                         </span>
                         <div *ngIf= "up.controls['clasTipDes'].hasError('required')">
                             <span class="text-danger">Campo obligatorio!</span>

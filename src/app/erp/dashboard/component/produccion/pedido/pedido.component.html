@@ -1,0 +1,180 @@
+<div class="grid">
+    <div class="col-12 admin-card">
+        <div class="card">
+            <p-toast></p-toast>            
+            <!-- Header con título y búsqueda -->
+            <div class="admin-header">
+                <h2 class="header-title">Administración de Pedidos Nacionales</h2>
+                <div class="header-actions">
+                    <span class="p-input-icon-left">
+                        <i class="pi pi-search"></i>
+                        <input pInputText type="text" (input)="onGlobalFilter(dt, $event)" placeholder="Buscar..." class="p-inputtext-sm"/>
+                    </span>
+                    <button pButton pRipple label="Nuevo" icon="pi pi-plus" class="p-button-primary p-button-sm" (click)="openNew()"></button>
+                    <button pButton pRipple label="Actualizar" icon="pi pi-refresh" class="p-button-info p-button-sm" (click)="refresh()"></button>
+                    <button pButton pRipple label="Exportar" icon="pi pi-upload" class="p-button-outlined p-button-sm" (click)="exportCSV()"></button>
+                </div>
+            </div>
+
+            <!-- Tabla modernizada -->
+            <div class="admin-table">
+                <p-table #dt [value]="data" 
+                        [columns]="cols" 
+                        styleClass="p-datatable-sm"
+                        [tableStyle]="{'min-width': '50rem'}"
+                        [paginator]="true" 
+                        [rows]="10" 
+                        [showCurrentPageReport]="true"
+                        [globalFilterFields]="globalFilterFields"
+                        [rowsPerPageOptions]="rowsPerPageOptions"
+                        currentPageReportTemplate="Mostrando {first} a {last} de {totalRecords} registros"
+                        [scrollable]="true"
+                        responsiveLayout="scroll">
+                    
+                    <ng-template pTemplate="header">
+                        <tr>
+                            <th>Id</th>                      
+                            <th>Orden Compra</th>
+                            <th>Orden Producción</th>
+                            <th>RUT Proveedor</th>
+                            <th>Proveedor</th>
+                            <th>Teléfono</th>
+                            <th>Clase</th>
+                            <th>Tipo</th>
+                            <th>Centro Destino</th>
+                            <th>Almacen Destino</th>
+                            <th>Fecha</th>
+                            <th>Estado Orden</th>
+                            <th>Estado Recepcion</th>                           
+                            <th>Total Lineas</th>
+                            <th>Total SKU's</th>
+                            <th>Usuario</th>
+                            <th>Observaciones</th>
+                            <th class="text-center">Acciones</th>
+                        </tr>
+                    </ng-template>
+                    
+                    <ng-template pTemplate="body" let-item>
+                        <tr [ngClass]="{'selected-row': selectedRow?.id === item.id}">
+                            <td>{{item.id}}</td>                    
+                            <td>
+                                <span class="font-medium">{{item.orden_compra}}</span>
+                            </td>
+                            <td>
+                                {{item.orden_produccion}}
+                            </td>
+                            <td>
+                                {{item.rut}}
+                            </td>
+                            <td>
+                                {{item.proveedor}}
+                            </td>
+                            <td>
+                                {{item.prv_telefono}}
+                            </td>
+                            <td>
+                                {{item.tipo_cod}}
+                            </td>
+                            <td>
+                                {{item.tipo}}
+                            </td>
+                            <td>
+                                {{item.centro_destino}}
+                            </td>
+                            <td>
+                                {{item.almacen_destino}}
+                            </td>
+                            <td>
+                                {{item.fecha}}
+                            </td>
+                            <td>
+                              
+                                <span class="tag-date" [ngClass]="getEstadoStyle(item.estado_ord).class">
+                                    {{getEstadoStyle(item.estado_ord).label}}
+                                </span>
+                            </td>
+                            <td>
+                                <span class="tag-date" [ngClass]="getEstadoProStyle(item.estado_pro).class">
+                                    {{getEstadoProStyle(item.estado_pro).label}}
+                                </span>
+                            </td>
+                           
+                            <td>
+                                {{item.prd_total}}
+                            </td>
+                            <td>
+                                {{item.prd_total_lineas}}
+                            </td>
+                            <td>
+                                {{item.usuario}}
+                            </td>
+                            <td>
+                                {{item.observaciones}}
+                            </td>
+                            <td>
+                                <div class="actions-column" (click)="onActionClick(item)">
+                                    <p-splitButton                                      
+                                        [model]="actionItems"
+                                        styleClass="p-button-text p-button-secondary"
+                                        appendTo="body">
+                                    </p-splitButton>
+                                </div>
+                            </td>
+                        </tr>
+                    </ng-template>
+                    
+                    <ng-template pTemplate="emptymessage">
+                        <tr>
+                            <td colspan="16">
+                                <div class="empty-message">
+                                    <i class="pi pi-folder-open"></i>
+                                    <span>No se encontraron registros</span>
+                                </div>
+                            </td>
+                        </tr>
+                    </ng-template>
+                </p-table>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Diálogo para carga de Excel -->
+<p-dialog header="Confirmación de envío a recepcionar" [(visible)]="visible" 
+          [modal]="true" [style]="{width: '500px'}" [draggable]="false" [resizable]="false"
+          [styleClass]="'carga-excel-dialog'">
+    <div class="flex flex-column gap-3">
+        <div class="flex align-items-center gap-2">
+            <i class="pi pi-receipt text-xl text-green-500"></i>
+            <h3 class="text-xl m-0">Confirmar envío a recepcionar</h3>
+        </div>
+         <div class="surface-card p-3 border-round">
+            <h4 class="m-0 mb-2">Consideraciones:</h4>
+            <ul class="m-0 text-sm">
+                <li>El pedido se enviará a recepcionar.</li>
+                <li>El pedido se marcará como PROCESANDO.</li>   
+                <li>Se generarán ordenes de trabajo de recepción en estado LIBERADO.</li>         
+            </ul>
+        </div>
+
+        <div class="surface-card p-3 border-round bg-yellow-50">
+            <p class="m-0 text-sm text-yellow-700">
+                <i class="pi pi-exclamation-triangle mr-2"></i>
+                <strong>Advertencia:</strong> Al confirmar el envío a recepcionar, no se podrá revertir.
+            </p>
+        </div>
+
+        <div class="flex justify-content-end gap-2 mt-3">
+            <p-button label="Cancelar" 
+                     icon="pi pi-times" 
+                     (click)="visible = false"
+                     styleClass="p-button-text"></p-button>
+            <p-button label="Confirmar" 
+                     icon="pi pi-upload" 
+                     (click)="confirmar()"
+                     [loading]="loading"                   
+                     styleClass="p-button-success"></p-button>
+        </div>
+    </div>
+</p-dialog>
+<p-toast></p-toast>

@@ -24,5 +24,9 @@ export const _ciudadReducer = createReducer(
     on(CiudadActions.ciudadError, (state, { error }) => ({
         ...state,
         error
+    })),
+    on(CiudadActions.getCiudadByRegionSuccess, (state, { ciudad }) => ({
+        ...state,
+        ciudad
     }))
 );

@@ -1,0 +1,75 @@
+<div class="col-12 p-fluid">
+    <p-fieldset legend="Ingreso de Almacenes">
+        <div class="col-12">
+            <form [formGroup]="up"
+                  (ngSubmit)="guardar()">
+                
+                <div class="grid formgrid">
+                    <div class="col-12 mb-2 lg:mb-0  p-3" >
+                        <span class="p-float-label">
+                            <input id="float-input" type="text" pInputText value="{{this.almacen.cenDes}}" oninput="this.value = this.value.toUpperCase()"
+                           disabled>
+                            <label for="float-input">Centro</label>
+                        </span> 
+                    </div>
+                    <div class="col-12 mb-2 lg:mb-0  p-3" >
+                        <span class="p-float-label">
+                            <input id="float-input" type="text" pInputText value="{{this.almacen.almDes}}" oninput="this.value = this.value.toUpperCase()"
+                           disabled>
+                            <label for="float-input">Almacen</label>
+                        </span> 
+                    </div>
+                    <div class="col-12 mb-2 lg:mb-0  p-3" >
+                        <span class="p-float-label">
+                            <input id="accion-input" 
+                                   type="text" 
+                                   pInputText 
+                                   formControlName="secCod"
+                                   oninput="this.value = this.value.toUpperCase()"
+                                   [ngClass]="(up.controls['secCod'].hasError('required'))
+                                   ? 'was-validated' : 'is-valid'">
+                            <label for="accion-input">Código</label>
+                        </span>
+                        <div *ngIf="up.controls['secCod'].hasError('required')">
+                            <span class="text-danger">Campo obligatorio!</span>
+                        </div>
+                    </div>
+                    <div class="col-12 mb-2 lg:mb-0  p-3" >
+                        <span class="p-float-label">
+                            <input id="accion-input" 
+                                   type="text" 
+                                   pInputText 
+                                   formControlName="secDes"
+                                   oninput="this.value = this.value.toUpperCase()"
+                                   [ngClass]="(up.controls['secDes'].hasError('required'))
+                                   ? 'was-validated' : 'is-valid'">
+                            <label for="accion-input">Descripción</label>
+                        </span>
+                        <div *ngIf="up.controls['secDes'].hasError('required')">
+                            <span class="text-danger">Campo obligatorio!</span>
+                        </div>
+                    </div>
+
+                    
+                </div>
+
+                <div class="flex flex-wrap gap-2 align-items-center mt-3">
+                    <p-button type="submit" 
+                             label="Guardar" 
+                             icon="pi pi-check" 
+                             size="small" 
+                             *ngIf="up.valid"
+                             [loading]="val"
+                           >
+                    </p-button>
+                    <p-button label="Volver" 
+                             icon="pi pi-arrow-down" 
+                             size="small" 
+                            (onClick)="volver()"
+                             severity="secondary">
+                    </p-button>
+                </div>
+            </form>
+        </div>
+    </p-fieldset>
+</div>

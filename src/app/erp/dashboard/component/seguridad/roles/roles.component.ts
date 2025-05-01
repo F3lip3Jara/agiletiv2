@@ -1,4 +1,4 @@
-import { Component, OnInit, OnDestroy, ViewChild } from '@angular/core';
+import { Component, OnInit, OnDestroy, ViewChild, ElementRef } from '@angular/core';
 import { Subscription, Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { Roles, ROLES_KEYS } from '../state/interface/roles.interface';
@@ -34,6 +34,9 @@ export class RolesComponent implements OnInit, OnDestroy {
   items: MenuItem[] | undefined;
   selectedRow: any = null;
   actionItems: MenuItem[] = [];
+  showSearchDialog: boolean = false;
+  @ViewChild('searchInput') searchInput!: ElementRef;
+  dt!: Table;
 
   @HostListener('document:click', ['$event'])
   handleClick(event: MouseEvent) {
@@ -140,5 +143,15 @@ export class RolesComponent implements OnInit, OnDestroy {
 
   onActionClick(item: any) {
     this.selectedRow = item;
+  }
+
+  onSearchValueChange(value: string) {
+    if (this.searchInput && this.searchInput.nativeElement) {
+      const inputElement = this.searchInput.nativeElement as HTMLInputElement;
+      inputElement.value = value;
+      // Disparar el evento input para activar el filtro
+      const event = new Event('input', { bubbles: true });
+      inputElement.dispatchEvent(event);
+    }
   }
 }

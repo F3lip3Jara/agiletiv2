@@ -1,0 +1,11 @@
+:host {
+  
+    .map-container {
+        height: 300px;
+        width: 100%;
+        border: 1px solid var(--surface-border);
+        border-radius: 6px;
+        box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    }
+
+}

@@ -44,7 +44,9 @@ export class InsModuloComponent implements OnInit {
     'pi pi-paperclip', 'pi pi-link', 'pi pi-share-alt', 'pi pi-search',
     'pi pi-angle-right', 'pi pi-angle-left', 'pi pi-angle-up', 'pi pi-angle-down',
     'pi pi-check', 'pi pi-times', 'pi pi-plus', 'pi pi-minus', 'pi pi-trash',
-    'pi pi-pencil', 'pi pi-save', 'pi pi-refresh', 'pi pi-sync', 'pi pi-print'
+    'pi pi-pencil', 'pi pi-save', 'pi pi-refresh', 'pi pi-sync', 'pi pi-print',
+    'pi pi-star', 'pi pi-star-fill', 'pi pi-star-half', 'pi pi-star-half-fill',
+    'pi pi-warehouse'
   ];
 
   constructor(
@@ -189,7 +191,7 @@ export class InsModuloComponent implements OnInit {
       }
       // Aquí iría la lógica para guardar el módulo
 
-      console.log(modulo);
+      
       
     this.store.dispatch(createModuloRequest({modulo:modulo}));
     this.actions$.pipe(

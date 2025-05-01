@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, OnInit, OnDestroy, ViewChild, ElementRef } from '@angular/core';
 import {  selectProductosPending } from '../state/selectors/producto.selectors';
 import { Store } from '@ngrx/store';
 import { Observable } from 'rxjs';
@@ -7,6 +7,10 @@ import { getProductosRequest } from '../state/actions/producto.actions';
 import { Table } from 'primeng/table';
 import { AppState } from '../../app.state';
 import { Router } from '@angular/router'; 
+import { incrementarRequest } from '../../state/actions/estado.actions';
+import { ExcelService } from '../../../service/excel.service';
+import { MenuItem } from 'primeng/api';
+
 interface ProductoExtended extends Producto {
   imageLoaded?: boolean;
   imageError?: boolean;
@@ -17,7 +21,7 @@ interface ProductoExtended extends Producto {
   templateUrl: './productos.component.html',
   styleUrl: './productos.component.scss'
 })
-export class ProductosComponent {
+export class ProductosComponent implements OnInit {
 
     productos             : Observable<Producto[]> = new Observable;
     loading               : Observable<any>        = new Observable;
@@ -34,11 +38,35 @@ export class ProductosComponent {
     previewVisible: boolean = false;
     selectedImage: ProductoExtended | null = null;
     previewImageLoaded: boolean = false;
+    actionItems: MenuItem[] = [];
+    selectedRow: any = null;
+    showSearchDialog: boolean = false;
+    @ViewChild('searchInput') searchInput!: ElementRef;
+    dt!: Table;
 
+    
   constructor(
     private router: Router,
-    private store: Store<AppState> // Inyecta el servicio Store de NgRx para gestionar el estado de la aplicación
-  ) { }
+    private store: Store<AppState>,
+    private excelService: ExcelService
+  ) {
+
+
+    this.actionItems = [
+        {
+          label: 'Editar',
+          icon: 'pi pi-pencil',
+          command: () => {
+            if (this.selectedRow) {
+              this.edit(this.selectedRow);
+            }
+          }
+        },
+        
+       
+      ];
+      
+   }
   
 
   ngOnInit(): void {
@@ -63,49 +91,22 @@ openNew() {
   this.router.navigate(['desk/parametros/productos/insproducto']);
 }
 
-deleteSelectedProducts() {
-    this.deleteProductsDialog = true;
-}
 
-editProduct(product: Producto) {
+
+edit(product: Producto) {
    let producto = btoa(JSON.stringify(product));
     this.router.navigate(['desk/parametros/productos/upproducto',producto]);  
 }
 
-deleteProduct(product: Producto) {
- 
-}
 
-confirmDeleteSelected() {
-    this.deleteProductsDialog = false;
-    this.data = this.data.filter(val => !this.selectedProducts.includes(val));
-   
-    this.selectedProducts = [];
-}
 
-confirmDelete() {
-   
-}
 
 hideDialog() {
     this.productDialog = false;
     this.submitted = false;
 }
 
-saveProduct() {
-    
-}
 
-findIndexById(id: string): number {
-    let index = -1;
-   
-
-    return index;
-}
-
-createId(): string {
-  return '';
-}
 
   onGlobalFilter(table: Table, event: Event) {
       table.filterGlobal((event.target as HTMLInputElement).value, 'contains');
@@ -150,4 +151,26 @@ createId(): string {
     }
   }
 
+
+  exportCSV() {
+    this.excelService.exportAsExcelFile(this.data, 'roles');
+  }
+
+  refresh() {
+    this.store.dispatch(incrementarRequest({request: 1}));
+    this.store.dispatch(getProductosRequest());
+  }
+
+  onActionClick(item: any) {
+    this.selectedRow = item;
+  }
+
+  onSearchValueChange(value: string) {
+    if (this.searchInput && this.searchInput.nativeElement) {
+      const inputElement = this.searchInput.nativeElement as HTMLInputElement;
+      inputElement.value = value;
+      const event = new Event('input', { bubbles: true });
+      inputElement.dispatchEvent(event);
+    }
+  }
 }

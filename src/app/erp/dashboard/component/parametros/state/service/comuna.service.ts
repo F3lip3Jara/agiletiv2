@@ -30,6 +30,13 @@ export class ComunaServices {
       ) 
     );
   }
+
+  getComunaByCiudad(ciudad: any, region: any, pais: any): Observable<any> {
+    this.parametros = [{key: 'ciuId', value: ciudad.ciuId} , {key: 'regId', value: region.regId} , {key: 'paiId', value: pais.paiId}]; 
+    return this.rest.get('ciuCom', this.token, this.parametros).pipe(
+      map((data: any) => data)
+    );
+  }
 /*
   createComuna(comuna: any): Observable<any> {
     let comuna = {

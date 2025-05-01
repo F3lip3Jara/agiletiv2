@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, OnInit, OnDestroy, ViewChild, ElementRef } from '@angular/core';
 import { map } from 'rxjs/operators';
 import { Observable } from 'rxjs';
 import { ACCIONES_KEYS } from '../../state/interface/acciones.interface';
@@ -19,9 +19,9 @@ import { Actions, ofType } from '@ngrx/effects';
   templateUrl: './acciones.component.html',
   styleUrl: './acciones.component.scss'
 })
-export class AccionesComponent {
+export class AccionesComponent implements OnInit, OnDestroy {
   
-    data$              : Observable<any[]>;
+    data$               : Observable<any[]>;
     loading             : boolean        = false;
     globalFilterFields  : string[]       = ACCIONES_KEYS;
     data                : any[]          = []; // Tipado correcto
@@ -35,6 +35,9 @@ export class AccionesComponent {
     opcion: any;
     selectedRow: any = null;
     actionItems: MenuItem[] = [];
+    showSearchDialog: boolean = false;
+    @ViewChild('searchInput') searchInput!: ElementRef;
+    dt!: Table;
   
   
     constructor(
@@ -136,5 +139,15 @@ export class AccionesComponent {
 
     onActionClick(item: any) {
       this.selectedRow = item;
+    }
+
+    onSearchValueChange(value: string) {
+      if (this.searchInput && this.searchInput.nativeElement) {
+        const inputElement = this.searchInput.nativeElement as HTMLInputElement;
+        inputElement.value = value;
+        // Disparar el evento input para activar el filtro
+        const event = new Event('input', { bubbles: true });
+        inputElement.dispatchEvent(event);
+      }
     }
 }

@@ -1,0 +1,273 @@
+<form [formGroup]="ordenForm" class="p-fluid">
+<div class="surface-ground">
+    <div class="flex justify-content-between align-items-center px-4 py-2 surface-section shadow-1">
+        <div class="flex align-items-center gap-2">
+            <i class="pi pi-eye text-2xl"></i>
+            <h2 class="text-2xl font-bold m-0">Visualizar Orden de Entrada</h2>
+        </div>
+        <div class="flex gap-2">     
+            <p-button icon="pi pi-file-pdf" label="PDF" 
+                     styleClass="p-button-danger" (click)="descargarPDF()"
+                     [disabled]="productosSeleccionados.length === 0"></p-button>
+            <p-button icon="pi pi-file-excel" label="Excel" 
+                     styleClass="p-button-success" (click)="descargarExcel()"
+                     [disabled]="productosSeleccionados.length === 0"></p-button>
+            <button pButton pRipple 
+                    label="Volver" 
+                    icon="pi pi-arrow-left" 
+                    class="p-button-text p-button-secondary p-button-sm"
+                    routerLink="/desk/wms/ordenes-entrada">
+            </button>
+        </div>
+    </div>
+
+    <div class="p-4">
+        <div class="grid">
+            <!-- Información del Documento -->
+            <div class="col-12 md:col-6 lg:col-3">
+                <div class="surface-card p-4 shadow-1 border-round">
+                    <div class="flex align-items-center gap-2 mb-4">
+                        <i class="pi pi-file-edit text-xl"></i>
+                        <h3 class="text-xl m-0">Información del Documento</h3>
+                    </div>
+                    <div class="field">
+                        <label for="tipoDocumento">N° de Documento</label>
+                        <input id="documentoRelacionado" type="text" pInputText 
+                        formControlName="documentoRelacionado" class="w-full" [disabled]="true">
+                    </div>
+                    
+                    <div class="field">
+                        <label for="fechaCreacion">Fecha de Creación</label>
+                        <p-calendar id="fechaCreacion" formControlName="fechaCreacion"
+                                  [showIcon]="true" dateFormat="dd-mm-yy"
+                                  styleClass="w-full" [disabled]="true"></p-calendar>
+                    </div>
+                    <div class="field">
+                        <label for="fechaPromesaEntrega">Fecha Promesa de Entrega</label>
+                        <p-calendar id="fechaPromesaEntrega" formControlName="fechaPromesaEntrega"
+                                  [showIcon]="true" dateFormat="dd-mm-yy"
+                                  styleClass="w-full" [disabled]="true"></p-calendar>
+                    </div>
+                  
+                </div>
+            </div>
+
+            <!-- Información de Ubicación -->
+            <div class="col-12 md:col-6 lg:col-3">
+                <div class="surface-card p-4 shadow-1 border-round">
+                    <div class="flex align-items-center gap-2 mb-4">
+                        <i class="pi pi-map-marker text-xl"></i>
+                        <h3 class="text-xl m-0">Ubicación</h3>
+                    </div>
+                    <div class="field">
+                        <label for="proveedor">Proveedor</label>
+                        <p-dropdown id="proveedor" formControlName="proveedor"
+                                  [options]="proveedores" optionLabel="nombre" optionValue="id"
+                                  placeholder="Seleccione proveedor" styleClass="w-full" [disabled]="true"></p-dropdown>
+                    </div>
+
+                    <div class="field">
+                        <label for="centro">Centro</label>
+                        <p-dropdown id="centro" formControlName="centro"
+                                  [options]="centros" optionLabel="cenDes" optionValue="centroId"
+                                  placeholder="Seleccione centro" styleClass="w-full" [disabled]="true"></p-dropdown>
+                    </div>
+
+                    <div class="field">
+                        <label for="almacen">Almacén</label>
+                        <p-dropdown id="almacen" formControlName="almacen"
+                                  [options]="almacenesFiltrados" optionLabel="almDes" optionValue="almId"
+                                  placeholder="Seleccione almacén" styleClass="w-full" [disabled]="true"></p-dropdown>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Información de Contacto -->
+            <div class="col-12 md:col-12 lg:col-6">
+                <div class="surface-card p-4 shadow-1 border-round">
+                    <div class="flex align-items-center gap-2 mb-4">
+                        <i class="pi pi-user text-xl"></i>
+                        <h3 class="text-xl m-0">Información de Contacto</h3>
+                    </div>
+                    <div class="grid">   
+                        <div class="col-12 md:col-12">
+                            <div class="field">
+                                <label for="rutProveedor">
+                                    <i class="pi pi-credit-card mr-2"></i>Rut Proveedor
+                                </label>
+                                <input  id="rutProveedor" type="text" 
+                                    pInputText 
+                                    value="{{proveedorSeleccionado?.rut}}"                                         
+                                    class="w-full" placeholder="Rut..." disabled>
+                            </div>
+                        </div>                         
+                        <div class="col-12 md:col-12">
+                            <div class="field">
+                                <label for="direccionProveedor">
+                                    <i class="pi pi-send mr-2"></i>Dirección de Proveedor
+                                </label>
+                                <input  id="direccionProveedor" type="text" 
+                                    pInputText 
+                                    value="{{proveedorSeleccionado?.direccion}}"
+                                    class="w-full" placeholder="Buscar dirección..." disabled>
+                            </div>
+                        </div>
+                        <div class="col-12">
+                            <div class="field">
+                                <label for="mailProveedor">
+                                    <i class="pi pi-envelope mr-2"></i>Correo Electrónico (Principal)
+                                </label>
+                                <input id="mailProveedor" type="email" pInputText 
+                                    value="{{proveedorSeleccionado?.mail}}"
+                                    class="w-full" disabled>
+                            </div>
+                        </div>
+                        <div class="col-12">
+                            <div class="field">
+                                <label for="telefonoProveedor">
+                                    <i class="pi pi-phone mr-2"></i>Teléfono
+                                </label>
+                                <input id="telefonoProveedor" type="text" pInputText 
+                                    value="{{proveedorSeleccionado?.telefono}}"
+                                    class="w-full" disabled>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Información de Envío -->
+            <div class="col-12 ">
+                <div class="surface-card p-4 shadow-1 border-round">
+                    <div class="flex align-items-center gap-2 mb-4">
+                        <i class="pi pi-thumbs-up text-xl"></i>
+                        <h3 class="text-xl m-0">Información de Envío</h3>
+                    </div>
+                    <div class="grid">                            
+                        <div class="col-12 md:col-12">
+                            <div class="field">
+                                <label for="direccionEnvio">
+                                    <i class="pi pi-send mr-2"></i>Dirección de Envío
+                                </label>
+                                <input #direccionEnvio id="direccionEnvio" type="text" 
+                                       pInputText formControlName="direccionEnvio"
+                                       class="w-full" placeholder="Buscar dirección..." disabled>
+                                <div #mapEnvio class="mt-3" style="height: 200px; border-radius: 6px;"></div>
+                            </div>
+                        </div>
+                        <div class="col-12">
+                            <div class="field">
+                                <label for="correoElectronico">
+                                    <i class="pi pi-envelope mr-2"></i>Correo Electrónico (Contacto)
+                                </label>
+                                <input id="correoElectronico" type="email" pInputText 
+                                       formControlName="correoElectronico" class="w-full" disabled>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Productos -->
+            <div class="col-12">
+                <div class="surface-card p-4 shadow-1 border-round">
+                    <div class="flex justify-content-between align-items-center mb-4">
+                        <div class="flex align-items-center gap-2">
+                            <i class="pi pi-box text-xl"></i>
+                            <h3 class="text-xl m-0">Productos</h3>
+                        </div>
+                    </div>
+
+                    <p-table [value]="productosSeleccionados" 
+                            styleClass="p-datatable-sm"
+                            [scrollable]="true" scrollHeight="400px">
+                        <ng-template pTemplate="header">
+                            <tr>
+                                <th>SKU</th>
+                                <th>Producto</th>
+                                <th>Imagen</th>
+                                <th>Precio</th>                             
+                                <th>Cantidad</th>
+                                <th>Subtotal</th>
+                                <th>IVA</th>
+                                <th>Total</th>
+                            </tr>
+                        </ng-template>
+                        <ng-template pTemplate="body" let-producto>
+                            <tr>
+                                <td>{{producto.cod_pareo}}</td>
+                                <td>{{producto.descripcion}}</td>
+                                <td>
+                                    <p-skeleton *ngIf="!producto.url" width="50px" height="50px"></p-skeleton>
+                                    <img [src]="producto.url" alt="Imagen del producto" style="width: 50px; height: 50px;">
+                                </td>
+                                <td>{{producto.neto | currency:'CLP':'symbol-narrow':'1.0-0'}}</td>
+                                <td>{{producto.cantidad}}</td>
+                                <td>{{ calcularSubtotal(producto) | currency:'CLP':'symbol-narrow':'1.0-0'}}</td>
+                                <td>{{ calcularIVA(calcularSubtotal(producto)) | currency:'CLP':'symbol-narrow':'1.0-0'}}</td>
+                                <td>{{ calcularTotalProducto(producto) | currency:'CLP':'symbol-narrow':'1.0-0'}}</td>
+                            </tr>
+                        </ng-template>
+                        <ng-template pTemplate="footer">
+                            <tr>
+                                <td colspan="5" class="text-right font-bold">
+                                    <i class="pi pi-money-bill mr-2"></i>Total:
+                                </td>
+                                <td colspan="2" class="font-bold">{{total | currency:'CLP':'symbol-narrow':'1.0-0'}}</td>
+                            </tr>
+                        </ng-template>
+                    </p-table>
+                </div>
+            </div>
+
+            <!-- Notas -->
+            <div class="col-12">
+                <div class="surface-card p-4 shadow-1 border-round">
+                    <div class="flex align-items-center gap-2 mb-4">
+                        <i class="pi pi-comment text-xl"></i>
+                        <h3 class="text-xl m-0">Notas</h3>
+                    </div>
+                    <div class="field">
+                        <textarea pInputTextarea formControlName="notas" rows="3"
+                                placeholder="Agregar notas al pedido..." class="w-full" disabled></textarea>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Seguimiento -->
+<div class="col-12">
+    <div class="surface-card p-4 shadow-1 border-round">
+        <div class="flex align-items-center gap-2 mb-4">
+            <i class="pi pi-clock text-xl"></i>
+            <h3 class="text-xl m-0">Seguimiento de la Orden</h3>
+        </div>
+        
+        <p-timeline [value]="seguimientoTimeline" styleClass="customized-timeline">
+            <ng-template pTemplate="marker" let-item>
+                <span class="custom-marker shadow-2" [style.backgroundColor]="item.color">
+                    <i [class]="item.icono"></i>
+                </span>
+            </ng-template>
+            <ng-template pTemplate="content" let-item>
+                <div class="timeline-card p-3 surface-card">
+                    <div class="flex justify-content-between align-items-center mb-2">
+                        <span class="font-bold text-xl">{{item.estado}}</span>
+                        <span class="text-500">{{item.fecha | date:'dd/MM/yyyy HH:mm'}}</span>
+                    </div>
+                    <p class="line-height-3 mb-2">{{item.descripcion}}</p>
+                    <div class="flex align-items-center gap-2">
+                        <i class="pi pi-user"></i>
+                        <span class="text-600">{{item.usuario}}</span>
+                    </div>
+                </div>
+            </ng-template>
+        </p-timeline>
+    </div>
+</div>
+
+<!-- Mensajes del sistema -->
+<p-toast></p-toast>
+</form>

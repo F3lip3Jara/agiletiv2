@@ -34,6 +34,7 @@ export class UpClaseComponent {
       clasTipDes: ['', Validators.required],
       clasTip: ['', Validators.required],
       clasTipId: [0, Validators.required],
+      clasTipCod: ['', Validators.required],
     });
   }
 
@@ -45,6 +46,7 @@ export class UpClaseComponent {
           clasTipDes: clase.clasTipDes,
           clasTip: clase.clasTip,
           clasTipId: clase.clasTipId,
+          clasTipCod: clase.clasTipCod,
         });
     });
   }

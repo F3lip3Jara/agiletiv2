@@ -31,6 +31,16 @@ import { TallaComponent } from './talla/talla.component';
 import { InsTallaComponent } from './talla/ins-talla/ins-talla.component';
 import { UpTallaComponent } from './talla/up-talla/up-talla.component';
 import { UpProductosComponent } from './productos/up-productos/up-productos.component';
+import { UpProveedorComponent } from './proveedor/up-proveedor/up-proveedor.component';
+import { InsTipopagosComponent } from './tipo-pagos/ins-tipopagos/ins-tipopagos.component';
+import { UpTipospagosComponent } from './tipo-pagos/up-tipospagos/up-tipospagos.component';
+import { AlmacenComponent } from './centro/almacen/almacen.component';
+import { InsAlmacenComponent } from './centro/almacen/ins-almacen/ins-almacen.component';
+import { UpAlmacenComponent } from './centro/almacen/up-almacen/up-almacen.component';
+import { WorkflowComponent } from './workflow/workflow.component';
+import { SectorComponent } from './centro/almacen/sector/sector.component';
+import { InsSectorComponent } from './centro/almacen/sector/ins-sector/ins-sector.component';
+import { UpSectorComponent } from './centro/almacen/sector/up-sector/up-sector.component';
 const routes: Routes = [
   {
     path: '',
@@ -70,6 +80,31 @@ const routes: Routes = [
         path: 'centro/upcentro/:centro',
         component: UpCentroComponent
       },
+      {
+        path: 'centro/almacen/:centro',
+        component: AlmacenComponent
+      },  
+      {
+        path: 'centro/almacen/insalmacen/:centro',
+        component: InsAlmacenComponent
+      },
+      {
+        path: 'centro/almacen/upalmacen/:almacen',
+        component: UpAlmacenComponent
+      },
+      {
+        path: 'centro/almacen/sector/:almacen',
+        component: SectorComponent
+      },  
+      {
+        path: 'centro/almacen/sector/inssector/:almacen',
+        component: InsSectorComponent
+      },
+      {
+        path: 'centro/almacen/sector/upsector/:almacen',
+        component: UpSectorComponent  
+      },
+
       {
         path: 'grupo',
         component: GrupoComponent
@@ -139,16 +174,32 @@ const routes: Routes = [
         component: UpClaseComponent
       },
       {
+        path: 'clase/workflow/:clase',
+        component: WorkflowComponent
+      },
+      {
         path: 'tipo_pago',
         component: TipoPagosComponent
       },
       {
+        path: 'tipo_pago/instipopagos',
+        component: InsTipopagosComponent  
+      },
+      {
+        path: 'tipo_pago/uptipopagos/:tipopago',
+        component: UpTipospagosComponent
+      },
+      {
         path: 'proveedor',
         component: ProveedorComponent
-      },
+      },     
       {
         path: 'proveedor/insproveedor',
         component: InsProveedorComponent  
+      },
+      {
+        path: 'proveedor/upproveedor/:proveedor',
+        component: UpProveedorComponent
       },
       {
         path: 'talla',
@@ -162,6 +213,7 @@ const routes: Routes = [
         path: 'talla/uptalla/:talla',
         component: UpTallaComponent
       }
+    
     ]
   }
 ];

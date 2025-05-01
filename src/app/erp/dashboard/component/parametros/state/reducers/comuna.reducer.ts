@@ -24,5 +24,9 @@ export const _comunaReducer = createReducer(
     on(ComunaActions.comunaError, (state, { error }) => ({
         ...state,
         error
+    })),
+    on(ComunaActions.getComunaByCiudadSuccess, (state, { comuna }) => ({
+        ...state,
+        comuna
     }))
 );

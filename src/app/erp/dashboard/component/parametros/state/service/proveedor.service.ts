@@ -30,23 +30,28 @@ export class ProveedorServices {
       ) 
     );
   }
-/*
-  createProveedor(proveedor: any): Observable<any> {
-    let proveedor = {
-      proveedorDes: proveedor
-    }
-    return this.rest.post('insProveedor', this.token, proveedor).pipe(
+  validaProveedor(proveedor: any): Observable<any> {
+
+    this.parametros = [{key :'prvRut' ,value: proveedor.trim()}];
+   
+    return this.rest.get('valPrvRut', this.token, this.parametros).pipe(
       map((data: any) => data)
     );
   }
 
-  updateProveedor(proveedor: any): Observable<any> {
- 
+
+  createProveedor(proveedor: any): Observable<any> {
+      return this.rest.post('insProveedor', this.token, proveedor).pipe(
+      map((data: any) => data)
+    );
+  }
+
+  updateProveedor(proveedor: any): Observable<any> { 
     return this.rest.post('updProveedor', this.token,proveedor).pipe(
       map((data: any) => data)
     );  
   }
-
+/*
   deleteProveedor(proveedor: any): Observable<any> {
 
     return this.rest.post('delProveedor', this.token, proveedor).pipe(

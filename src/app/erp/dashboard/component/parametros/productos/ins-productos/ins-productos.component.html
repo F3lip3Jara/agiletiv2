@@ -3,286 +3,52 @@
         <!-- Panel Principal -->
         <form [formGroup]="ins" (ngSubmit)="guardar()">
             <div class="flex">
-                <!-- Panel Izquierdo (70%) -->
-                <div class="col-8">
-                    <div class="card mb-3">
-                        <!-- Título del Producto -->
-                        <div class="p-fluid">
-                            <div class="mt-3">
-                                <span class="p-float-label">
-                                    <input id="float-input" type="text" pInputText formControlName="descripcion"  
-                                    [ngClass]="(ins.controls['descripcion'].hasError('required'))
-                                    ? '           was-validated' : 'is-valid'" >
-                                    <label for="float-input">Descripción</label>
-                                </span>
-                                <div *ngIf= "ins.controls['descripcion'].hasError('required')">
-                                    <span class="text-danger">Campo obligatorio!</span>
-                                </div>   
-                            </div>
-                        </div>
-                        <!-- Editor de Descripción -->
-                        <div class="mt-3">
-                            <p-editor formControlName="observaciones" [style]="{'height':'200px'}">
-                                <ng-template pTemplate="header">
-                                    <span class="ql-formats">
-                                        <button type="button" class="ql-bold" aria-label="Bold"></button>
-                                        <button type="button" class="ql-italic" aria-label="Italic"></button>
-                                        <button type="button" class="ql-underline" aria-label="Underline"></button>
-                                    </span>
-                                </ng-template>
-                            </p-editor>
-                        </div>
-                    </div>
-                    <!-- Panel de Datos del Producto -->
-                    <div class="card">
-                        <h5>Datos del Producto</h5>
-                        <div class="grid p-fluid">
-                            <div class="col-6">
-                                <div class="field">
-                                    <label>Código de Pareo</label>
-                                    <input type="text" pInputText formControlName="cod_pareo"
-                                    [ngClass]="(ins.controls['cod_pareo'].hasError('required'))
-                                    ? '           was-validated' : 'is-valid'" />
-                                    <div *ngIf="ins.controls['cod_pareo'].invalid && ins.controls['cod_pareo'].touched">
-                                        <span class="text-danger">Campo obligatorio!</span>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="col-6">
-                                <div class="field">
-                                    <label>Código Rápido</label>
-                                    <input type="text" pInputText formControlName="cod_rapido"    
-                                    [ngClass]="(ins.controls['cod_rapido'].hasError('required'))
-                                    ? '           was-validated' : 'is-valid'"  />                         
-                                    <div *ngIf="ins.controls['cod_rapido'].invalid && ins.controls['cod_rapido'].touched">
-                                        <span class="text-danger">Campo obligatorio!</span>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="col-6">
-                                <div class="field">
-                                    <label>Código de Barras</label>
-                                    <input type="text" pInputText formControlName="cod_barra"  
-                                    [ngClass]="(ins.controls['cod_barra'].hasError('required'))
-                                    ? '           was-validated' : 'is-valid'" />                               
-                                    <div *ngIf="ins.controls['cod_barra'].invalid && ins.controls['cod_barra'].touched">
-                                        <span class="text-danger">Campo obligatorio!</span>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="col-6">
-                                <div class="field">
-                                    <label>Tipo</label>
-                                    <p-dropdown formControlName="tipo" [options]="tipos" optionLabel="name"
-                                              [ngClass]="(ins.controls['tipo'].hasError('required')) ? 'was-validated' : 'is-valid'">
-                                    </p-dropdown>
-                                    <div *ngIf="ins.controls['tipo'].hasError('required') ">
-                                        <span class="text-danger">Campo obligatorio!</span>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    
-                    <div class="card">
-                        <div class="p-fluid">   
-                            <!-- Panel de Atributos -->
-                            <div class="card mb-3">
-                                <h5><i class="pi pi-tags"></i> Atributos del Producto</h5>
-                                <div class="attributes-container">
-                                    <!-- Sección de Categorización -->
-                                    <div class="attribute-section">
-                                        <h6><i class="pi pi-sitemap"></i> Categorización</h6>
-                                        <!-- Grupos -->
-                                        <div class="attribute-group">
-                                            <label>Grupo</label>
-                                            <div class="attribute-target"
-                                                 cdkDropList
-                                                 #grupoSelList="cdkDropList"
-                                                 [cdkDropListData]="grupoSeleccionado"
-                                                 [cdkDropListConnectedTo]="[grupoList]"
-                                                 (cdkDropListDropped)="drop($event, 'grupo')"
-                                                 [ngClass]="(ins.controls['grupo'].hasError('required')) ? 'was-validated' : 'is-valid'">
-                                                <p-chip *ngFor="let item of grupoSeleccionado"
-                                                       [label]="item.name"
-                                                       cdkDrag
-                                                       [cdkDragData]="item">
-                                                </p-chip>
-                                            </div>
-                                            <div *ngIf="ins.controls['grupo'].hasError('required') && ins.controls['grupo'].touched">
-                                                <span class="text-danger">Debe seleccionar un grupo!</span>
-                                            </div>
-                                            <div class="attribute-chips"
-                                                 cdkDropList
-                                                 #grupoList="cdkDropList"
-                                                 [cdkDropListData]="gruposDisponibles"
-                                                 [cdkDropListConnectedTo]="[grupoSelList]"
-                                                 (cdkDropListDropped)="drop($event, 'grupo')">
-                                                <p-chip *ngFor="let item of gruposDisponibles"
-                                                       [label]="item.name"
-                                                       cdkDrag
-                                                       [cdkDragData]="item">
-                                                </p-chip>
-                                            </div>
-                                        </div>
             
-                                        <!-- Subgrupos -->
-                                        <div class="attribute-group">
-                                            <label>Subgrupo</label>
-                                            <div class="attribute-target"
-                                                 cdkDropList
-                                                 #subgrupoSelList="cdkDropList"
-                                                 [cdkDropListData]="subgrupoSeleccionado"
-                                                 [cdkDropListConnectedTo]="[subgrupoList]"
-                                                 (cdkDropListDropped)="drop($event, 'sub_grupo')"
-                                                 
-                                                 [ngClass]="(ins.controls['sub_grupo'].hasError('required')) ? 'was-validated' : 'is-valid'">
-                                                <p-chip *ngFor="let item of subgrupoSeleccionado"
-                                                       [label]="item.name"
-                                                       cdkDrag
-                                                       [cdkDragData]="item">
-                                                </p-chip>
-                                            </div>
-                                            <div *ngIf="ins.controls['sub_grupo'].hasError('required') && ins.controls['sub_grupo'].touched">
-                                                <span class="text-danger">Debe seleccionar un subgrupo!</span>
-                                            </div>
-                                            <div class="attribute-chips"
-                                                 cdkDropList
-                                                 #subgrupoList="cdkDropList"
-                                                 [cdkDropListData]="subgruposDisponibles"
-                                                 [cdkDropListConnectedTo]="[subgrupoSelList]"
-                                                 (cdkDropListDropped)="drop($event, 'sub_grupo')">
-                                                <p-chip *ngFor="let item of subgruposDisponibles"
-                                                       [label]="item.name"
-                                                       cdkDrag
-                                                       [cdkDragData]="item">
-                                                </p-chip>
-                                            </div>
-                                        </div>
-                                    </div>
-            
-                                    <!-- Sección de Características Físicas -->
-                                    <div class="attribute-section">
-                                        <h6><i class="pi pi-box"></i> Características Físicas</h6>
-                                        <!-- Colores -->
-                                        <div class="attribute-group">
-                                            <label>Color</label>
-                                            <div class="attribute-target"
-                                                 cdkDropList
-                                                 #colorSelList="cdkDropList"
-                                                 [cdkDropListData]="colorSeleccionado"
-                                                 [cdkDropListConnectedTo]="[colorList]"
-                                                 (cdkDropListDropped)="drop($event, 'color')"
-                                                 [ngClass]="(ins.controls['color'].hasError('required')) ? 'was-validated' : 'is-valid'">
-                                                <p-chip *ngFor="let item of colorSeleccionado"
-                                                       [label]="item.name"
-                                                       [style]="{'background-color': item.code}"
-                                                       styleClass="color-chip"
-                                                       cdkDrag
-                                                       [cdkDragData]="item">
-                                                </p-chip>
-                                            </div>
-                                            <div *ngIf="ins.controls['color'].hasError('required') && ins.controls['color'].touched">
-                                                <span class="text-danger">Debe seleccionar un color!</span>
-                                            </div>
-                                            <div class="attribute-chips"
-                                                 cdkDropList
-                                                 #colorList="cdkDropList"
-                                                 [cdkDropListData]="coloresDisponibles"
-                                                 [cdkDropListConnectedTo]="[colorSelList]"
-                                                 (cdkDropListDropped)="drop($event, 'color')">
-                                                <p-chip *ngFor="let item of coloresDisponibles"
-                                                       [label]="item.name"
-                                                       [style]="{'background-color': item.code}"
-                                                       styleClass="color-chip"
-                                                       cdkDrag
-                                                       [cdkDragData]="item">
-                                                </p-chip>
-                                            </div>
-                                        </div>
-            
-                                        <!-- Tallas -->
-                                        <div class="attribute-group">
-                                            <label>Talla</label>
-                                            <div class="attribute-target"
-                                                 cdkDropList
-                                                 #tallaSelList="cdkDropList"
-                                                 [cdkDropListData]="tallaSeleccionada"
-                                                 [cdkDropListConnectedTo]="[tallaList]"
-                                                 (cdkDropListDropped)="drop($event, 'talla')"
-                                                 [ngClass]="(ins.controls['talla'].hasError('required')) ? 'was-validated' : 'is-valid'">
-                                                <p-chip *ngFor="let item of tallaSeleccionada"
-                                                       [label]="item.name"
-                                                       cdkDrag
-                                                       [cdkDragData]="item">
-                                                </p-chip>
-                                            </div>
-                                            <div *ngIf="ins.controls['talla'].hasError('required') && ins.controls['talla'].touched">
-                                                <span class="text-danger">Debe seleccionar una talla!</span>
-                                            </div>
-                                            <div class="attribute-chips"
-                                                 cdkDropList
-                                                 #tallaList="cdkDropList"
-                                                 [cdkDropListData]="tallasDisponibles"
-                                                 [cdkDropListConnectedTo]="[tallaSelList]"
-                                                 (cdkDropListDropped)="drop($event, 'talla')">
-                                                <p-chip *ngFor="let item of tallasDisponibles"
-                                                       [label]="item.name"
-                                                       cdkDrag
-                                                       [cdkDragData]="item">
-                                                </p-chip>
-                                            </div>
-                                        </div>
-            
-                                        <!-- Medidas -->
-                                        <div class="attribute-group">
-                                            <label>Unidad de Medida</label>
-                                            <div class="attribute-target"
-                                                 cdkDropList
-                                                 #medidaSelList="cdkDropList"
-                                                 [cdkDropListData]="medidaSeleccionada"
-                                                 [cdkDropListConnectedTo]="[medidaList]"
-                                                 (cdkDropListDropped)="drop($event, 'medida')"
-                                                 [ngClass]="(ins.controls['medida'].hasError('required')) ? 'was-validated' : 'is-valid'">
-                                                <p-chip *ngFor="let item of medidaSeleccionada"
-                                                       [label]="item.name"
-                                                       cdkDrag
-                                                       [cdkDragData]="item">
-                                                </p-chip>
-                                            </div>
-                                            <div *ngIf="ins.controls['medida'].hasError('required') && ins.controls['medida'].touched">
-                                                <span class="text-danger">Debe seleccionar una unidad de medida!</span>
-                                            </div>
-                                            <div class="attribute-chips"
-                                                 cdkDropList
-                                                 #medidaList="cdkDropList"
-                                                 [cdkDropListData]="medidasDisponibles"
-                                                 [cdkDropListConnectedTo]="[medidaSelList]"
-                                                 (cdkDropListDropped)="drop($event, 'medida')">
-                                                <p-chip *ngFor="let item of medidasDisponibles"
-                                                       [label]="item.name"
-                                                       cdkDrag
-                                                       [cdkDragData]="item">
-                                                </p-chip>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <!-- Panel Derecho (30%) -->
+                <!-- Panel Izquierdo (30%) -->
                 <div class="col-4 pl-3">
                     <!-- Panel de Publicación -->
                     <div class="card mb-3">
                         <h5>Publicar</h5>
                         <div class="flex justify-content-between mb-3">
                             <p-button type="submit" label="Guardar" icon="pi pi-check" size="small" *ngIf="ins.valid"
-                            [loading]="val"
-                                />
+                            [loading]="val"/>
                             <p-button label="Volver" icon="pi pi-arrow-down" size="small"  routerLink=".." severity="secondary" />
-                           
+                        </div>
+                    </div>
+
+                    <!-- Panel de Imagen del Producto -->
+                    <div class="card mb-3">
+                        <h5><i class="pi pi-image"></i> Imagen del Producto</h5>
+                        <div class="p-fluid">
+                            <div class="field">
+                                <div class="p-inputgroup">
+                                    <input type="text" pInputText formControlName="url" 
+                                           placeholder="URL de la imagen"
+                                           (blur)="validarURL()"/>
+                                    <button pButton pRipple type="button" 
+                                            icon="pi pi-search" 
+                                            class="p-button-secondary"
+                                            (click)="showPreview()">
+                                    </button>
+                                </div>
+                                <small class="text-danger" *ngIf="ins.get('url')?.errors?.['pattern']">
+                                    URL inválida
+                                </small>
+                            </div>
+                            
+                            <!-- Previsualización de imagen -->
+                            <div class="product-image-preview mt-3" *ngIf="ins.get('url')?.valid && ins.get('url')?.value">
+                                <p-skeleton *ngIf="!imageLoaded" width="100%" height="200px" borderRadius="4px"></p-skeleton>
+                                <img [src]="ins.get('url')?.value" 
+                                     (load)="onImageLoad()"
+                                     (error)="onImageError()"
+                                     [class.hidden]="!imageLoaded"
+                                     class="preview-image"/>
+                                <div *ngIf="imageError" class="image-error-message">
+                                    <i class="pi pi-exclamation-circle"></i>
+                                    <span>Error al cargar la imagen</span>
+                                </div>
+                            </div>
                         </div>
                     </div>
                     <!-- Panel de Precios -->
@@ -422,6 +188,275 @@
                         </div>
                     </div>
                 </div>
+                    <!-- Panel Derecho (70%) -->
+                    <div class="col-8">
+                        <div class="card mb-3">
+                            <!-- Título del Producto -->
+                            <div class="p-fluid">
+                                <div class="mt-3">
+                                    <span class="p-float-label">
+                                        <input id="float-input" type="text" pInputText formControlName="descripcion"  
+                                        [ngClass]="(ins.controls['descripcion'].hasError('required'))
+                                        ? '           was-validated' : 'is-valid'" >
+                                        <label for="float-input">Descripción</label>
+                                    </span>
+                                    <div *ngIf= "ins.controls['descripcion'].hasError('required')">
+                                        <span class="text-danger">Campo obligatorio!</span>
+                                    </div>   
+                                </div>
+                            </div>
+                            <!-- Editor de Descripción -->
+                            <div class="mt-3">
+                                <p-editor formControlName="observaciones" [style]="{'height':'200px'}">
+                                    <ng-template pTemplate="header">
+                                        <span class="ql-formats">
+                                            <button type="button" class="ql-bold" aria-label="Bold"></button>
+                                            <button type="button" class="ql-italic" aria-label="Italic"></button>
+                                            <button type="button" class="ql-underline" aria-label="Underline"></button>
+                                        </span>
+                                    </ng-template>
+                                </p-editor>
+                            </div>
+                        </div>
+                        <!-- Panel de Datos del Producto -->
+                        <div class="card">
+                            <h5>Datos del Producto</h5>
+                            <div class="grid p-fluid">
+                                <div class="col-6">
+                                    <div class="field">
+                                        <label>Código de Pareo</label>
+                                        <input type="text" pInputText formControlName="cod_pareo"
+                                        [ngClass]="(ins.controls['cod_pareo'].hasError('required'))
+                                        ? '           was-validated' : 'is-valid'" />
+                                        <div *ngIf="ins.controls['cod_pareo'].invalid && ins.controls['cod_pareo'].touched">
+                                            <span class="text-danger">Campo obligatorio!</span>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-6">
+                                    <div class="field">
+                                        <label>Código Rápido</label>
+                                        <input type="text" pInputText formControlName="cod_rapido"    
+                                        [ngClass]="(ins.controls['cod_rapido'].hasError('required'))
+                                        ? '           was-validated' : 'is-valid'"  />                         
+                                        <div *ngIf="ins.controls['cod_rapido'].invalid && ins.controls['cod_rapido'].touched">
+                                            <span class="text-danger">Campo obligatorio!</span>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-6">
+                                    <div class="field">
+                                        <label>Código de Barras</label>
+                                        <input type="text" pInputText formControlName="cod_barra"  
+                                        [ngClass]="(ins.controls['cod_barra'].hasError('required'))
+                                        ? '           was-validated' : 'is-valid'" />                               
+                                        <div *ngIf="ins.controls['cod_barra'].invalid && ins.controls['cod_barra'].touched">
+                                            <span class="text-danger">Campo obligatorio!</span>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-6">
+                                    <div class="field">
+                                        <label>Tipo</label>
+                                        <p-dropdown formControlName="tipo" [options]="tipos" optionLabel="name"
+                                                  [ngClass]="(ins.controls['tipo'].hasError('required')) ? 'was-validated' : 'is-valid'">
+                                        </p-dropdown>
+                                        <div *ngIf="ins.controls['tipo'].hasError('required') ">
+                                            <span class="text-danger">Campo obligatorio!</span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="card">
+                            <div class="p-fluid">   
+                                <!-- Panel de Atributos -->
+                                <div class="card mb-3">
+                                    <h5><i class="pi pi-tags"></i> Atributos del Producto</h5>
+                                    <div class="attributes-container">
+                                        <!-- Sección de Categorización -->
+                                        <div class="attribute-section">
+                                            <h6><i class="pi pi-sitemap"></i> Categorización</h6>
+                                            <!-- Grupos -->
+                                            <div class="attribute-group">
+                                                <label>Grupo</label>
+                                                <div class="attribute-target"
+                                                     cdkDropList
+                                                     #grupoSelList="cdkDropList"
+                                                     [cdkDropListData]="grupoSeleccionado"
+                                                     [cdkDropListConnectedTo]="[grupoList]"
+                                                     (cdkDropListDropped)="drop($event, 'grupo')"
+                                                     [ngClass]="(ins.controls['grupo'].hasError('required')) ? 'was-validated' : 'is-valid'">
+                                                    <p-chip *ngFor="let item of grupoSeleccionado"
+                                                           [label]="item.name"
+                                                           cdkDrag
+                                                           [cdkDragData]="item">
+                                                    </p-chip>
+                                                </div>
+                                                <div *ngIf="ins.controls['grupo'].hasError('required') && ins.controls['grupo'].touched">
+                                                    <span class="text-danger">Debe seleccionar un grupo!</span>
+                                                </div>
+                                                <div class="attribute-chips"
+                                                     cdkDropList
+                                                     #grupoList="cdkDropList"
+                                                     [cdkDropListData]="gruposDisponibles"
+                                                     [cdkDropListConnectedTo]="[grupoSelList]"
+                                                     (cdkDropListDropped)="drop($event, 'grupo')">
+                                                    <p-chip *ngFor="let item of gruposDisponibles"
+                                                           [label]="item.name"
+                                                           cdkDrag
+                                                           [cdkDragData]="item">
+                                                    </p-chip>
+                                                </div>
+                                            </div>
+                
+                                            <!-- Subgrupos -->
+                                            <div class="attribute-group">
+                                                <label>Subgrupo</label>
+                                                <div class="attribute-target"
+                                                     cdkDropList
+                                                     #subgrupoSelList="cdkDropList"
+                                                     [cdkDropListData]="subgrupoSeleccionado"
+                                                     [cdkDropListConnectedTo]="[subgrupoList]"
+                                                     (cdkDropListDropped)="drop($event, 'sub_grupo')"
+                                                     
+                                                     [ngClass]="(ins.controls['sub_grupo'].hasError('required')) ? 'was-validated' : 'is-valid'">
+                                                    <p-chip *ngFor="let item of subgrupoSeleccionado"
+                                                           [label]="item.name"
+                                                           cdkDrag
+                                                           [cdkDragData]="item">
+                                                    </p-chip>
+                                                </div>
+                                                <div *ngIf="ins.controls['sub_grupo'].hasError('required') && ins.controls['sub_grupo'].touched">
+                                                    <span class="text-danger">Debe seleccionar un subgrupo!</span>
+                                                </div>
+                                                <div class="attribute-chips"
+                                                     cdkDropList
+                                                     #subgrupoList="cdkDropList"
+                                                     [cdkDropListData]="subgruposDisponibles"
+                                                     [cdkDropListConnectedTo]="[subgrupoSelList]"
+                                                     (cdkDropListDropped)="drop($event, 'sub_grupo')">
+                                                    <p-chip *ngFor="let item of subgruposDisponibles"
+                                                           [label]="item.name"
+                                                           cdkDrag
+                                                           [cdkDragData]="item">
+                                                    </p-chip>
+                                                </div>
+                                            </div>
+                                        </div>
+                
+                                        <!-- Sección de Características Físicas -->
+                                        <div class="attribute-section">
+                                            <h6><i class="pi pi-box"></i> Características Físicas</h6>
+                                            <!-- Colores -->
+                                            <div class="attribute-group">
+                                                <label>Color</label>
+                                                <div class="attribute-target"
+                                                     cdkDropList
+                                                     #colorSelList="cdkDropList"
+                                                     [cdkDropListData]="colorSeleccionado"
+                                                     [cdkDropListConnectedTo]="[colorList]"
+                                                     (cdkDropListDropped)="drop($event, 'color')"
+                                                     [ngClass]="(ins.controls['color'].hasError('required')) ? 'was-validated' : 'is-valid'">
+                                                    <p-chip *ngFor="let item of colorSeleccionado"
+                                                           [label]="item.name"
+                                                           [style]="{'background-color': item.code}"
+                                                           styleClass="color-chip"
+                                                           cdkDrag
+                                                           [cdkDragData]="item">
+                                                    </p-chip>
+                                                </div>
+                                                <div *ngIf="ins.controls['color'].hasError('required') && ins.controls['color'].touched">
+                                                    <span class="text-danger">Debe seleccionar un color!</span>
+                                                </div>
+                                                <div class="attribute-chips"
+                                                     cdkDropList
+                                                     #colorList="cdkDropList"
+                                                     [cdkDropListData]="coloresDisponibles"
+                                                     [cdkDropListConnectedTo]="[colorSelList]"
+                                                     (cdkDropListDropped)="drop($event, 'color')">
+                                                    <p-chip *ngFor="let item of coloresDisponibles"
+                                                           [label]="item.name"
+                                                           [style]="{'background-color': item.code}"
+                                                           styleClass="color-chip"
+                                                           cdkDrag
+                                                           [cdkDragData]="item">
+                                                    </p-chip>
+                                                </div>
+                                            </div>
+                
+                                            <!-- Tallas -->
+                                            <div class="attribute-group">
+                                                <label>Talla</label>
+                                                <div class="attribute-target"
+                                                     cdkDropList
+                                                     #tallaSelList="cdkDropList"
+                                                     [cdkDropListData]="tallaSeleccionada"
+                                                     [cdkDropListConnectedTo]="[tallaList]"
+                                                     (cdkDropListDropped)="drop($event, 'talla')"
+                                                     [ngClass]="(ins.controls['talla'].hasError('required')) ? 'was-validated' : 'is-valid'">
+                                                    <p-chip *ngFor="let item of tallaSeleccionada"
+                                                           [label]="item.name"
+                                                           cdkDrag
+                                                           [cdkDragData]="item">
+                                                    </p-chip>
+                                                </div>
+                                                <div *ngIf="ins.controls['talla'].hasError('required') && ins.controls['talla'].touched">
+                                                    <span class="text-danger">Debe seleccionar una talla!</span>
+                                                </div>
+                                                <div class="attribute-chips"
+                                                     cdkDropList
+                                                     #tallaList="cdkDropList"
+                                                     [cdkDropListData]="tallasDisponibles"
+                                                     [cdkDropListConnectedTo]="[tallaSelList]"
+                                                     (cdkDropListDropped)="drop($event, 'talla')">
+                                                    <p-chip *ngFor="let item of tallasDisponibles"
+                                                           [label]="item.name"
+                                                           cdkDrag
+                                                           [cdkDragData]="item">
+                                                    </p-chip>
+                                                </div>
+                                            </div>
+                
+                                            <!-- Medidas -->
+                                            <div class="attribute-group">
+                                                <label>Unidad de Medida</label>
+                                                <div class="attribute-target"
+                                                     cdkDropList
+                                                     #medidaSelList="cdkDropList"
+                                                     [cdkDropListData]="medidaSeleccionada"
+                                                     [cdkDropListConnectedTo]="[medidaList]"
+                                                     (cdkDropListDropped)="drop($event, 'medida')"
+                                                     [ngClass]="(ins.controls['medida'].hasError('required')) ? 'was-validated' : 'is-valid'">
+                                                    <p-chip *ngFor="let item of medidaSeleccionada"
+                                                           [label]="item.name"
+                                                           cdkDrag
+                                                           [cdkDragData]="item">
+                                                    </p-chip>
+                                                </div>
+                                                <div *ngIf="ins.controls['medida'].hasError('required') && ins.controls['medida'].touched">
+                                                    <span class="text-danger">Debe seleccionar una unidad de medida!</span>
+                                                </div>
+                                                <div class="attribute-chips"
+                                                     cdkDropList
+                                                     #medidaList="cdkDropList"
+                                                     [cdkDropListData]="medidasDisponibles"
+                                                     [cdkDropListConnectedTo]="[medidaSelList]"
+                                                     (cdkDropListDropped)="drop($event, 'medida')">
+                                                    <p-chip *ngFor="let item of medidasDisponibles"
+                                                           [label]="item.name"
+                                                           cdkDrag
+                                                           [cdkDragData]="item">
+                                                    </p-chip>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
             </div>
         </form>
     </div>

@@ -27,7 +27,9 @@ private excludedUrl  : any [] = [
 ]; 
 private excludedLoad : any [] = [
   'regPai',
-  'colorInfo'
+  'colorInfo',
+  'https://maps.googleapis.com/maps/api/mapsjs/gen_204?csp_test=true',
+  'indicadores'
 ]; 
 
 constructor(   private router : Router, private store: Store ) {
@@ -39,7 +41,9 @@ constructor(   private router : Router, private store: Store ) {
    let count = 0;   
 
    this.excludedLoad.forEach((element : any) => { 
+    //console.log(element);
     if (req.url === element.url) {
+      console.log(element);
        count ++;
     }
    });
@@ -66,7 +70,7 @@ constructor(   private router : Router, private store: Store ) {
   }
   
   private handleHttpResponse(response: HttpResponse<any> , count: number): void {
-   
+   // console.log(count);
     if(count === 0 ){
     this.store.dispatch(decrementarRequest());
     }
@@ -120,5 +124,6 @@ constructor(   private router : Router, private store: Store ) {
   
     return throwError(errorMessage);
   }
+  
   
 }

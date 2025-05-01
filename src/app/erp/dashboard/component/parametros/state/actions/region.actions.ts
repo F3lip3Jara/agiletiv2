@@ -24,6 +24,23 @@ export const uploadRegionSuccess = createAction(
     '[Region] Upload Region Success'
 );
 
+export const getRegionesPaisRequest = createAction(
+    '[Region] Get Regiones Pais Request',
+    props<{ pais: any }>()
+);
 
+export const getRegionesPaisSuccess = createAction(
+    '[Region] Get Regiones Pais Success',
+    props<{ region: Region[] }>()
+);
 
+export const checkUploadStatusRequest = createAction(
+    '[Region] Check Upload Status Request',
+    props<{ jobId: number }>()
+);
+
+export const checkUploadStatusSuccess = createAction(
+    '[Region] Check Upload Status Success',
+    props<{ status: string }>()
+);
 

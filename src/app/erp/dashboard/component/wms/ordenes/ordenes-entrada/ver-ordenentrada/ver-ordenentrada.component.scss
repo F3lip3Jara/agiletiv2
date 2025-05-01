@@ -1,0 +1,93 @@
+.timeline-container {
+    position: relative;
+    padding: 1rem;
+}
+
+.timeline-item {
+    position: relative;
+    padding-bottom: 2rem;
+
+    &:last-child {
+        padding-bottom: 0;
+    }
+}
+
+.timeline-content {
+    padding: 1rem;
+    border-radius: 8px;
+    background-color: var(--surface-card);
+    transition: transform 0.2s, box-shadow 0.2s;
+
+    &:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    }
+}
+
+.timeline-icon {
+    width: 2.5rem;
+    height: 2.5rem;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+}
+
+.timeline-connector {
+    position: absolute;
+    left: 2.25rem;
+    top: 3.5rem;
+    height: calc(100% - 3.5rem);
+    width: 2px;
+    background-color: var(--surface-border);
+}
+
+.timeline-details {
+    h4 {
+        color: var(--text-color);
+        font-size: 1.1rem;
+    }
+
+    p {
+        color: var(--text-color-secondary);
+    }
+}
+
+:host ::ng-deep {
+    .customized-timeline {
+        .p-timeline-event-marker {
+            display: none;
+        }
+
+        .custom-marker {
+            width: 2.5rem;
+            height: 2.5rem;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+
+            i {
+                color: #ffffff;
+                font-size: 1rem;
+            }
+        }
+
+        .timeline-card {
+            border-radius: 12px;
+            margin-left: 1.5rem;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+            transition: transform 0.2s, box-shadow 0.2s;
+
+            &:hover {
+                transform: translateY(-2px);
+                box-shadow: 0 4px 12px rgba(0, 0, 0, 0.12);
+            }
+        }
+
+        .p-timeline-event-opposite {
+            display: none;
+        }
+    }
+}

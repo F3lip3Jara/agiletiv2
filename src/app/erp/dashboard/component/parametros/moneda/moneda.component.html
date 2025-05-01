@@ -8,13 +8,20 @@
                 <div class="header-actions">
                     <span class="p-input-icon-left">
                         <i class="pi pi-search"></i>
-                        <input pInputText type="text" (input)="onGlobalFilter(dt, $event)" placeholder="Buscar..." class="p-inputtext-sm"/>
+                        <input #searchInput pInputText type="text" (input)="onGlobalFilter(dt, $event)" placeholder="Buscar... (Ctrl+Q)" class="p-inputtext-sm"/>
                     </span>
-                    <button pButton pRipple label="Nuevo" icon="pi pi-plus" class="p-button-primary p-button-sm" (click)="openNew()"></button>
+                    
                     <button pButton pRipple label="Actualizar" icon="pi pi-refresh" class="p-button-info p-button-sm" (click)="refresh()"></button>
                     <button pButton pRipple label="Exportar" icon="pi pi-upload" class="p-button-outlined p-button-sm" (click)="exportCSV()"></button>
                 </div>
             </div>
+
+            <!-- Componente de búsqueda -->
+            <app-search-dialog 
+                [(visible)]="showSearchDialog"
+                [data]="data"
+                (searchValueChange)="onSearchValueChange($event)">
+            </app-search-dialog>
 
             <!-- Tabla -->
             <div class="admin-table">
@@ -38,7 +45,7 @@
                             <th>Descripción</th>
                             <th>Representación</th>
                             <th>Creado</th>
-                            <th class="text-center">Acciones</th>
+                        <!-- <th class="text-center">Acciones</th>-->
                         </tr>
                     </ng-template>
                     
@@ -54,7 +61,7 @@
                             <td>
                                 <span>{{item.created_at}}</span>
                             </td>                       
-                            <td>
+                         <!--   <td>
                                 <div class="actions-column" (click)="onActionClick(item)">
                                     <p-splitButton                                      
                                         [model]="actionItems"
@@ -62,7 +69,7 @@
                                         appendTo="body">
                                     </p-splitButton>
                                 </div>
-                            </td>
+                            </td>-->
                         </tr>
                     </ng-template>
                     

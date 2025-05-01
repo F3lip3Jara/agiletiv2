@@ -10,7 +10,9 @@
                     ins.controls['empFono'].value,
                     ins.controls['empTokenOMS'].value
                   )">
+                   <h3 class="text-xl font-bold mb-4"><i class="pi pi-phone mr-2"></i>Información de Contacto</h3>
                 <div class="grid formgrid">
+                    
                     <div class="col-12 mb-2 lg:col-6 lg:mb-0  p-3">
                         <span class="p-float-label">
                             <input id="empRut" type="text" pInputText formControlName="empRut"
@@ -27,7 +29,7 @@
                             <small class="p-error">{{mensaje}}</small>
                         </div>
                     </div>
-
+                  
                     <div class="col-12 mb-2 lg:col-6 lg:mb-0  p-3">
                         <span class="p-float-label">
                             <input id="float-input" type="text" pInputText formControlName="empDes" 
@@ -60,7 +62,7 @@
                             <small class="p-error">Campo obligatorio!</small>
                         </div>
                     </div>
-
+                    <h3 class="text-xl font-bold mb-4"><i class="pi pi-map-marker mr-2"></i>Ubicación</h3>
                     <div class="col-12 mt-4">
                         <div class="p-2 border-round">
                               <div class="grid">
@@ -84,7 +86,9 @@
                         </div>
                     </div>
 
+                    
                     <div class="col-12 md:col-6 mb-2 lg:mb-0 p-3">
+                        <h3 class="text-xl font-bold mb-4"><i class="pi pi pi-cog mr-2"></i>Configuración</h3>
                         <span class="p-float-label">
                             <input id="empTokenOMS" type="text" pInputText formControlName="empTokenOMS">
                             <label for="empTokenOMS">OMS Token</label>

@@ -5,7 +5,7 @@ import { FormGroup } from '@angular/forms';
 import { Router } from '@angular/router';
 import { filter, Observable, of } from 'rxjs';
 import { faArrowDown } from '@fortawesome/free-solid-svg-icons';
-import { debounceTime, defaultIfEmpty, distinctUntilChanged, map } from 'rxjs/operators';
+import { debounceTime, defaultIfEmpty, distinctUntilChanged, map, tap } from 'rxjs/operators';
 import { ImageCroppedEvent } from 'ngx-image-cropper';
 import { Store } from '@ngrx/store';
 import { AppState } from '../../../app.state';
@@ -41,6 +41,7 @@ export class InsUsuariosComponent implements OnInit {
     validNombre      : boolean      = false;
     faArrowTurnDown = faArrowDown;
     val              : boolean      = false;
+    loading          : boolean      = false;
     usuarios: Observable<Usuario[]>;
     display: boolean = false; 
     label: string    = '';
@@ -64,8 +65,10 @@ export class InsUsuariosComponent implements OnInit {
             nombreUsuario: ['', [Validators.required]]
       });
       
+      this.loading = true;
       this.store.dispatch(getRolesRequest());
       this.store.dispatch(incrementarRequest({request: 1}));
+     
         // llama a la acción para obtener los todos
         this.roles$ = this.store.select(selectRoles).pipe(
           filter(roles => roles !== null && roles !== undefined), // Filtra valores nulos o indefinidos
@@ -74,6 +77,7 @@ export class InsUsuariosComponent implements OnInit {
     
       this.store.select(selectUsuarios).subscribe(usuarios => {        
         this.usuarios$ = usuarios.usuarios;
+        this.loading = false;
       });
 
    

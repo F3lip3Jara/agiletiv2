@@ -1,0 +1,102 @@
+:host ::ng-deep .p-dialog {
+    .p-dialog-header {
+        padding: 1rem;
+        background: var(--surface-card);
+        border-bottom: 1px solid var(--surface-border);
+    }
+
+    .p-dialog-content {
+        padding: 1rem;
+    }
+
+    .p-dialog-footer {
+        padding: 1rem;
+        border-top: 1px solid var(--surface-border);
+        display: flex;
+        justify-content: flex-end;
+        gap: 0.5rem;
+    }
+}
+
+.search-suggestions {
+    margin-top: 0.5rem;
+    border: 1px solid var(--surface-border);
+    border-radius: 6px;
+    max-height: 300px;
+    overflow-y: auto;
+
+    .suggestion-item {
+        padding: 0.75rem 1rem;
+        transition: background-color 0.2s;
+        border-bottom: 1px solid var(--surface-border);
+
+        &:last-child {
+            border-bottom: none;
+        }
+
+        &:hover {
+            background-color: var(--surface-hover);
+        }
+
+        i {
+            color: var(--primary-color);
+        }
+    }
+
+    .suggestion-loading {
+        display: flex;
+        align-items: center;
+        padding: 1rem;
+        background-color: var(--surface-ground);
+        color: var(--text-color-secondary);
+        font-size: 0.875rem;
+    }
+
+    .suggestion-empty {
+        color: var(--text-color-secondary);
+        font-style: italic;
+        background-color: var(--surface-ground);
+        display: flex;
+        align-items: center;
+    }
+}
+
+.w-full {
+    width: 100%;
+}
+
+/* Keyboard shortcut hint */
+.keyboard-hint {
+    color: var(--text-color-secondary);
+    font-size: 0.875rem;
+    margin-left: 0.5rem;
+}
+
+/* Loading spinner styles */
+:host ::ng-deep .p-progress-spinner {
+    width: 30px !important;
+    height: 30px !important;
+
+    .p-progress-spinner-circle {
+        animation: p-progress-spinner-dash 1.5s ease-in-out infinite, p-progress-spinner-color 6s ease-in-out infinite;
+    }
+}
+
+/* Input icon styles */
+.p-input-icon-right {
+    i {
+        &.pi-times {
+            cursor: pointer;
+            color: var(--text-color-secondary);
+            transition: color 0.2s;
+
+            &:hover {
+                color: var(--text-color);
+            }
+        }
+
+        &.pi-spinner {
+            color: var(--primary-color);
+        }
+    }
+} 

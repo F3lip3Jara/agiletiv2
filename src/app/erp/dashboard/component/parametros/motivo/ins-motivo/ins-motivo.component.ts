@@ -17,7 +17,7 @@ import { Actions } from '@ngrx/effects';
   styleUrl: './ins-motivo.component.scss'
 })
 export class InsMotivoComponent {
-    motivo$ : Observable<Motivo[]>;
+   /* motivo$ : Observable<Motivo[]>;
     ins : FormGroup;
     val : boolean = false;
     faArrowTurnDown = faArrowDown;
@@ -54,5 +54,5 @@ export class InsMotivoComponent {
       ).subscribe((error) => {
         this.val = false;
       });
-    }
+    }*/
 }

@@ -14,3 +14,26 @@ export const tipospagosError = createAction(
     '[Tipospagos] Tipospagos Error',
     props<{ error: string }>()
 );
+ 
+export const createTipospagosRequest = createAction(
+    '[Tipospagos] Create Tipospagos Request',
+    props<{tipospagos: any}>()
+);
+
+export const createTipospagosSuccess = createAction(
+    '[Tipospagos] Create Tipospagos Success');
+
+export const updateTipospagosRequest = createAction(
+    '[Tipospagos] Update Tipospagos Request',
+    props<{tipospagos: any}>()
+);
+
+export const updateTipospagosSuccess = createAction(
+    '[Tipospagos] Update Tipospagos Success');  
+
+
+
+
+
+
+

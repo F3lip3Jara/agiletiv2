@@ -46,6 +46,7 @@ import { UpEmpresaComponent } from "./empresa/up-empresa/up-empresa.component";
 import { AdmOpcionesComponent } from "./empresa/adm-opciones/adm-opciones.component";
 import { PickListModule } from 'primeng/picklist';
 import { SplitButtonModule } from 'primeng/splitbutton';
+import { SearchDialogComponent } from "../../generales/search-dialog/search-dialog.component";
 @NgModule({
     declarations: [
         OpcionesComponent,
@@ -95,7 +96,8 @@ import { SplitButtonModule } from 'primeng/splitbutton';
       SpeedDialModule,
       TagModule,
       PickListModule,
-      SplitButtonModule
+      SplitButtonModule,
+      SearchDialogComponent
     ],
 })
 

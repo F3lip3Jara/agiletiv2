@@ -1,4 +1,4 @@
-import { Component, OnInit, OnDestroy, ViewChild } from '@angular/core';
+import { Component, OnInit, OnDestroy, ViewChild, ElementRef } from '@angular/core';
 import { Subscription, Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { Store } from '@ngrx/store';
@@ -17,7 +17,7 @@ import { getProveedorRequest } from '../state/actions/proveedor.actions';
   templateUrl: './proveedor.component.html',
   styleUrl: './proveedor.component.scss'
 })
-export class ProveedorComponent  {
+export class ProveedorComponent implements OnInit {
   data$: Observable<any[]>;
   loading: boolean = false;
   data: any[] = [];
@@ -28,6 +28,9 @@ export class ProveedorComponent  {
   selectedRow: any = null;
   actionItems: MenuItem[] = [];
   globalFilterFields  : string[]       =PROVEEDOR_KEYS;
+  showSearchDialog: boolean = false;
+  @ViewChild('searchInput') searchInput!: ElementRef;
+  dt!: Table;
   constructor(
     private store: Store<AppState>,
     private router: Router,
@@ -76,7 +79,7 @@ export class ProveedorComponent  {
 
   edit(data: any) {  
     const dato = btoa(JSON.stringify(data));    
-   // this.router.navigate(['desk/seguridad/proveedor/upproveedor/'+ dato]);
+    this.router.navigate(['desk/parametros/proveedor/upproveedor/'+ dato]);
   }
 
   onGlobalFilter(table: Table, event: Event) {
@@ -103,5 +106,14 @@ export class ProveedorComponent  {
 
   onActionClick(item: any) {
     this.selectedRow = item;
+  }
+
+  onSearchValueChange(value: string) {
+    if (this.searchInput && this.searchInput.nativeElement) {
+      const inputElement = this.searchInput.nativeElement as HTMLInputElement;
+      inputElement.value = value;
+      const event = new Event('input', { bubbles: true });
+      inputElement.dispatchEvent(event);
+    }
   }
 }

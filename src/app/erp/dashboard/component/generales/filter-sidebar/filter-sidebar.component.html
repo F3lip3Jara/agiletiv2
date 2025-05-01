@@ -1,0 +1,128 @@
+<p-sidebar
+          id="filter-sidebar"
+          [(visible)]="visible" 
+          [position]="'left'" 
+          [styleClass]="'w-full md:w-30rem filter-sidebar'"
+          [showCloseIcon]="true"
+          [modal]="true"
+          [blockScroll]="true"
+          (onHide)="onSidebarHide()">
+    <ng-template pTemplate="header">
+        <div class="flex align-items-center justify-content-between w-full">
+            <div class="flex align-items-center gap-2">
+                <i class="pi pi-filter text-xl text-primary"></i>
+                <span class="text-xl font-semibold">Filtros</span>
+            </div>
+            <span class="p-badge p-badge-info" *ngIf="activeFilters > 0">{{activeFilters}}</span>
+        </div>
+    </ng-template>
+
+    <div class="filter-container">
+        <p-accordion [multiple]="true" [activeIndex]="[0]" styleClass="filter-accordion">
+            <p-accordionTab header="Filtros Principales">
+                <div class="flex flex-column gap-2">
+                    <div class="p-inputgroup">
+                        <span class="p-inputgroup-addon">Desde</span>
+                        <p-calendar 
+                                  [showTime]="false"
+                                  [showButtonBar]="true"
+                                  [showIcon]="true"
+                                  [appendTo]="'body'"
+                                  placeholder="Fecha inicial"
+                                  styleClass="w-full">
+                        </p-calendar>
+                    </div>
+                    <div class="p-inputgroup">
+                        <span class="p-inputgroup-addon">Hasta</span>
+                        <p-calendar
+                                  [showTime]="false"
+                                  [showButtonBar]="true"
+                                  [showIcon]="true"
+                                  [appendTo]="'body'"
+                                  placeholder="Fecha final"
+                                  styleClass="w-full">
+                        </p-calendar>
+                    </div>
+                </div>
+            </p-accordionTab>
+
+                <p-accordionTab header="Filtros Adicionales">
+                    @for (column of columns.slice(0, 5); track column.campo) {
+                        <div class="field">
+                            <label [for]="column.campo" class="block">
+                                <span class="font-medium text-900">{{column.label}}</span>
+                            </label>
+                            @switch (getInputType(column.data_type)) {
+                                @case ('number') {
+                                    <p-chips [ngModel]="filterValues[column.campo]"
+                                            (ngModelChange)="onFilterChange(column.campo, $event)"
+                                            [allowDuplicate]="false"
+                                            [separator]="','"
+                                            [placeholder]="'Ingrese ' + column.label.toLowerCase()"
+                                            [addOnBlur]="true"
+                                            styleClass="w-full">
+                                    </p-chips>
+                                }
+                                @case ('datetime') {
+                                    <div class="flex flex-column gap-2">
+                                        <div class="p-inputgroup">
+                                            <span class="p-inputgroup-addon">{{column.label}}</span>
+                                            <p-calendar [(ngModel)]="dateRanges[column.campo].from"
+                                                      (ngModelChange)="onDateRangeChange(column.campo, dateRanges[column.campo])"
+                                                      [showTime]="false"
+                                                      [showButtonBar]="true"
+                                                      [showIcon]="true"
+                                                      [appendTo]="'body'"
+                                                      placeholder="Fecha inicial"
+                                                      styleClass="w-full">
+                                            </p-calendar>
+                                        </div>
+                                       
+                                    </div>
+                                }
+                                @default {
+                                    <p-chips [ngModel]="filterValues[column.campo]"
+                                            (ngModelChange)="onFilterChange(column.campo, $event)"
+                                            [allowDuplicate]="false"
+                                            [separator]="','"
+                                            [placeholder]="'Ingrese ' + column.label.toLowerCase()"
+                                            [addOnBlur]="true"
+                                            styleClass="w-full">
+                                    </p-chips>
+                                }
+                            }
+                            @if (filterValues[column.campo]?.length > 0) {
+                                <small class="block mt-1 text-right">
+                                    <a class="text-primary cursor-pointer" (click)="clearSingleFilter(column.campo)">
+                                        <i class="pi pi-times"></i> Limpiar filtro
+                                    </a>
+                                </small>
+                            }
+                        </div>
+                    }
+                </p-accordionTab>
+            
+        </p-accordion>
+    </div>
+
+    <ng-template pTemplate="footer">
+        <div class="flex justify-content-between gap-2">
+            <button pButton 
+                    label="Limpiar" 
+                    icon="pi pi-filter-slash"
+                    [disabled]="activeFilters === 0"
+                    class="p-button-outlined p-button-secondary flex-1"
+                    pTooltip="Limpiar todos los filtros"
+                    (click)="clearFilter()">
+            </button>
+            <button pButton 
+                    label="Aplicar" 
+                    icon="pi pi-check"
+                    [disabled]="activeFilters === 0"
+                    class="p-button-primary flex-1"
+                    pTooltip="Aplicar filtros seleccionados"
+                    (click)="applyFilter()">
+            </button>
+        </div>
+    </ng-template>
+</p-sidebar>

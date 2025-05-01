@@ -1,0 +1,69 @@
+<p-dialog [(visible)]="visible" 
+         [modal]="true" 
+         [style]="{width: '450px'}" 
+         header="Búsqueda de Tabla"
+         [draggable]="false"
+         [resizable]="false"
+         (onShow)="focusInput()"
+         (onHide)="closeDialog()">
+    <div class="p-fluid">
+        <div class="p-field">
+            <span class="p-input-icon-left p-input-icon-right w-full">
+                <i class="pi pi-search"></i>
+                <input type="text" 
+                       pInputText 
+                       [(ngModel)]="searchQuery" 
+                       (input)="updateSuggestions()"
+                       (keydown.enter)="applySearch()"
+                       placeholder="Buscar... (Enter para aplicar)"
+                       class="w-full" 
+                       #searInput
+                       [disabled]="false"
+                       />
+                <i *ngIf="searchQuery && !isLoading" 
+                   class="pi pi-times cursor-pointer" 
+                   (click)="searchQuery=''; updateSuggestions()"></i>
+                <i *ngIf="isLoading" class="pi pi-spin pi-spinner"></i>
+            </span>
+        </div>
+        
+        <!-- Sugerencias -->
+        <div class="search-suggestions" *ngIf="searchSuggestions.length > 0 || isLoading">
+            <div *ngIf="isLoading" class="suggestion-loading">
+                <p-progressSpinner [style]="{width: '30px', height: '30px'}" 
+                                 strokeWidth="4"
+                                 fill="var(--surface-ground)"
+                                 animationDuration=".5s"></p-progressSpinner>
+                <span class="ml-2">Buscando coincidencias...</span>
+            </div>
+            <div *ngFor="let suggestion of searchSuggestions" 
+                 class="suggestion-item p-2 cursor-pointer hover:surface-200"
+                 (click)="selectSuggestion(suggestion)">
+                <div class="flex align-items-center gap-2">
+                    <i class="pi pi-check-circle"></i>
+                    <span>{{suggestion}}</span>
+                </div>
+            </div>
+            <div *ngIf="searchSuggestions.length === 0 && !isLoading && searchQuery" 
+                 class="suggestion-empty p-2">
+                <i class="pi pi-info-circle mr-2"></i>
+                <span>No se encontraron coincidencias</span>
+            </div>
+        </div>
+    </div>
+    
+    <ng-template pTemplate="footer">
+        <div class="flex justify-content-end gap-2">
+            <button pButton 
+                    label="Aplicar (Ctrl+A)" 
+                    icon="pi pi-check" 
+                    (click)="applySearch()"
+                    [disabled]="!searchQuery.trim() || isLoading"></button>
+            <button pButton 
+                    label="Cancelar" 
+                    icon="pi pi-times" 
+                    class="p-button-text"
+                    (click)="closeDialog()"></button>
+        </div>
+    </ng-template>
+</p-dialog> 

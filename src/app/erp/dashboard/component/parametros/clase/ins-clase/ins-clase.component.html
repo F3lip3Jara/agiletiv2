@@ -8,10 +8,21 @@
                 <div class="grid formgrid">
                     <div class="col-12 mb-4">
                         <span class="p-float-label">
+                            <input id="float-input" type="text" pInputText formControlName="clasTipCod" oninput="this.value = this.value.toUpperCase()" 
+                            [ngClass]="(ins.controls['clasTipCod'].hasError('required'))
+              ? '           was-validated' : 'is-valid'" >
+                            <label for="float-input">Código</label>
+                        </span>
+                        <div *ngIf= "ins.controls['clasTipCod'].hasError('required')">
+                            <span class="text-danger">Campo obligatorio!</span>
+                        </div>                    
+                    </div>
+                    <div class="col-12 mb-4">
+                        <span class="p-float-label">
                             <input id="float-input" type="text" pInputText formControlName="clasTipDes" oninput="this.value = this.value.toUpperCase()" 
                             [ngClass]="(ins.controls['clasTipDes'].hasError('required'))
               ? '           was-validated' : 'is-valid'" >
-                            <label for="float-input">Codigo</label>
+                            <label for="float-input">Descripción</label>
                         </span>
                         <div *ngIf= "ins.controls['clasTipDes'].hasError('required')">
                             <span class="text-danger">Campo obligatorio!</span>

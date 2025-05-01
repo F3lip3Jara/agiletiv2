@@ -1,1 +1,41 @@
-<p>ins-tipopagos works!</p>
+<div class="col-12 p-fluid" >
+    <p-fieldset legend="Ingreso de tipo de pago">
+        <div class="col-12">
+            <form
+            [formGroup] = "ins"
+            (ngSubmit)  = "guardar()">
+           
+                <div class="grid formgrid">
+                    <div class="col-12 mb-4">
+                        <span class="p-float-label">
+                            <input id="float-input" type="text" pInputText formControlName="tipCod" oninput="this.value = this.value.toUpperCase()" 
+                            [ngClass]="(ins.controls['tipCod'].hasError('required'))
+              ? '           was-validated' : 'is-valid'" >
+                            <label for="float-input">Codigo</label>
+                        </span>
+                        <div *ngIf= "ins.controls['tipCod'].hasError('required')">
+                            <span class="text-danger">Campo obligatorio!</span>
+                        </div>                    
+                    </div>
+                    <div class="col-12  w-90" >
+                        <span class="p-float-label">
+                            <input id="float-input" type="text" pInputText formControlName="tipDes" oninput="this.value = this.value.toUpperCase()" 
+                            [ngClass]="(ins.controls['tipDes'].hasError('required'))
+              ? '           was-validated' : 'is-valid'" >
+                            <label for="float-input">Descripción</label>
+                        </span>
+                        <div *ngIf= "ins.controls['tipDes'].hasError('required')">
+                            <span class="text-danger">Campo obligatorio!</span>
+                        </div>                    
+                    </div>
+                </div>
+              
+               <div class="flex  flex-wrap gap-2 align-items-center mt-3">
+                    <p-button type="submit" label="Guardar" icon="pi pi-check" size="small" *ngIf="ins.valid"
+                    [loading]="val"
+                        />
+                    <p-button label="Volver" icon="pi pi-arrow-down" size="small"  routerLink="/desk/parametros/tipo_pago" severity="secondary" />
+               </div>
+            </form>
+        </div>
+    </p-fieldset>

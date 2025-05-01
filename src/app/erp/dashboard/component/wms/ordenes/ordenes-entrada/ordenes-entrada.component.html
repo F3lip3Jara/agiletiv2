@@ -1,0 +1,121 @@
+<div class="grid">
+    <div class="col-12 admin-card">
+        <div class="card">
+            <p-toast></p-toast>            
+            <!-- Header con título y búsqueda -->
+            <div class="admin-header">
+                <h2 class="header-title">Administración ordenes de entrada</h2>
+                <div class="header-actions">
+                    <span class="p-input-icon-left">
+                        <i class="pi pi-search"></i>
+                        <input #searchInput pInputText type="text" (input)="onGlobalFilter(dt, $event)" placeholder="Buscar... (Ctrl+Q)" class="p-inputtext-sm"/>
+                    </span>
+                    <button pButton pRipple label="Nuevo" icon="pi pi-plus" class="p-button-primary p-button-sm" (click)="openNew()"></button>
+                    <button pButton pRipple label="Listas" icon="pi pi-file-pdf" 
+                            class="p-button-success p-button-sm" 
+                            [disabled]="!selectedRows || selectedRows.length === 0"
+                            (click)="generarListasMultiples()"></button>
+                     <button pButton pRipple label="Liberar" icon="pi pi-send" 
+                            class="p-button-success p-button-sm" 
+                            [disabled]="!selectedRows || selectedRows.length === 0"
+                            (click)="liberarOrdenes()"></button>
+                    <button pButton pRipple label="Actualizar" icon="pi pi-refresh" class="p-button-info p-button-sm" (click)="refresh()"></button>
+                    <button pButton pRipple label="Exportar" icon="pi pi-upload" class="p-button-outlined p-button-sm" (click)="exportCSV()"></button>
+                   
+                </div>
+            </div>
+
+            <!-- Componente de búsqueda -->
+            <app-search-dialog 
+                [(visible)]="showSearchDialog"
+                [data]="data"
+                (searchValueChange)="onSearchValueChange($event)">
+            </app-search-dialog>
+            <app-filter-sidebar [visible]="sidebarVisible" [columns]="columnDefinitions"></app-filter-sidebar>
+
+            <!-- Tabla -->
+            <div class="admin-table">
+                <div class="flex justify-between items-center mb-4 mt-4">
+                    <button pButton pRipple label="Filtros" icon="pi pi-filter" class="p-button-outlined p-button-sm" (click)="toggleSidebar()"></button>
+                </div>
+
+                <p-table #dt [value]="data" 
+                        [columns]="cols" 
+                        styleClass="p-datatable-sm"
+                        [tableStyle]="{'min-width': '50rem'}"
+                        [paginator]="true" 
+                        [rows]="10" 
+                        [showCurrentPageReport]="true"
+                        [rowsPerPageOptions]="rowsPerPageOptions"
+                        currentPageReportTemplate="Mostrando {first} a {last} de {totalRecords} registros"
+                        [scrollable]="true"
+                        responsiveLayout="scroll"
+                        [(selection)]="selectedRows"
+                        [globalFilterFields]="globalFilterFields">
+                    
+                    <ng-template pTemplate="header">
+                        <tr>
+                            <th style="width: 4rem">
+                                <p-tableHeaderCheckbox></p-tableHeaderCheckbox>
+                            </th>
+                            <th>Id</th>
+                            <th>Orden</th>
+                            <th>Estado</th>
+                            <th>Cliente</th>
+                            <th>Proveedor</th>
+                            <th>Fecha Entrega</th>
+                            <th>Almacen Destino</th>
+                            <th>Total Lineas</th>
+                            <th>Total SKU's</th>
+                            <th>Created At</th>
+                            <th class="text-center">Acciones</th>
+                        </tr>
+                    </ng-template>
+                    
+                    <ng-template pTemplate="body" let-item>
+                        <tr [ngClass]="{'selected-row': selectedRow?.ordId === item.ordId}">
+                            <td>
+                                <p-tableCheckbox [value]="item"></p-tableCheckbox>
+                            </td>
+                            <td><span class="font-medium">{{item.ordId}}</span></td>
+                            <td>{{item.ordNumber}}</td>
+                            <td>
+                                <span class="tag-date" [ngClass]="getEstadoStyle(item.ordestatus).class">
+                                    {{getEstadoStyle(item.ordestatus).label}}
+                                </span>
+                            </td>
+                            <td>{{item.cenDes}}</td>
+                            <td>{{item.ordHdrCustShortText3}}</td>
+                            <td>{{item.ordHdrCustShortText5}}</td>
+                            <td>{{item.almDes}}</td>
+                            <td>{{item.ordHdrCustShortText6}}</td>
+                            <td>{{item.ordQty}}</td>
+                            <td>{{item.created_at }}</td>
+                            <td>
+                                <div class="actions-column" (click)="onActionClick(item)">
+                                    <p-splitButton 
+                                        [model]="actionItems"
+                                        styleClass="p-button-text p-button-secondary"
+                                        appendTo="body">
+                                    </p-splitButton>
+                                </div>
+                            </td>
+                        </tr>
+                    </ng-template>
+                    
+                    <ng-template pTemplate="emptymessage">
+                        <tr>
+                            <td colspan="11">
+                                <div class="empty-message">
+                                    <i class="pi pi-folder-open"></i>
+                                    <span>No se encontraron registros</span>
+                                </div>
+                            </td>
+                        </tr>
+                    </ng-template>
+                </p-table>
+            </div>
+        </div>
+    </div>
+</div>
+

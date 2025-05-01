@@ -2,9 +2,6 @@ import { RouterModule } from '@angular/router';
 import { NgModule } from '@angular/core';
 import { AppLayoutComponent } from "./layout/app.layout.component";
 import { NotfoundComponent } from './erp/auth/notfound/notfound.component';
-import { ConfiguracionuserComponent } from './layout/configuracionuser/configuracionuser.component';
-
-
 @NgModule({
     imports: [
         RouterModule.forRoot([
@@ -14,7 +11,9 @@ import { ConfiguracionuserComponent } from './layout/configuracionuser/configura
                     { path: 'home', loadChildren: () => import('./erp/dashboard/dashboard.module').then(m => m.DashboardModule) },
                     { path: 'parametros', loadChildren: () => import('./erp/dashboard/component/parametros/parametros.module').then(m => m.ParametrosModule) },
                     { path: 'seguridad', loadChildren: () => import('./erp/dashboard/component/seguridad/seguridad.module').then(m => m.SeguridadModule) },
-                    {path: 'configuracion', loadChildren: () => import('./layout/configuracionuser/configuracionuser.module').then(m => m.ConfiguracionuserModule)}
+                    { path: 'configuracion', loadChildren: () => import('./layout/configuracionuser/configuracionuser.module').then(m => m.ConfiguracionuserModule)},
+                    { path: 'produccion', loadChildren: () => import('./erp/dashboard/component/produccion/produccion.module').then(m => m.ProduccionModule)},
+                    { path: 'wms', loadChildren: () => import('./erp/dashboard/component/wms/wms.module').then(m => m.WmsModule)},
                 ]
             },
             {

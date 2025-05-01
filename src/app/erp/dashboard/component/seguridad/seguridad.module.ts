@@ -48,6 +48,8 @@ import { SubModuloComponent } from './modulo/sub-modulo/sub-modulo.component';
 import { SeguridadComponent } from './seguridad/seguridad.component';
 import { InsSubmoduloComponent } from './modulo/sub-modulo/ins-submodulo/ins-submodulo.component';
 import { UpSubModuloComponent } from './modulo/sub-modulo/up-sub-modulo/up-sub-modulo.component';
+import { ProgressSpinnerModule } from 'primeng/progressspinner';
+import { SearchDialogComponent } from '../generales/search-dialog/search-dialog.component';
 @NgModule({
   declarations: [
     UsuariosComponent,
@@ -101,7 +103,9 @@ import { UpSubModuloComponent } from './modulo/sub-modulo/up-sub-modulo/up-sub-m
     SpeedDialModule,
     SplitButtonModule,
     PickListModule,
-    ScrollPanelModule
+    ScrollPanelModule,
+    ProgressSpinnerModule,
+    SearchDialogComponent 
   ]
 })
 export class SeguridadModule { }

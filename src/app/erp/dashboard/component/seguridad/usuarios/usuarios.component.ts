@@ -1,4 +1,4 @@
-import { Component, HostListener } from '@angular/core';
+import { Component, ElementRef, HostListener, ViewChild } from '@angular/core';
 import { Observable, Subscription } from 'rxjs';
 import { Usuario, USUARIO_KEYS } from '../state/interface/usuarios.interface';
 import { AppState } from '../../app.state';
@@ -35,7 +35,10 @@ export class UsuariosComponent {
   items: MenuItem[] | undefined;
   selectedRow: any = null;
   actionItems: MenuItem[] = [];
-  
+  showSearchDialog: boolean = false;
+  @ViewChild('searchInput') searchInput!: ElementRef;
+  dt!: Table;
+
 
   constructor(private store: Store<AppState>,
               private router: Router,
@@ -166,6 +169,16 @@ edit(id: number) {
     const target = event.target as HTMLElement;
     if (!target.closest('.p-datatable') && !target.closest('.p-splitbutton-panel')) {
       this.selectedRow = null;
+    }
+  }
+
+ 
+  onSearchValueChange(value: string) {
+    if (this.searchInput && this.searchInput.nativeElement) {
+      const inputElement = this.searchInput.nativeElement as HTMLInputElement;
+      inputElement.value = value;
+      const event = new Event('input', { bubbles: true });
+      inputElement.dispatchEvent(event);
     }
   }
 }

@@ -31,6 +31,13 @@ export class CiudadSerivices {
     );
   }
 
+  getCiudadByRegion(region: any, pais: any): Observable<any> {
+    this.parametros = [{key: 'regId', value: region.regId} , {key: 'paiId', value: pais.paiId}]; 
+    return this.rest.get('regCiu', this.token, this.parametros).pipe(
+      map((data: any) => data)
+    );
+  }
+
  /* createCiudad(ciudad: any): Observable<any> {
     let ciudad = {
       ciudadDes: ciudad

@@ -14,3 +14,18 @@ export const ciudadError = createAction(
     '[Ciudad] Ciudad Error',
     props<{ error: string }>()
 );
+
+
+export const getCiudadByRegionRequest = createAction(
+    '[Ciudad] Get Ciudad By Region Request',
+    props<{ region: any , pais: any }>()
+);
+
+export const getCiudadByRegionSuccess = createAction(
+    '[Ciudad] Get Ciudad By Region Success',
+    props<{ ciudad: Ciudad[] }>()
+);
+
+
+
+

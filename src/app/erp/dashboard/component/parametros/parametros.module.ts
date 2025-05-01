@@ -65,6 +65,17 @@ import { ChipModule } from 'primeng/chip';
 import { TabViewModule } from 'primeng/tabview';
 import { DragDropModule } from '@angular/cdk/drag-drop';
 import { UpProductosComponent } from './productos/up-productos/up-productos.component';
+import { UpProveedorComponent } from './proveedor/up-proveedor/up-proveedor.component';
+import { InsTipopagosComponent } from './tipo-pagos/ins-tipopagos/ins-tipopagos.component';
+import { UpTipospagosComponent } from './tipo-pagos/up-tipospagos/up-tipospagos.component';
+import { AlmacenComponent } from './centro/almacen/almacen.component';
+import { InsAlmacenComponent } from './centro/almacen/ins-almacen/ins-almacen.component';
+import { UpAlmacenComponent } from './centro/almacen/up-almacen/up-almacen.component';
+import { WorkflowComponent } from './workflow/workflow.component';
+import { SectorComponent } from './centro/almacen/sector/sector.component';
+import { InsSectorComponent } from './centro/almacen/sector/ins-sector/ins-sector.component';
+import { UpSectorComponent } from './centro/almacen/sector/up-sector/up-sector.component';
+import { SearchDialogComponent } from '../generales/search-dialog/search-dialog.component';
 @NgModule({
   declarations: [
     ProductosComponent,
@@ -99,7 +110,17 @@ import { UpProductosComponent } from './productos/up-productos/up-productos.comp
     TallaComponent, 
     InsTallaComponent,
     UpTallaComponent,
-    UpProductosComponent
+    UpProductosComponent,
+    UpProveedorComponent,
+    InsTipopagosComponent,
+    UpTipospagosComponent,
+    AlmacenComponent,
+    InsAlmacenComponent,
+    UpAlmacenComponent,
+    WorkflowComponent,
+    SectorComponent,
+    InsSectorComponent,
+    UpSectorComponent
   ],
   imports: [
     CommonModule,
@@ -135,7 +156,8 @@ import { UpProductosComponent } from './productos/up-productos/up-productos.comp
     EditorModule,
     ChipModule,
     TabViewModule,
-    DragDropModule 
+    DragDropModule,
+    SearchDialogComponent
   ],
   providers: [
     Environment

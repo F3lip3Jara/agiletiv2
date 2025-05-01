@@ -1,4 +1,4 @@
-import { Component, OnInit, OnDestroy, ViewChild } from '@angular/core';
+import { Component, OnInit, OnDestroy, ViewChild, ElementRef } from '@angular/core';
 import { Subscription, Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { Store } from '@ngrx/store';
@@ -17,7 +17,7 @@ import { REGION_KEYS } from '../state/interface/region.interface';
   templateUrl: './region.component.html',
   styleUrl: './region.component.scss'
 })
-export class RegionComponent {
+export class RegionComponent implements OnInit {
   data$: Observable<any[]>;
   loading: boolean = false;
   data: any[] = [];
@@ -28,6 +28,9 @@ export class RegionComponent {
   selectedRow: any = null;
   actionItems: MenuItem[] = [];
   globalFilterFields  : string[]       = REGION_KEYS;
+  showSearchDialog: boolean = false;
+  @ViewChild('searchInput') searchInput!: ElementRef;
+  dt!: Table;
   constructor(
     private store: Store<AppState>,
     private router: Router,
@@ -98,10 +101,19 @@ export class RegionComponent {
 
   refresh() {
     this.store.dispatch(incrementarRequest({request: 1}));
-   // this.store.dispatch(get{INTERFACE_NAME}Request());
+   this.store.dispatch(getRegionRequest());
   }
 
   onActionClick(item: any) {
     this.selectedRow = item;
+  }
+
+  onSearchValueChange(value: string) {
+    if (this.searchInput && this.searchInput.nativeElement) {
+      const inputElement = this.searchInput.nativeElement as HTMLInputElement;
+      inputElement.value = value;
+      const event = new Event('input', { bubbles: true });
+      inputElement.dispatchEvent(event);
+    }
   }
 }

@@ -1,0 +1,400 @@
+<div class="surface-ground">
+    <div class="flex justify-content-between align-items-center px-4 py-2 surface-section shadow-1">
+        <div class="flex align-items-center gap-2">
+            <i class="pi pi-shopping-cart text-2xl"></i>
+            <h2 class="text-2xl font-bold m-0">Nuevo Pedido</h2>
+        </div>
+        <div class="flex gap-2">          
+            <p-button icon="pi pi-save" label="Guardar" 
+                     (click)="guardarPedido()"  [loading]="loading"
+                    *ngIf="pedidoForm.valid && productosSeleccionados.length > 0"></p-button>
+            <button pButton pRipple 
+                    label="Volver" 
+                    icon="pi pi-arrow-left" 
+                    class="p-button-text p-button-secondary p-button-sm"
+                    routerLink="/desk/produccion/orden_nacional/">
+            </button>
+        </div>
+    </div>
+
+    <div class="p-4">
+        <form [formGroup]="pedidoForm" class="p-fluid">
+            <div class="grid">
+                <!-- Información del Documento -->
+                <div class="col-12 md:col-6 lg:col-3">
+                    <div class="surface-card p-4 shadow-1 border-round">
+                        <div class="flex align-items-center gap-2 mb-4">
+                            <i class="pi pi-file-edit text-xl"></i>
+                            <h3 class="text-xl m-0">Información del Documento</h3>
+                        </div>
+                        <div class="field">
+                            <label for="tipoDocumento">Tipo de Documento</label>
+                            <p-dropdown id="tipoDocumento" formControlName="tipoDocumento"
+                                      [options]="tiposDocumento" optionLabel="clasTipDes" 
+                                      placeholder="Seleccione tipo" styleClass="w-full"></p-dropdown>
+                        </div>
+                        
+                        <div class="field">
+                            <label for="fechaCreacion">Fecha de Creación</label>
+                            <p-calendar id="fechaCreacion" formControlName="fechaCreacion"
+                                      [showIcon]="true" dateFormat="dd-mm-yy"
+                                      styleClass="w-full"></p-calendar>
+                        </div>
+                        <div class="field">
+                            <label for="fechaPromesaEntrega">Fecha Promesa de Entrega</label>
+                            <p-calendar id="fechaPromesaEntrega" formControlName="fechaPromesaEntrega"
+                                      [showIcon]="true" dateFormat="dd-mm-yy"
+                                      styleClass="w-full"></p-calendar>
+                        </div>
+                        <div class="field">
+                            <label for="documentoRelacionado">
+                                <i class="pi pi-file-pdf mr-2"></i>Documento relacionado
+                            </label>
+                            <input id="documentoRelacionado" type="text" pInputText 
+                                   formControlName="documentoRelacionado" class="w-full">
+                        </div>
+                      
+                    </div>
+                </div>
+
+                <!-- Información de Ubicación -->
+                <div class="col-12 md:col-6 lg:col-3">
+                    <div class="surface-card p-4 shadow-1 border-round">
+                        <div class="flex align-items-center gap-2 mb-4">
+                            <i class="pi pi-map-marker text-xl"></i>
+                            <h3 class="text-xl m-0">Ubicación</h3>
+                        </div>
+                        <div class="field">
+                            <label for="proveedor">Proveedor</label>
+                            <p-dropdown id="proveedor" formControlName="proveedor"
+                                      [options]="proveedores" optionLabel="nombre" optionValue="id"
+                                      placeholder="Seleccione proveedor" styleClass="w-full"></p-dropdown>
+                        </div>
+
+                        <div class="field">
+                            <label for="centro">Centro</label>
+                            <p-dropdown id="centro" formControlName="centro"
+                                      [options]="centros" optionLabel="cenDes" optionValue="centroId"
+                                      placeholder="Seleccione centro" styleClass="w-full"></p-dropdown>
+                        </div>
+
+                        <div class="field">
+                            <label for="almacen">Almacén</label>
+                            <p-dropdown id="almacen" formControlName="almacen"
+                                      [options]="almacenesFiltrados" optionLabel="almDes" optionValue="almId"
+                                      placeholder="Seleccione almacén" styleClass="w-full"
+                                      [disabled]="!pedidoForm.get('centro')?.value"></p-dropdown>
+                        </div>
+                    </div>
+                </div>
+                <!-- Información de Contacto -->
+                <div class="col-12 md:col-12 lg:col-6">
+                    <div class="surface-card p-4 shadow-1 border-round">
+                        <div class="flex align-items-center gap-2 mb-4">
+                            <i class="pi pi-user text-xl"></i>
+                            <h3 class="text-xl m-0">Información de Contacto</h3>
+                        </div>
+                        <div class="grid">   
+                            <div class="col-12 md:col-12">
+                                <div class="field">
+                                    <label for="rutProveedor">
+                                        <i class="pi pi-credit-card mr-2"></i>Rut Proveedor
+                                    </label>
+                                    <input  id="rutProveedor" type="text" 
+                                        pInputText 
+                                        value="{{proveedorSeleccionado?.rut}}"                                         
+                                        class="w-full" placeholder="Rut..." disabled>
+                                   
+                                </div>
+                            </div>                         
+                            <div class="col-12 md:col-12">
+                                <div class="field">
+                                    <label for="direccionProveedor">
+                                        <i class="pi pi-send mr-2"></i>Dirección de Proveedor
+                                    </label>
+                                    <input  id="direccionProveedor" type="text" 
+                                        pInputText 
+                                        value="{{proveedorSeleccionado?.direccion}}"
+                                        class="w-full" placeholder="Buscar dirección..." disabled>
+                                   
+                                </div>
+                            </div>
+                            <div class="col-12">
+                                <div class="field">
+                                    <label for="mailProveedor">
+                                        <i class="pi pi-envelope mr-2"></i>Correo Electrónico (Principal)
+                                    </label>
+                                    <input id="mailProveedor" type="email" pInputText 
+                                        value="{{proveedorSeleccionado?.mail}}"
+                                        class="w-full" disabled>
+                                </div>
+                            </div>
+                            <div class="col-12">
+                                <div class="field">
+                                    <label for="telefonoProveedor">
+                                        <i class="pi pi-phone mr-2"></i>Telefono
+                                    </label>
+                                    <input id="telefonoProveedor" type="text" pInputText 
+                                        value="{{proveedorSeleccionado?.telefono}}"
+                                        class="w-full" disabled>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!-- Información de Envío -->
+                <div class="col-12 ">
+                    <div class="surface-card p-4 shadow-1 border-round">
+                        <div class="flex align-items-center gap-2 mb-4">
+                            <i class="pi pi-thumbs-up text-xl"></i>
+                            <h3 class="text-xl m-0">Información de Envío</h3>
+                        </div>
+                        <div class="grid">                            
+                            <div class="col-12 md:col-12">
+                                <div class="field">
+                                    <label for="direccionEnvio">
+                                        <i class="pi pi-send mr-2"></i>Dirección de Envío
+                                    </label>
+                                    <input #direccionEnvio id="direccionEnvio" type="text" 
+                                           pInputText formControlName="direccionEnvio"
+                                           class="w-full" placeholder="Buscar dirección...">
+                                    <div #mapEnvio class="mt-3" style="height: 200px; border-radius: 6px;"></div>
+                                </div>
+                            </div>
+                            <div class="col-12">
+                                <div class="field">
+                                    <label for="correoElectronico">
+                                        <i class="pi pi-envelope mr-2"></i>Correo Electrónico (Contacto)
+                                    </label>
+                                    <input id="correoElectronico" type="email" pInputText 
+                                           formControlName="correoElectronico" class="w-full">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Productos -->
+                <div class="col-12">
+                    <div class="surface-card p-4 shadow-1 border-round">
+                        <div class="flex justify-content-between align-items-center mb-4">
+                            <div class="flex align-items-center gap-2">
+                                <i class="pi pi-box text-xl"></i>
+                                <h3 class="text-xl m-0">Productos</h3>
+                            </div>
+                            <div class="gap-2 right flex">
+                                <p-button icon="pi pi-plus" label="Agregar Producto"
+                                     styleClass="p-button-outlined" 
+                                     (click)="op.toggle($event)"></p-button>
+                                <p-button icon="pi pi-download" label="Descargar Excel" 
+                                        styleClass="p-button-info" (click)="descargarExcel()"
+                                        [disabled]="productosSeleccionados.length === 0"></p-button>
+                                <p-button icon="pi pi-file-excel" label="Cargar Excel" 
+                                        styleClass="p-button-success" (click)="mostrarDialogoCarga()"></p-button>
+                            </div>
+                            
+                        </div>
+
+                        <p-table [value]="productosSeleccionados" 
+                                styleClass="p-datatable-sm"
+                                [scrollable]="true" scrollHeight="400px">
+                            <ng-template pTemplate="header">
+                                <tr>
+                                    <th>SKU</th>
+                                    <th>Producto</th>
+                                    <th>Imagen</th>
+                                    <th>Color</th>
+                                    <th>Talla</th>
+                                    <th>Precio</th>                             
+                                    <th>Cantidad</th>
+                                    <th>Subtotal</th>
+                                    <th>IVA</th>
+                                    <th>Total</th>
+                                    <th>Acciones</th>
+                                </tr>
+                            </ng-template>
+                            <ng-template pTemplate="body" let-producto let-i="rowIndex">
+                                <tr>
+                                    <td>{{producto.cod_pareo}}</td>
+                                    <td>{{producto.descripcion}}</td>
+                                    <td>
+                                        <p-skeleton *ngIf="!producto.url" width="50px" height="50px"></p-skeleton>
+                                        <img [src]="producto.url" alt="Imagen del producto" style="width: 50px; height: 50px;">
+                                    </td>
+                                    <td>{{producto.color}}</td>
+                                    <td>{{producto.talla}}</td>
+                                    <td>{{producto.neto | currency:'CLP':'symbol-narrow':'1.0-0'}}</td>                               
+                                    <td style="width: 150px">
+                                        <p-inputNumber [(ngModel)]="producto.cantidad"
+                                                     [ngModelOptions]="{standalone: true}"
+                                                     (onInput)="calcularTotal()"
+                                                     [showButtons]="true" [min]="1"
+                                                     buttonLayout="horizontal"
+                                                     spinnerMode="horizontal"
+                                                     decrementButtonClass="p-button-secondary"
+                                                     incrementButtonClass="p-button-secondary"
+                                                     incrementButtonIcon="pi pi-plus"
+                                                     decrementButtonIcon="pi pi-minus">
+                                        </p-inputNumber>
+                                    </td>
+                                    <td>{{ calcularSubtotal(producto) | currency:'CLP':'symbol-narrow':'1.0-0'}}</td>
+                                    <td>{{ calcularIVA(calcularSubtotal(producto)) | currency:'CLP':'symbol-narrow':'1.0-0'}}</td>
+                                    <td>{{ calcularTotalProducto(producto) | currency:'CLP':'symbol-narrow':'1.0-0'}}</td>
+                                    <td>
+                                        <button pButton icon="pi pi-trash"
+                                                class="p-button-danger p-button-text p-button-rounded"
+                                                (click)="eliminarProducto(i)"></button>
+                                    </td>
+                                </tr>
+                            </ng-template>
+                            <ng-template pTemplate="footer">
+                                <tr>
+                                    <td colspan="5" class="text-right font-bold">
+                                        <i class="pi pi-money-bill mr-2"></i>Total:
+                                    </td>
+                                    <td colspan="2" class="font-bold">{{total | currency:'CLP':'symbol-narrow':'1.0-0'}}</td>
+                                </tr>
+                            </ng-template>
+                        </p-table>
+                    </div>
+                </div>
+
+                <!-- Notas -->
+                <div class="col-12">
+                    <div class="surface-card p-4 shadow-1 border-round">
+                        <div class="flex align-items-center gap-2 mb-4">
+                            <i class="pi pi-comment text-xl"></i>
+                            <h3 class="text-xl m-0">Notas</h3>
+                        </div>
+                        <div class="field">
+                            <textarea pInputTextarea formControlName="notas" rows="3"
+                                    placeholder="Agregar notas al pedido..." class="w-full"></textarea>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+
+<!-- Overlay Panel para Selección de Productos -->
+<p-overlayPanel #op>
+    <ng-template pTemplate>
+        <div class="w-40rem">
+            <div class="flex align-items-center gap-2 mb-3">
+                <i class="pi pi-box text-xl"></i>
+                <h3 class="text-xl m-0">Seleccionar Producto</h3>
+            </div>
+            <p-table [value]="productos" [scrollable]="true" 
+                     scrollHeight="250px" styleClass="p-datatable-sm">
+                <ng-template pTemplate="header">
+                    <tr>
+                        <th>SKU</th>
+                        <th>Producto</th>
+                        <th>Imagen</th>
+                        <th>Color</th>
+                        <th>Talla</th>
+                        <th>Precio</th>                   
+                        <th>Acción</th>
+                    </tr>
+                </ng-template>
+                <ng-template pTemplate="body" let-producto>
+                    <tr>
+                        <td>{{producto.cod_pareo}}</td>
+                        <td>{{producto.descripcion}}</td>
+                        <td>
+                            <p-skeleton *ngIf="!producto.url" width="50px" height="50px"></p-skeleton>
+                            <img [src]="producto.url" alt="Imagen del producto" style="width: 50px; height: 50px;">
+                        </td>
+                        <td>{{producto.color}}</td>
+                        <td>{{producto.talla}}</td>
+                        <td>{{producto.neto | currency:'CLP':'symbol-narrow':'1.0-0'}}</td>                       
+                        <td>
+                            <button pButton icon="pi pi-plus"
+                                    class="p-button-rounded p-button-text"
+                                    (click)="agregarProducto(producto); op.hide()"></button>
+                        </td>
+                    </tr>
+                </ng-template>
+            </p-table>
+        </div>
+    </ng-template>
+</p-overlayPanel>
+
+<!-- Diálogo para carga de Excel -->
+<p-dialog header="Cargar Productos desde Excel" [(visible)]="visible" 
+          [modal]="true" [style]="{width: '500px'}" [draggable]="false" [resizable]="false"
+          [styleClass]="'carga-excel-dialog'">
+    <div class="flex flex-column gap-3">
+        <div class="flex align-items-center gap-2">
+            <i class="pi pi-file-excel text-xl text-green-500"></i>
+            <h3 class="text-xl m-0">Cargar desde Excel</h3>
+        </div>
+        
+        <div class="surface-card p-3 border-round">
+            <div class="flex justify-content-between align-items-center mb-3">
+                <h4 class="m-0">Formato requerido:</h4>
+                <p-button icon="pi pi-download" 
+                         label="Descargar Formato" 
+                         styleClass="p-button-outlined p-button-sm"
+                         (click)="descargarFormato()"></p-button>
+            </div>
+            <p class="m-0 text-sm">
+                El archivo Excel debe contener las siguientes columnas:
+            </p>
+            <ul class="m-0 mt-2 text-sm">
+                <li><strong>sku:</strong> Código SKU del producto</li>
+                <li><strong>cantidad:</strong> Cantidad del producto</li>
+            </ul>
+            <div class="mt-3 p-2 border-round bg-blue-50">
+                <p class="m-0 text-sm text-blue-700">
+                    <i class="pi pi-info-circle mr-2"></i>
+                    Los SKUs deben existir en la base de datos. Los productos no encontrados serán ignorados.
+                </p>
+            </div>
+        </div>
+
+        <div class="surface-card p-3 border-round">
+            <h4 class="m-0 mb-2">Requisitos del archivo:</h4>
+            <ul class="m-0 text-sm">
+                <li>Formato: .xls o .xlsx</li>
+                <li>Tamaño máximo: 1MB</li>
+                <li>Primera fila debe contener los nombres de las columnas</li>
+            </ul>
+        </div>
+
+        <div class="surface-card p-3 border-round bg-yellow-50">
+            <p class="m-0 text-sm text-yellow-700">
+                <i class="pi pi-exclamation-triangle mr-2"></i>
+                <strong>Advertencia:</strong> Al cargar un nuevo archivo, se eliminarán todos los productos actuales del pedido.
+            </p>
+        </div>
+
+        <p-fileUpload #fileUpload
+                     mode="basic" 
+                     chooseLabel="Seleccionar Archivo" 
+                     accept=".xls,.xlsx" 
+                     [maxFileSize]="1000000"
+                     (onSelect)="onFileSelect($event)"
+                     [auto]="false"
+                     [showUploadButton]="false"
+                     [showCancelButton]="false"
+                     styleClass="mt-3"></p-fileUpload>
+
+        <div class="flex justify-content-end gap-2 mt-3">
+            <p-button label="Cancelar" 
+                     icon="pi pi-times" 
+                     (click)="visible = false"
+                     styleClass="p-button-text"></p-button>
+            <p-button label="Comenzar Carga" 
+                     icon="pi pi-upload" 
+                     (click)="procesarArchivoExcel()"
+                     [loading]="loading"
+                     [disabled]="!archivoSeleccionado"
+                     styleClass="p-button-success"></p-button>
+        </div>
+    </div>
+</p-dialog>
+
+<!-- Mensajes del sistema -->
+<p-toast></p-toast>

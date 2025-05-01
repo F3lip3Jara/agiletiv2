@@ -30,23 +30,21 @@ export class TipospagosServices {
       ) 
     );
   }
-/*
+
   createTipospagos(tipospagos: any): Observable<any> {
-    let tipospagos = {
-      tipospagosDes: tipospagos
-    }
-    return this.rest.post('insTipospagos', this.token, tipospagos).pipe(
+    
+    return this.rest.post('insTipPag', this.token, tipospagos).pipe(
       map((data: any) => data)
     );
   }
 
   updateTipospagos(tipospagos: any): Observable<any> {
  
-    return this.rest.post('updTipospagos', this.token,tipospagos).pipe(
+    return this.rest.post('updTipPag', this.token,tipospagos).pipe(
       map((data: any) => data)
     );  
   }
-
+/*
   deleteTipospagos(tipospagos: any): Observable<any> {
 
     return this.rest.post('delTipospagos', this.token, tipospagos).pipe(

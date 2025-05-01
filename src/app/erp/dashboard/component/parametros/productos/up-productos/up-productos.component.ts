@@ -32,6 +32,10 @@ export class UpProductosComponent implements OnInit, OnDestroy {
 
     up: FormGroup;
     loading: boolean = false;
+    imageLoaded: boolean = false;
+    imageError: boolean = false;
+    previewVisible: boolean = false;
+    val: boolean = false;
     productoId: number = 0;
     producto: Producto = {
         id: 0,
@@ -287,7 +291,8 @@ export class UpProductosComponent implements OnInit, OnDestroy {
             sub_grupo: '',
             color: '',
             talla: '',
-            medida: ''
+            medida: '',
+            url: this.producto.url || ''
         });
 
         // Calcular volumen después de establecer las dimensiones
@@ -404,6 +409,7 @@ export class UpProductosComponent implements OnInit, OnDestroy {
             this.producto.minimo = this.up.value.minimo;
             this.producto.inventariable = this.up.value.inventariable;
             this.producto.peso = this.up.value.peso;
+            this.producto.url = this.up.value.url;
             
             
             this.store.dispatch(incrementarRequest({request: 1}));
@@ -445,7 +451,8 @@ export class UpProductosComponent implements OnInit, OnDestroy {
             sub_grupo: ['', [Validators.required]],
             color: ['', [Validators.required]],
             talla: ['', [Validators.required]],
-            medida: ['', [Validators.required]]
+            medida: ['', [Validators.required]],
+            url: ['', [Validators.pattern('(https?://)?([\\da-z.-]+)\\.([a-z.]{2,6})[/\\w .-]*/?')]]
         });
 
         const dimensiones = ['alto', 'ancho', 'largo'];
@@ -472,5 +479,29 @@ export class UpProductosComponent implements OnInit, OnDestroy {
         const div = document.createElement("div"); // Crear un elemento temporal
         div.innerHTML = html; // Asignar el HTML recibido
         return div.innerText || div.textContent || ""; // Obtener solo el texto
+    }
+
+    validarURL() {
+        const urlControl = this.up.get('url');
+        if (urlControl?.valid) {
+            this.imageLoaded = true;
+            this.imageError = false;
+        }
+    }
+
+    onImageLoad() {
+        this.imageLoaded = true;
+        this.imageError = false;
+    }
+
+    onImageError() {
+        this.imageLoaded = false;
+        this.imageError = true;
+    }
+
+    showPreview() {
+        if (this.up.get('url')?.valid && this.up.get('url')?.value) {
+            this.previewVisible = true;
+        }
     }
 }

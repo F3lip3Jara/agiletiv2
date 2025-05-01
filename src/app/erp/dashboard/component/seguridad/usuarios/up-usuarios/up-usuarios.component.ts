@@ -35,6 +35,7 @@ export class UpUsuariosComponent {
   roles            : any     = {};
   parms            : any     = [];
   val              : boolean = false;
+  loading          : boolean = false;
   gerencia         : any     = {};
   validNombre      : boolean = false;
   dato             : number  = 0;
@@ -101,6 +102,7 @@ export class UpUsuariosComponent {
       let id       = this.usuario.id;
       this.store.dispatch(incrementarRequest({request: 2}));
     
+      this.loading = true;
       this.store.dispatch(getRolesRequest())
       // llama a la acción para obtener los todos
       this.roles$ = this.store.select(selectRoles).pipe(
@@ -110,6 +112,7 @@ export class UpUsuariosComponent {
 
       this.subscription.add(
         this.roles$.subscribe(roles => {
+          this.loading = false;
           if (roles.length > 0 ) {        
           this.selectedRole$ = this.store.select(selectRolesById, { id:this.usuario.rolId });
           this.selectedRole$.subscribe(usuario => {

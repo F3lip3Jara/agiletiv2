@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, OnDestroy, ViewChild, ElementRef } from '@angular/core';
 import type { ChartConfiguration } from 'chart.js';
 import { Chart as ChartJS } from 'chart.js';
 import { registerables } from 'chart.js';
@@ -179,6 +179,12 @@ export class SeguridadComponent implements OnInit {
     ]
   };
 
+  // Propiedades para el diálogo de búsqueda
+  showSearchDialog: boolean = false;
+  @ViewChild('searchInput') searchInput!: ElementRef;
+  dt!: Table;
+  data: any[] = [];
+
   ngOnInit() {
     this.inicializarGraficos();
   }
@@ -308,5 +314,16 @@ export class SeguridadComponent implements OnInit {
     const data: Blob = new Blob([excelBuffer], { type: EXCEL_TYPE });
     
     FileSaver.saveAs(data, 'requests_sistema_' + new Date().getTime() + EXCEL_EXTENSION);
+  }
+
+  // Función para manejar cambios en el valor de búsqueda
+  onSearchValueChange(value: string) {
+    if (this.searchInput && this.searchInput.nativeElement) {
+      const inputElement = this.searchInput.nativeElement as HTMLInputElement;
+      inputElement.value = value;
+      // Disparar el evento input para activar el filtro
+      const event = new Event('input', { bubbles: true });
+      inputElement.dispatchEvent(event);
+    }
   }
 }

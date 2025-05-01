@@ -1,4 +1,4 @@
-import { Component, OnInit, OnDestroy, ViewChild } from '@angular/core';
+import { Component, OnInit, OnDestroy, ViewChild, ElementRef } from '@angular/core';
 import { Subscription, Observable } from 'rxjs';
 import { map, take } from 'rxjs/operators';
 import { Store } from '@ngrx/store';
@@ -30,6 +30,10 @@ export class SubModuloComponent {
   selectedRow: any = null;
   actionItems: MenuItem[] = [];
   modulo: any;  
+  showSearchDialog: boolean = false;
+  @ViewChild('searchInput') searchInput!: ElementRef;
+   dt!: Table;
+
 
   constructor(
     private store: Store<AppState>,
@@ -130,5 +134,15 @@ export class SubModuloComponent {
 
   onActionClick(item: any) {
     this.selectedRow = item;
+  }
+
+  
+  onSearchValueChange(value: string) {
+    if (this.searchInput && this.searchInput.nativeElement) {
+      const inputElement = this.searchInput.nativeElement as HTMLInputElement;
+      inputElement.value = value;
+      const event = new Event('input', { bubbles: true });
+      inputElement.dispatchEvent(event);
+    }
   }
 }
