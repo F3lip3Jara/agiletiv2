@@ -9,6 +9,7 @@ export interface PedidonacState {
     loading: boolean;
     empresa: any;
     productos: any[];
+    colums: any[];
 }
 
 export const initialPedidonacState: DataStatePedidonac = {
@@ -16,14 +17,16 @@ export const initialPedidonacState: DataStatePedidonac = {
     error: null,
     loading: false,
     empresa: null,
-    productos: []
+    productos: [],
+    colums: []
 };
 
 export const _pedidonacReducer = createReducer(
     initialPedidonacState,
-    on(PedidonacActions.getPedidonacSuccess, (state, { pedidonac }) => ({
+    on(PedidonacActions.getPedidonacSuccess, (state, { pedidonac, colums }) => ({
         ...state,
-        pedidonac
+        pedidonac,
+        colums
     })),
     on(PedidonacActions.pedidonacError, (state, { error }) => ({
         ...state,

@@ -17,7 +17,9 @@ import {
   checkListaStatusSuccess,
   listaCompletadaSuccess,
   liberarOrdenesRequest,
-  liberarOrdenesSuccess
+  liberarOrdenesSuccess,
+  aplicarFiltrosSuccess,
+  aplicarFiltrosRequest
 } from '../actions/ordenes.actions';
 import { getMensajesSuccess } from '../../../state/actions/mensajes.actions';
 import { Action } from '@ngrx/store';
@@ -34,8 +36,12 @@ export class OrdenesEffects {
         ofType(getOrdenesRequest),
         switchMap(() => this.ordenesService.getOrdenes()
             .pipe(
-                map(ordenes => getOrdenesSuccess({ ordenes : ordenes.data })),
+                map(ordenes => {
+        
+                    return getOrdenesSuccess({ ordenes : ordenes.data, colums: ordenes.columns });
+                  }),
                 catchError(error => of(ordenesError({ error: error.message })))
+                
             ))
     ));
 
@@ -100,4 +106,15 @@ export class OrdenesEffects {
                 catchError(error => of(ordenesError({ error: error.message })))
             ))
     ));
+
+    aplicarFiltrosRequest = createEffect(() => this.actions.pipe(
+        ofType(aplicarFiltrosRequest),
+        switchMap(({ filtros }) => this.ordenesService.aplicarFiltros(filtros)
+            .pipe(
+
+                map(ordenes => aplicarFiltrosSuccess({ ordenes: ordenes.data, colums: ordenes.columns }))
+            ))
+    ));
+
+
 }

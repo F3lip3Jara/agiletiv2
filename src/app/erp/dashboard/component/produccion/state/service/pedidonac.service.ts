@@ -24,7 +24,8 @@ export class PedidonacServices {
   }
 
    getPedidonac(): Observable<any> {   
-       return this.rest.get('trabOrdenProduccion', this.token, this.parametros).pipe(
+    let parametros = [];
+       return this.rest.get('trabOrdenProduccion', this.token, parametros).pipe(
         map(
           (data: any) => data
           
@@ -71,5 +72,14 @@ export class PedidonacServices {
         map((data: any) => data)
       );
    
+  }
+
+  getPedidonacFiltrado(filtros: any):Observable<any> {
+    this.parametros = [{key: 'filter', value: btoa(JSON.stringify(filtros.filtros))}];   
+    return this.rest.get('trabOrdenProduccion', this.token, this.parametros).pipe(
+     map(
+       (data: any) => data          
+      ) 
+    );
   }
 }

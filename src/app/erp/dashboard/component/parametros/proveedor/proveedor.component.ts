@@ -11,14 +11,16 @@ import { ExcelService } from 'src/app/erp/dashboard/service/excel.service';
 import { MessageService } from 'primeng/api';
 import { PROVEEDOR_KEYS } from '../state/interface/proveedor.interface';
 import { selectProveedor } from '../state/selectors/proveedor.selectors';
-import { getProveedorRequest } from '../state/actions/proveedor.actions';
+import { aplicarFiltrosRequest, aplicarFiltrosSuccess, getProveedorRequest, getProveedorSuccess } from '../state/actions/proveedor.actions';
+import { Actions, ofType } from '@ngrx/effects';
 @Component({
   selector: 'app-proveedor',
   templateUrl: './proveedor.component.html',
   styleUrl: './proveedor.component.scss'
 })
 export class ProveedorComponent implements OnInit {
-  data$: Observable<any[]>;
+  @ViewChild('searchInput') searchInput!: ElementRef;
+
   loading: boolean = false;
   data: any[] = [];
   submitted: boolean = false;
@@ -28,18 +30,23 @@ export class ProveedorComponent implements OnInit {
   selectedRow: any = null;
   actionItems: MenuItem[] = [];
   globalFilterFields  : string[]       =PROVEEDOR_KEYS;
-  showSearchDialog: boolean = false;
-  @ViewChild('searchInput') searchInput!: ElementRef;
-  dt!: Table;
+   // Propiedades para el diálogo de búsqueda
+   showSearchDialog: boolean = false;
+   dt!: Table;
+   sidebarVisible = false;
+   colums: any[] = [];
+   COMPONENT_SELECTOR = 'app-proveedor';
+
+
+
   constructor(
     private store: Store<AppState>,
     private router: Router,
     private excelService: ExcelService,
-    private messageService: MessageService
+    private messageService: MessageService,
+    private actions$: Actions
   ) {
-    this.data$ = this.store.select(selectProveedor).pipe(
-      map(data => Array.isArray(data) ? data : [])
-    );
+    
 
     this.actionItems = [
       {
@@ -66,11 +73,12 @@ export class ProveedorComponent implements OnInit {
   ngOnInit(): void {
     this.store.dispatch(incrementarRequest({request: 1}));
     this.store.dispatch(getProveedorRequest());
-    this.subscription.add(
-      this.data$.subscribe(data => {
-        this.data = data || [];
-      })
-    );
+    this.actions$.pipe(
+      ofType(getProveedorSuccess)
+    ).subscribe((proveedor: any) => {
+      this.data = proveedor.proveedor;
+      this.colums = proveedor.colums;
+    });
   }
 
   openNew() {  
@@ -116,4 +124,34 @@ export class ProveedorComponent implements OnInit {
       inputElement.dispatchEvent(event);
     }
   }
+
+  
+  toggleSidebar() {
+    const event = new KeyboardEvent('keydown', {
+      key: 'a',
+      code: 'KeyA',
+      ctrlKey: true,
+      bubbles: true
+    });
+  
+    // Puedes despachar el evento en un elemento específico
+    const targetElement = document.activeElement || document.body;
+    targetElement.dispatchEvent(event);
+  }
+
+
+  onFilterApplied(filters: any[]) {
+  //  console.log(filters);
+      this.store.dispatch(incrementarRequest({request: 1}));
+      this.store.dispatch(aplicarFiltrosRequest({filtros: filters}));
+      this.actions$.pipe(
+        ofType(aplicarFiltrosSuccess)
+      ).subscribe((proveedor: any) => {
+       console.log(proveedor);
+       console.log(proveedor.proveedor);
+       this.colums = proveedor.colums;
+       this.data = proveedor.proveedor;
+      });
+  }
+
 }

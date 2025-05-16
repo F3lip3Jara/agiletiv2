@@ -3,7 +3,7 @@ import { Actions, createEffect, ofType } from '@ngrx/effects';
 import { of } from 'rxjs';
 import { catchError, exhaustMap, map, mergeMap } from 'rxjs/operators';
 import { UsuariosService } from '../service/usuarios.services'; // Ajusta la ruta
-import {  updateUsuarioRequest ,getUsuariosRequest, usuariosError, getUsuariosSuccess, createUsuarioSuccess, createUsuarioRequest , updateUsuarioSuccess, dataUsuarioRequest, dataUsuarioSuccess, desactivarUsuarioRequest, desactivarUsuarioSuccess, reiniciarUsuarioRequest, reiniciarUsuarioSuccess, upconfiguserRequest, upconfiguserSuccess } from '../actions/usuarios.actions';
+import {  updateUsuarioRequest ,getUsuariosRequest, usuariosError, getUsuariosSuccess, createUsuarioSuccess, createUsuarioRequest , updateUsuarioSuccess, dataUsuarioRequest, dataUsuarioSuccess, desactivarUsuarioRequest, desactivarUsuarioSuccess, reiniciarUsuarioRequest, reiniciarUsuarioSuccess, upconfiguserRequest, upconfiguserSuccess, aplicarFiltrosRequest, aplicarFiltrosSuccess } from '../actions/usuarios.actions';
 import { getMensajesSuccess } from '../../../state/actions/mensajes.actions';
 
 @Injectable()
@@ -19,7 +19,7 @@ export class UserEffects {
             .pipe( // se tratan los datos obtenidos
                 map((resp: any) => {
                     // Se retorna la acción getTodosSuccess con los TODOS obtenidos   
-                 return getUsuariosSuccess({ usuarios: resp }) 
+                 return getUsuariosSuccess({ usuarios: resp.data, colums: resp.columns }) 
                 }),
                 catchError((err) => {                   
                     return [usuariosError({ error: 'Error al obtener los usuarios' })]
@@ -111,6 +111,18 @@ upconfiguser$ = createEffect(() => this.actions$.pipe(
                         getMensajesSuccess({ mensaje: resp }),
                          upconfiguserSuccess()
                     ]),
+        )
+    )
+))
+
+aplicarFiltros$ = createEffect(() => this.actions$.pipe(
+    ofType(aplicarFiltrosRequest), // Se escucha la acción createTodoRequest y esto desencadena el flujo
+    //exhaustMap evita las peticiones duplicadas
+    exhaustMap((filtros) =>
+        this.usuarioService.aplicarFiltros(filtros.filtros)// Se envía el todo proveniente de la acción al servicio
+        .pipe(
+            map((resp: any) => aplicarFiltrosSuccess({ usuarios: resp.data, colums: resp.columns })),
+            catchError(error => of(usuariosError({ error: error.message })))
         )
     )
 ))

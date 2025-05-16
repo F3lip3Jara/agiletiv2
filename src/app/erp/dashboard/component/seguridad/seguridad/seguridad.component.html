@@ -42,18 +42,18 @@
 
         <ng-template pTemplate="header">
           <tr>
-            <th>Tipo</th>
+            <th>Id</th>
             <th>Mensaje</th>
             <th>Usuario</th>
             <th>Fecha</th>
-            <th>IP</th>
+            <th>Descripción</th>
           </tr>
         </ng-template>
 
         <ng-template pTemplate="body" let-log>
           <tr>
             <td>
-              <p-tag [severity]="log.tipo === 'error' ? 'danger' : 'info'" [value]="log.tipo"></p-tag>
+              {{log.id}}
             </td>
             <td>{{log.mensaje}}</td>
             <td>{{log.usuario}}</td>
@@ -109,8 +109,6 @@
     </div>
   </div>
 </div>
-
-
 
 <!-- Gráficos -->
 <div class="grid mt-3">

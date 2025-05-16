@@ -5,7 +5,10 @@ import { DataStateProductos } from "../../../app.state";
 
 export const initialState: DataStateProductos = {
     productos: [],
-    error: ''
+    error: '',
+    loading: false,
+    colums: [] 
+    
 };
 
 export const _productoReducer = createReducer(

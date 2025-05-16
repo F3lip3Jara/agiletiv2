@@ -28,7 +28,10 @@ import { _tallaReducer } from "./parametros/state/reducers/talla.reducer";
 import { _pedidonacReducer } from "./produccion/state/reducers/pedidonac.reducer";
 import { _ordenesReducer } from "./wms/state/reducers/ordenes.reducer";
 import { _sectorReducer } from "./parametros/state/reducers/sector.reducer";
-
+import { _stockReducer } from "./wms/state/reducers/stock.reducer";
+import { _stockCajaReducer } from "./wms/state/reducers/stockCaja.reducer";
+import { _seguridadReducer } from "./seguridad/state/reducers/seguridad.reducer";
+import { _parametrosReducer } from "./parametros/state/reducers/parametros.reducer";
 export interface AppState {
     usuarios    : DataStateUsuarios,
     productos   : DataStateProductos,
@@ -57,19 +60,26 @@ export interface AppState {
     talla        : DataStateTalla,
     pedidonac    : DataStatePedidonac,
     ordenes      : DataStateOrdenes,
-    sector      : DataStateSector
+    sector      : DataStateSector,
+    stock       : DataStateStock ,    
+    stockCaja   : DataStateStockCaja,
+    seguridad   : DataStateSeguridad,
+    parametros  : DataStateParametros
 }
 
 export interface DataStateUsuarios {
     usuarios: any[],
     avatar: any[],
     loading: boolean,
-    error?: string
+    error?: string,
+    colums: any[]
 }
 
 export interface DataStateProductos {
     productos: any[],
-    error?: string
+    error?: string,
+    loading: boolean,
+    colums: any[]
 }
 
 export interface DataStateRoles {
@@ -205,6 +215,7 @@ export interface DataStateProveedor {
     proveedor: any[],
     error?: string,
     loading: boolean,
+    colums: any[]
 }
 
 export interface DataStateTalla {
@@ -218,7 +229,8 @@ export interface DataStatePedidonac {
     error?: string,
     loading: boolean,
     empresa: any,
-    productos: any[]
+    productos: any[],
+    colums: any[]
 }
 
 export interface DataStateOrdenes{
@@ -229,11 +241,38 @@ export interface DataStateOrdenes{
     productos: any[],
     jobId: number,
     status: string,
-    url: string
+    url: string,
+    colums: any[]
 }
 
 export interface DataStateSector {
     sector: any[],
+    error?: string,
+    loading: boolean,
+}
+
+export interface DataStateStock {
+    stock: any[],
+    error?: string,
+    loading: boolean,
+    colums: any[]
+}
+
+export interface DataStateStockCaja {
+    stockCaja: any[],
+    error?: string,
+    loading: boolean,
+    colums: any[]
+}
+
+export interface DataStateSeguridad {
+    seguridad: any,
+    error?: string,
+    loading: boolean,
+}
+
+export interface DataStateParametros{
+    parametros: any,
     error?: string,
     loading: boolean,
 }
@@ -266,5 +305,9 @@ export const ROOT_APP_REDUCER: ActionReducerMap<AppState> = {
     talla       : _tallaReducer,
     pedidonac   : _pedidonacReducer,
     ordenes     : _ordenesReducer,
-    sector      : _sectorReducer
+    sector      : _sectorReducer,
+    stock       : _stockReducer,
+    stockCaja   : _stockCajaReducer,
+    seguridad   : _seguridadReducer,
+    parametros  : _parametrosReducer  
   };

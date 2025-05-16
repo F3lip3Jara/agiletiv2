@@ -23,9 +23,14 @@
             [data]="data"
             (searchValueChange)="onSearchValueChange($event)">
             </app-search-dialog>
-
+            @if(this.colums.length > 0){
+                <app-filter-sidebar [visible]="sidebarVisible"  [data]="this.colums"  (filterApplied)="onFilterApplied($event)" [COMPONENT_SELECTOR]="this.COMPONENT_SELECTOR"></app-filter-sidebar>
+            }    
             <!-- Tabla modernizada -->
             <div class="admin-table">
+                <div class="flex justify-between items-center mb-4 mt-4">
+                    <button pButton pRipple label="Filtros (Ctrl+A)" icon="pi pi-filter" class="p-button-outlined p-button-sm" (click)="toggleSidebar()"></button>
+                </div>
                 <p-table #dt [value]="data" 
                         [columns]="cols" 
                         styleClass="p-datatable-sm"

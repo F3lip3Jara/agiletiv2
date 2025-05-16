@@ -13,99 +13,190 @@
                 <i class="pi pi-filter text-xl text-primary"></i>
                 <span class="text-xl font-semibold">Filtros</span>
             </div>
-            <span class="p-badge p-badge-info" *ngIf="activeFilters > 0">{{activeFilters}}</span>
+            <div class="flex align-items-center gap-2">
+                <button pButton 
+                        icon="pi pi-save" 
+                        class="p-button-rounded p-button-text p-button-primary"
+                        pTooltip="Guardar consulta actual"
+                        (click)="showSaveQuery($event, op)">
+                </button>
+                <span class="p-badge p-badge-info" *ngIf="activeFilters > 0">{{activeFilters}}</span>
+            </div>
         </div>
     </ng-template>
 
+    <p-overlayPanel #op [showCloseIcon]="true" [style]="{width: '300px'}">
+        <ng-template pTemplate="content">
+            <div class="flex flex-column gap-3">
+                <div class="text-xl font-semibold mb-2">Guardar Consulta</div>
+                <div class="field">
+                    <label for="queryName" class="block text-900 mb-2">Nombre de la consulta</label>
+                    <input type="text" 
+                           pInputText 
+                           id="queryName"
+                           [(ngModel)]="queryName"
+                           placeholder="Ingrese un nombre descriptivo"
+                           class="w-full">
+                </div>
+                <div class="flex justify-content-end gap-2">
+                    <button pButton 
+                            label="Cancelar" 
+                            class="p-button-text"
+                            (click)="op.hide()">
+                    </button>
+                    <button pButton 
+                            label="Guardar" 
+                            icon="pi pi-save"
+                            [disabled]="!queryName?.trim()"
+                            (click)="saveCurrentQuery(op)">
+                    </button>
+                </div>
+            </div>
+        </ng-template>
+    </p-overlayPanel>
+
     <div class="filter-container">
-        <p-accordion [multiple]="true" [activeIndex]="[0]" styleClass="filter-accordion">
-            <p-accordionTab header="Filtros Principales">
+        <p-accordion [multiple]="true" [activeIndex]="activeAccordionIndexes" styleClass="filter-accordion">
+            <p-accordionTab header="Filtros Generales">
                 <div class="flex flex-column gap-2">
                     <div class="p-inputgroup">
                         <span class="p-inputgroup-addon">Desde</span>
-                        <p-calendar 
+                        <p-calendar
+                                  [(ngModel)]="dateRanges['created_at'].from"
+                                  (ngModelChange)="onDateRangeChange('created_at', dateRanges['created_at'])"
                                   [showTime]="false"
                                   [showButtonBar]="true"
                                   [showIcon]="true"
                                   [appendTo]="'body'"
+                                  [dateFormat]="'dd-mm-yy'"
                                   placeholder="Fecha inicial"
                                   styleClass="w-full">
                         </p-calendar>
                     </div>
                     <div class="p-inputgroup">
                         <span class="p-inputgroup-addon">Hasta</span>
-                        <p-calendar
+                        <p-calendar 
+                                 [(ngModel)]="dateRanges['created_at'].to"
+                                  (ngModelChange)="onDateRangeChange('created_at', dateRanges['created_at'])"
                                   [showTime]="false"
                                   [showButtonBar]="true"
                                   [showIcon]="true"
                                   [appendTo]="'body'"
+                                  [dateFormat]="'dd-mm-yy'"
                                   placeholder="Fecha final"
                                   styleClass="w-full">
                         </p-calendar>
                     </div>
+                    <div class="flex justify-content-between align-items-center mt-2">
+                        <span class="text-500">Días de diferencia:</span>
+                        <span class="font-semibold">{{daysDifference}} días</span>
+                    </div>
+                   
                 </div>
             </p-accordionTab>
-
-                <p-accordionTab header="Filtros Adicionales">
-                    @for (column of columns.slice(0, 5); track column.campo) {
-                        <div class="field">
-                            <label [for]="column.campo" class="block">
-                                <span class="font-medium text-900">{{column.label}}</span>
-                            </label>
-                            @switch (getInputType(column.data_type)) {
-                                @case ('number') {
-                                    <p-chips [ngModel]="filterValues[column.campo]"
-                                            (ngModelChange)="onFilterChange(column.campo, $event)"
-                                            [allowDuplicate]="false"
-                                            [separator]="','"
-                                            [placeholder]="'Ingrese ' + column.label.toLowerCase()"
-                                            [addOnBlur]="true"
-                                            styleClass="w-full">
-                                    </p-chips>
-                                }
-                                @case ('datetime') {
-                                    <div class="flex flex-column gap-2">
-                                        <div class="p-inputgroup">
-                                            <span class="p-inputgroup-addon">{{column.label}}</span>
-                                            <p-calendar [(ngModel)]="dateRanges[column.campo].from"
-                                                      (ngModelChange)="onDateRangeChange(column.campo, dateRanges[column.campo])"
-                                                      [showTime]="false"
-                                                      [showButtonBar]="true"
-                                                      [showIcon]="true"
-                                                      [appendTo]="'body'"
-                                                      placeholder="Fecha inicial"
-                                                      styleClass="w-full">
-                                            </p-calendar>
-                                        </div>
-                                       
+            <p-accordionTab header="Filtros Principales">
+                @for (column of columns; track column.campo) {
+                    <div class="field">
+                        <label [for]="column.campo" class="block">
+                            <span class="font-medium text-900">{{column.label}}</span>
+                        </label>
+                        @switch (getInputType(column.data_type)) {
+                            @case ('number') {
+                                <p-chips [ngModel]="filterValues[column.campo]"
+                                        (ngModelChange)="onFilterChange(column.campo, $event)"
+                                        [allowDuplicate]="false"
+                                        [separator]="','"
+                                        [placeholder]="'Ingrese ' + column.label.toLowerCase()"
+                                        [addOnBlur]="true"
+                                        styleClass="w-full">
+                                </p-chips>
+                            }
+                            @case ('datetime') {
+                                <div class="flex flex-column gap-2">
+                                    <div class="p-inputgroup">
+                                        <span class="p-inputgroup-addon">{{column.label}}</span>
+                                        <p-calendar 
+                                        [ngModel]="filterValues[column.campo]"
+                                        (ngModelChange)="onFilterChange(column.campo, $event)"
+                                                  [showTime]="false"
+                                                  [showButtonBar]="true"
+                                                  [showIcon]="true"
+                                                  [appendTo]="'body'"
+                                                  [dateFormat]="'dd-mm-yy'"
+                                                  placeholder="Fecha inicial"
+                                                  styleClass="w-full">
+                                        </p-calendar>
                                     </div>
-                                }
-                                @default {
-                                    <p-chips [ngModel]="filterValues[column.campo]"
-                                            (ngModelChange)="onFilterChange(column.campo, $event)"
-                                            [allowDuplicate]="false"
-                                            [separator]="','"
-                                            [placeholder]="'Ingrese ' + column.label.toLowerCase()"
-                                            [addOnBlur]="true"
-                                            styleClass="w-full">
-                                    </p-chips>
-                                }
+                                
+                                </div>
                             }
-                            @if (filterValues[column.campo]?.length > 0) {
-                                <small class="block mt-1 text-right">
-                                    <a class="text-primary cursor-pointer" (click)="clearSingleFilter(column.campo)">
-                                        <i class="pi pi-times"></i> Limpiar filtro
-                                    </a>
-                                </small>
+                            @default {
+                                <p-chips [ngModel]="filterValues[column.campo]"
+                                        (ngModelChange)="onFilterChange(column.campo, $event)"
+                                        [allowDuplicate]="false"
+                                        [separator]="','"
+                                        [placeholder]="'Ingrese ' + column.label.toLowerCase()"
+                                        [addOnBlur]="true"
+                                        styleClass="w-full">
+                                </p-chips>
                             }
+                        }
+                        @if (filterValues[column.campo]?.length > 0) {
+                            <small class="block mt-1 text-right">
+                                <a class="text-primary cursor-pointer" (click)="clearSingleFilter(column.campo)">
+                                    <i class="pi pi-times"></i> Limpiar filtro
+                                </a>
+                            </small>
+                        }
+                    </div>
+                }
+            </p-accordionTab>
+
+            <p-accordionTab header="Mis consultas guardadas">
+                @if (savedQueries.length === 0) {
+                    <div class="empty-state">
+                        <i class="pi pi-search text-500 mb-3"></i>
+                        <p class="text-500 mb-0">Aún no tienes consultas guardadas</p>
+                    </div>
+                } @else {
+                    @for (query of savedQueries; track query.id) {
+                        <div class="saved-query-item">
+                            <div class="saved-query-content">
+                                <div class="saved-query-header">
+                                    <div class="flex flex-column">
+                                        <span class="saved-query-name font-semibold">{{query.name}}</span>
+                                        <span class="saved-query-date text-500">{{query.createdAt}}</span>
+                                    </div>
+                                    <div class="saved-query-actions">
+                                        <button pButton 
+                                                icon="pi pi-trash" 
+                                                class="p-button-rounded p-button-text p-button-danger"
+                                                pTooltip="Eliminar consulta"
+                                                (click)="deleteQuery($event, query)">
+                                        </button>
+                                    </div>
+                                </div>
+                                <p class="saved-query-description">{{query.description}}</p>
+                                <button pButton 
+                                        label="Aplicar filtros" 
+                                        icon="pi pi-check"
+                                        class="p-button-outlined p-button-primary p-button-sm mt-2"
+                                        (click)="applyQuery(query)">
+                                </button>
+                            </div>
                         </div>
                     }
-                </p-accordionTab>
-            
+                }
+            </p-accordionTab>
         </p-accordion>
+       
     </div>
-
+    <div class=" p-2 border-round border-1 border-200 bg-blue-50">
+        <i class="pi pi-info-circle text-blue-400 mr-2"></i>
+        <span class="text-500">Esta consulta podría exceder los 5000 registros. Si esto ocurre, se generará un archivo XLS y se notificará en el panel de alertas.</span>
+    </div>
     <ng-template pTemplate="footer">
+       
         <div class="flex justify-content-between gap-2">
             <button pButton 
                     label="Limpiar" 
@@ -125,4 +216,7 @@
             </button>
         </div>
     </ng-template>
+
+    <p-toast></p-toast>
+    <p-confirmPopup></p-confirmPopup>
 </p-sidebar>

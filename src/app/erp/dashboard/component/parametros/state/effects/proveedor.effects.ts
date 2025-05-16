@@ -17,7 +17,7 @@ export class ProveedorEffects {
         ofType(ProveedorActions.getProveedorRequest),
         switchMap(() => this.proveedorService.getProveedor()
             .pipe(
-                map(proveedor => ProveedorActions.getProveedorSuccess({ proveedor })),
+                map(proveedor => ProveedorActions.getProveedorSuccess({ proveedor : proveedor.data, colums: proveedor.columns })),
                 catchError(error => of(ProveedorActions.proveedorError({ error: error.message })))
             ))
     ));
@@ -51,6 +51,15 @@ export class ProveedorEffects {
                 ProveedorActions.updateProveedorSuccess()
               ]),
               catchError(error => of(ProveedorActions.proveedorError({ error: error.message })))    
+            ))
+    ));
+
+    aplicarFiltros = createEffect(() => this.actions.pipe(
+        ofType(ProveedorActions.aplicarFiltrosRequest),
+        switchMap(({ filtros }) => this.proveedorService.aplicarFiltros(filtros)
+            .pipe(
+                map(proveedor => ProveedorActions.aplicarFiltrosSuccess({ proveedor : proveedor.data, colums: proveedor.columns })),
+                catchError(error => of(ProveedorActions.proveedorError({ error: error.message })))
             ))
     ));
 }

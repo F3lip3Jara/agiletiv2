@@ -10,7 +10,7 @@ export const getProductosRequest = createAction(
 // Acción para indicar la obtención exitosa de todos los elementos de Productos
 export const getProductoSuccess = createAction(
     "[Productos] Get Productos Success",  // Identificador del tipo de acción
-    props<{ productos: Producto[] }>()    // Carga útil que contiene el array de todos obtenidos
+    props<{ productos: Producto[], colums: any[] }>()    // Carga útil que contiene el array de todos obtenidos
 )
 
 // Acción para manejar errores que ocurran durante la obtención de elementos todo
@@ -37,5 +37,17 @@ export const updateProductoRequest = createAction(
 export const updateProductoSuccess = createAction(
     "[Productos] Update Producto Success"        // Carga útil que contiene el todo creado
 )
+
+export const aplicarFiltrosRequest = createAction(
+    "[Productos] Aplicar filtros",
+    props<{ filtros: any[] }>()
+);
+
+ export const aplicarFiltrosSuccess = createAction(
+    "[Productos] Aplicar filtros exitosa",
+    props<{ productos: Producto[], colums: any[] }>()
+);
+
+
 
 

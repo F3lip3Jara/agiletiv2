@@ -56,6 +56,15 @@ export class OrdenesServices {
     );
   }
 
+  aplicarFiltros(filtros: any[]): Observable<any> {
+    let parametros = [{key: 'filter', value: btoa(JSON.stringify(filtros))}];
+   
+
+    return this.rest.get('trabSdOrden', this.token, parametros).pipe(
+      map((data: any) => data)
+    );
+  }
+
 /*
   createOrdenes(ordenes: any): Observable<any> {
     let ordenes = {

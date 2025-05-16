@@ -3,7 +3,7 @@ import { Actions, createEffect, ofType } from '@ngrx/effects';
 import { of } from 'rxjs';
 import { catchError, exhaustMap, map, mergeMap, switchMap } from 'rxjs/operators';
 import { ProductoService } from '../service/producto.services'; // Ajusta la ruta
-import {  getProductoSuccess, productoError, getProductosRequest, createProductoRequest, createProductoSuccess, updateProductoSuccess, updateProductoRequest } from '../actions/producto.actions';
+import {  getProductoSuccess, productoError, getProductosRequest, createProductoRequest, createProductoSuccess, updateProductoSuccess, updateProductoRequest, aplicarFiltrosRequest, aplicarFiltrosSuccess } from '../actions/producto.actions';
 import { getMensajesSuccess } from '../../../state/actions/mensajes.actions';
 
 @Injectable()
@@ -19,7 +19,7 @@ export class ProductoEffects {
             .pipe( // se tratan los datos obtenidos
                 map((resp: any) => {
                     // Se retorna la acción getTodosSuccess con los TODOS obtenidos
-                    return getProductoSuccess({ productos: resp })
+                    return getProductoSuccess({ productos: resp.data, colums: resp.columns })
                 }),
                 catchError((err) => {                   
                     return [productoError({ error: 'Error al obtener los TODOS' })]
@@ -53,4 +53,13 @@ export class ProductoEffects {
             )
         )
     ))
+
+    aplicarFiltros$ = createEffect(() => this.actions$.pipe(
+        ofType(aplicarFiltrosRequest),
+        exhaustMap((action) => this.productoService.aplicarFiltros(action.filtros)
+            .pipe(
+                map((resp: any) => aplicarFiltrosSuccess({ productos: resp.data, colums: resp.columns }))
+            )
+        )
+    ));
 }

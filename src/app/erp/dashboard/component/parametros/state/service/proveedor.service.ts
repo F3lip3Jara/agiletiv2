@@ -18,14 +18,17 @@ export class ProveedorServices {
               private rest    : RestService,
               private userSer : UsersService,
               private store   : Store<AppState>
-  ) {  }
+  ) {  
+
+    this.token = this.userSer.getToken();
+  }
 
    getProveedor(): Observable<any> {
-    this.token = this.userSer.getToken();
-    
-       return this.rest.get('trabProveedor', this.token, this.parametros).pipe(
+   
+      let parametros = [];
+       return this.rest.get('trabProveedor', this.token, parametros).pipe(
         map(
-          (data: any) => data.data
+          (data: any) => data
           
       ) 
     );
@@ -50,6 +53,13 @@ export class ProveedorServices {
     return this.rest.post('updProveedor', this.token,proveedor).pipe(
       map((data: any) => data)
     );  
+  }
+
+  aplicarFiltros(filtros: any[]): Observable<any> {
+    this.parametros = [{key:'filter', value:btoa(JSON.stringify(filtros))}];
+    return this.rest.get('trabProveedor', this.token, this.parametros).pipe(
+      map((data: any) => data)
+    );
   }
 /*
   deleteProveedor(proveedor: any): Observable<any> {

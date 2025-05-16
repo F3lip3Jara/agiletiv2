@@ -76,6 +76,7 @@ import { SectorComponent } from './centro/almacen/sector/sector.component';
 import { InsSectorComponent } from './centro/almacen/sector/ins-sector/ins-sector.component';
 import { UpSectorComponent } from './centro/almacen/sector/up-sector/up-sector.component';
 import { SearchDialogComponent } from '../generales/search-dialog/search-dialog.component';
+import { FilterSidebarComponent } from '../generales/filter-sidebar/filter-sidebar.component';
 @NgModule({
   declarations: [
     ProductosComponent,
@@ -157,7 +158,8 @@ import { SearchDialogComponent } from '../generales/search-dialog/search-dialog.
     ChipModule,
     TabViewModule,
     DragDropModule,
-    SearchDialogComponent
+    SearchDialogComponent,
+    FilterSidebarComponent
   ],
   providers: [
     Environment

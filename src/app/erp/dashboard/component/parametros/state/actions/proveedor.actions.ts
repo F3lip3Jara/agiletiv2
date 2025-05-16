@@ -10,7 +10,7 @@ export const getProveedorRequest = createAction(
 
 export const getProveedorSuccess = createAction(
     '[Proveedor] Get Proveedor Success',
-    props<{ proveedor: Proveedor[] }>()
+    props<{ proveedor: Proveedor[] , colums: any[]}>()
 );
 
 export const proveedorError = createAction(
@@ -46,7 +46,13 @@ export const updateProveedorSuccess = createAction(
     '[Proveedor] Actualizar proveedor exitosa'
 );
 
+export const aplicarFiltrosRequest = createAction(  
+    '[Proveedor] Aplicar filtros',
+    props<{ filtros: any[] }>()
+);
 
-
-
+export const aplicarFiltrosSuccess = createAction(
+    '[Proveedor] Aplicar filtros exitosa',
+    props<{ proveedor: Proveedor[] , colums: any[]}>()
+);
 

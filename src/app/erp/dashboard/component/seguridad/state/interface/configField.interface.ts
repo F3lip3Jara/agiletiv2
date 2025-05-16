@@ -1,9 +1,22 @@
 export interface ConfigField {
     id: number;
-    // Agrega más propiedades según necesites
+    table_name: string;
+    field_name: string;
+    label: string;
+    description: string;
+    data_type: string;
+    options: string;
+    is_filterable: boolean;
 }
 
-export const _KEYS = [
+export const CONFIG_FIELD_KEYS = [
+    'table_name',
+    'field_name',
+    'label',
+    'description',
+    'data_type',
+    'options',
+    'is_filterable',
     'id'
-    // Agrega más keys según necesites
+
 ];

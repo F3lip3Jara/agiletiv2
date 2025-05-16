@@ -22,5 +22,9 @@ export const selectJobId = createSelector(
     (state) => state.jobId
 );
 
+export const selectColums = createSelector(
+    selectState,
+    (state) => state.colums
+);
 
 

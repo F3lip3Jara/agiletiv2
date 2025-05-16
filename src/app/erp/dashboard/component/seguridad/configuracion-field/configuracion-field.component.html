@@ -1,1 +1,125 @@
-<p>configuracion-field works!</p>
+<div class="grid">
+    <div class="col-12 admin-card">
+        <div class="card">
+            <p-toast></p-toast>            
+            <!-- Header con título y búsqueda -->
+            <div class="admin-header">
+                <h2 class="header-title">Administración de filtros</h2>
+                <div class="header-actions">
+                    <span class="p-input-icon-left">
+                        <i class="pi pi-search"></i>
+                        <input #searchInput pInputText type="text" (input)="onGlobalFilter(dt, $event)" placeholder="Buscar... (Ctrl+Q)" class="p-inputtext-sm"/>
+                    </span>
+                    <button pButton pRipple label="Importar" icon="pi pi-upload" class="p-button-primary p-button-sm" (click)="showImportDialog()"></button>
+                    <button pButton pRipple label="Actualizar" icon="pi pi-refresh" class="p-button-info p-button-sm" (click)="refresh()"></button>
+                    <button pButton pRipple label="Exportar" icon="pi pi-upload" class="p-button-outlined p-button-sm" (click)="exportCSV()"></button>
+                </div>
+            </div>
+             <!-- Componente de búsqueda -->
+             <app-search-dialog 
+             [(visible)]="showSearchDialog"
+             [data]="data"
+             (searchValueChange)="onSearchValueChange($event)">
+         </app-search-dialog>
+            <!-- Tabla -->
+            <div class="admin-table">
+                <p-table #dt [value]="data" 
+                        [columns]="cols" 
+                        styleClass="p-datatable-sm"
+                        [tableStyle]="{'min-width': '50rem'}"
+                        [paginator]="true" 
+                        [rows]="10" 
+                        [showCurrentPageReport]="true"
+                        [rowsPerPageOptions]="rowsPerPageOptions"
+                        currentPageReportTemplate="Mostrando {first} a {last} de {totalRecords} registros"
+                        [scrollable]="true"
+                        responsiveLayout="scroll"
+                        [globalFilterFields]="globalFilterFields">
+                    
+                    <ng-template pTemplate="header">
+                        <tr>
+                                <th>Id</th>
+                                <th>Nombre Campo</th>
+                                <th>Label</th>
+                                <th>Tipo Campo</th>
+                                <th>Es Filtro</th>
+                           
+                        </tr>
+                    </ng-template>
+                    
+                    <ng-template pTemplate="body" let-item>
+                        <tr [ngClass]="{'selected-row': selectedRow?.id === item.id}">
+                              <td> <span class="font-medium">{{item.id}}</span>
+                              </td>
+                              <td> 
+                                {{item.field_name}}
+                              </td>
+                              <td> 
+                                {{item.label}}
+                              </td>
+                              <td>
+                                {{item.data_type}}
+                              </td>
+                              <td>
+                                 @if(item.is_filterable ==1){
+                                    <span class="font-medium text-green-500">Si</span>
+                                 }  
+                                 @if(item.is_filterable == 0){
+                                    <span class="font-medium text-red-500">No</span>
+                                 }  
+                              </td>                             
+                        </tr>
+                    </ng-template>
+                    
+                    <ng-template pTemplate="emptymessage">
+                        <tr>
+                            <td colspan="4">
+                                <div class="empty-message">
+                                    <i class="pi pi-folder-open"></i>
+                                    <span>No se encontraron registros</span>
+                                </div>
+                            </td>
+                        </tr>
+                    </ng-template>
+                </p-table>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Diálogo de Importación -->
+<p-dialog header="Importar Configuración de Campos" [(visible)]="importDialogVisible" [style]="{width: '50vw'}" [modal]="true">
+    <div class="p-fluid">
+        <div class="p-field">
+            <p-fileUpload #fileUpload 
+                name="file" 
+                [customUpload]="true" 
+                (uploadHandler)="onUpload($event)"
+                accept=".xlsx,.xls"
+                [maxFileSize]="1000000"
+                [showUploadButton]="true"
+                [showCancelButton]="true"
+                [auto]="false">
+                <ng-template pTemplate="content">
+                    <ul *ngIf="uploadedFiles.length">
+                        <li *ngFor="let file of uploadedFiles">{{file.name}} - {{file.size}} bytes</li>
+                    </ul>
+                </ng-template>
+            </p-fileUpload>
+        </div>
+        
+        <div class="p-mt-3">
+            <p-message severity="info" text="Instrucciones de importación:"></p-message>
+            <ul class="p-ml-4">
+                <li>El archivo debe estar en formato Excel (.xlsx o .xls)</li>
+                <li>Las columnas requeridas son: id, field_name, label, data_type, is_filterable</li>
+                <li>El campo id no puede estar vacío</li>
+                <li>El campo is_filterable debe ser 0 o 1</li>
+            </ul>
+        </div>
+    </div>
+    
+    <ng-template pTemplate="footer">
+        <button pButton pRipple label="Cancelar" icon="pi pi-times" class="p-button-text" (click)="importDialogVisible = false"></button>
+    </ng-template>
+</p-dialog>

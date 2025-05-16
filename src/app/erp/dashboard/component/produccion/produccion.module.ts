@@ -25,6 +25,8 @@ import { VerPedidoComponent } from './pedido/ver-pedido/ver-pedido.component';
 import { TimelineModule } from 'primeng/timeline';
 import { SkeletonModule } from 'primeng/skeleton';
 import { SearchDialogComponent } from '../generales/search-dialog/search-dialog.component';
+import { FilterSidebarComponent } from '../generales/filter-sidebar/filter-sidebar.component';
+
 @NgModule({
   declarations: [
     PedidoComponent,
@@ -52,7 +54,8 @@ import { SearchDialogComponent } from '../generales/search-dialog/search-dialog.
     SplitButtonModule,
     TimelineModule,
     SkeletonModule,
-    SearchDialogComponent
+    SearchDialogComponent,
+    FilterSidebarComponent
   ],
   providers: [
     

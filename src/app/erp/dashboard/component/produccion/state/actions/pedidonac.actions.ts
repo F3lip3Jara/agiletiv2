@@ -7,7 +7,7 @@ export const getPedidonacRequest = createAction(
 
 export const getPedidonacSuccess = createAction(
     '[Pedidonac] Get Pedidonac Success',
-    props<{ pedidonac: Pedidonac[] }>()
+    props<{ pedidonac: Pedidonac[], colums: any[] }>()
 );
 
 export const pedidonacError = createAction(
@@ -60,4 +60,17 @@ export const recepcionarPedidoRequest = createAction(
 export const recepcionarPedidoSuccess = createAction(
     '[Pedidonac] Recepcionar pedido exitosa'
 );
+
+export const aplicarFiltrosRequest = createAction(
+    '[Pedidonac] Aplicar filtros',
+    props<{ filtros: any[] }>()
+);
+
+export const aplicarFiltrosSuccess = createAction(
+    '[Pedidonac] Aplicar filtros exitosa',
+    props<{ pedidonac: Pedidonac[], colums: any[] }>()
+);
+
+
+
 

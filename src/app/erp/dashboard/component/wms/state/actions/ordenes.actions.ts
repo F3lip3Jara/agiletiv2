@@ -7,7 +7,7 @@ export const getOrdenesRequest = createAction(
 
 export const getOrdenesSuccess = createAction(
     '[Ordenes] Get Ordenes Success',
-    props<{ ordenes: Ordenes[] }>()
+    props<{ ordenes: Ordenes[], colums: any[] }>()
 );
 
 export const ordenesError = createAction(
@@ -58,6 +58,19 @@ export const liberarOrdenesRequest = createAction(
 export const liberarOrdenesSuccess = createAction(
     '[Ordenes] Liberar Ordenes Success'
 );
+
+export const aplicarFiltrosRequest = createAction(
+    '[Ordenes] Aplicar Filtros Request',
+    props<{ filtros: any[] }>()
+);
+
+export const aplicarFiltrosSuccess = createAction(
+    '[Ordenes] Aplicar Filtros Success',
+    props<{ ordenes: Ordenes[], colums: any[] }>()
+);
+
+
+
 
 
 

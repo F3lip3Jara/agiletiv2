@@ -57,6 +57,9 @@ export class AppLayoutComponent implements OnDestroy , OnInit  {
 
             if (!this.profileMenuOutsideClickListener) {
                 this.profileMenuOutsideClickListener = this.renderer.listen('document', 'click', event => {
+                    if (!this.appTopbar || !this.appTopbar.menu || !this.appTopbar.topbarMenuButton) {
+                        return;
+                    }
                     const isOutsideClicked = !(this.appTopbar.menu.nativeElement.isSameNode(event.target) || this.appTopbar.menu.nativeElement.contains(event.target)
                         || this.appTopbar.topbarMenuButton.nativeElement.isSameNode(event.target) || this.appTopbar.topbarMenuButton.nativeElement.contains(event.target));
 

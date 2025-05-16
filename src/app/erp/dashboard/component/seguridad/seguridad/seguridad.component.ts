@@ -5,7 +5,11 @@ import { registerables } from 'chart.js';
 import * as FileSaver from 'file-saver';
 import { Table } from 'primeng/table';
 import * as XLSX from 'xlsx';
-
+import { Store } from '@ngrx/store';
+import { Actions, ofType } from '@ngrx/effects';
+import { getSeguridadRequest, getSeguridadSuccess } from '../state/actions/seguridad.actions';
+import { AppState } from '../../app.state';
+import { incrementarRequest } from '../../state/actions/estado.actions';
 // Registrar los componentes necesarios de Chart.js
 ChartJS.register(...registerables);
 
@@ -36,6 +40,10 @@ interface RequestLog {
 
 interface EstadisticasUsuarios {
   totalUsuarios: number;
+  incrementoUsuarios: {
+    porcentaje: number;
+    valor: number;
+  };
   usuariosActivos: number;
   usuariosInactivos: number;
   distribucionRoles: {
@@ -47,6 +55,10 @@ interface EstadisticasUsuarios {
 interface EstadisticasActividad {
   sesionesUltimaSemana: number;
   tiempoPromedioSesion: string;
+  incrementoSesiones: {
+    porcentaje: number;
+    valor: number;
+  };
   usuariosMasActivos: {
     usuario: string;
     sesiones: number;
@@ -60,6 +72,19 @@ interface EstadisticasSeguridad {
     cantidad: number;
   }[];
   erroresPlataforma: number;
+  incrementoIntentosFallidos: {
+    porcentaje: number;
+    valor: number;
+  };
+}
+
+interface ActividadMensual {
+  labels: string[];
+  datasets: {
+    label: string;
+    data: number[];
+    backgroundColor: string;
+  }[];
 }
 
 @Component({
@@ -68,116 +93,14 @@ interface EstadisticasSeguridad {
   styleUrl: './seguridad.component.scss'
 })
 export class SeguridadComponent implements OnInit {
-  cards: DashboardCard[] = [
-    {
-      titulo: 'Total Usuarios',
-      valor: 28441,
-      incremento: '+520 nuevos registros',
-      icono: 'pi pi-users'
-    },
-    {
-      titulo: 'Sesiones Activas',
-      valor: 152,
-      incremento: '+24 desde última visita',
-      icono: 'pi pi-shield'
-    },
-    {
-      titulo: 'Intentos Fallidos',
-      valor: 85,
-      incremento: '-12% esta semana',
-      icono: 'pi pi-exclamation-triangle'
-    }
-  ];
-
-  logs: LogEntry[] = [
-    {
-      id: 1,
-      tipo: 'error',
-      mensaje: 'Intento de acceso fallido',
-      usuario: 'juan.perez',
-      fecha: '2024-03-10 10:15:00',
-      ip: '192.168.1.100'
-    },
-    {
-      id: 2,
-      tipo: 'info',
-      mensaje: 'Cambio de rol exitoso',
-      usuario: 'admin',
-      fecha: '2024-03-10 10:14:00',
-      ip: '192.168.1.101'
-    }
-  ];
-
-  requests: RequestLog[] = [
-    {
-      id: 1,
-      metodo: 'POST',
-      ruta: '/api/auth/login',
-      estado: 200,
-      duracion: '150ms',
-      fecha: '2024-03-10 10:15:00'
-    },
-    {
-      id: 2,
-      metodo: 'GET',
-      ruta: '/api/users',
-      estado: 200,
-      duracion: '89ms',
-      fecha: '2024-03-10 10:14:50'
-    }
-  ];
-
-  estadisticasUsuarios: EstadisticasUsuarios = {
-    totalUsuarios: 150,
-    usuariosActivos: 120,
-    usuariosInactivos: 30,
-    distribucionRoles: [
-      { rol: 'Admin', cantidad: 5 },
-      { rol: 'Usuario', cantidad: 100 },
-      { rol: 'Supervisor', cantidad: 45 }
-    ]
-  };
-
-  estadisticasActividad: EstadisticasActividad = {
-    sesionesUltimaSemana: 450,
-    tiempoPromedioSesion: '45 minutos',
-    usuariosMasActivos: [
-      { usuario: 'juan.perez', sesiones: 25 },
-      { usuario: 'maria.garcia', sesiones: 20 },
-      { usuario: 'carlos.lopez', sesiones: 18 }
-    ]
-  };
-
-  estadisticasSeguridad: EstadisticasSeguridad = {
-    intentosFallidos: 23,
-    ubicacionesAcceso: [
-      { ubicacion: 'Ciudad de México', cantidad: 250 },
-      { ubicacion: 'Guadalajara', cantidad: 150 },
-      { ubicacion: 'Monterrey', cantidad: 100 }
-    ],
-    erroresPlataforma: 15
-  };
-
-  actividadMensual = {
-    labels: ['Q1', 'Q2', 'Q3', 'Q4'],
-    datasets: [
-      {
-        label: 'Accesos',
-        data: [5000, 10000, 15000, 12000],
-        backgroundColor: '#4CAF50'
-      },
-      {
-        label: 'Operaciones',
-        data: [3000, 8000, 12000, 9000],
-        backgroundColor: '#2196F3'
-      },
-      {
-        label: 'Errores',
-        data: [500, 1000, 800, 600],
-        backgroundColor: '#FF5722'
-      }
-    ]
-  };
+  
+  cards: DashboardCard[] = [];
+  logs: LogEntry[] = [];
+  requests: RequestLog[] = [];
+  estadisticasUsuarios: EstadisticasUsuarios;
+  estadisticasActividad: EstadisticasActividad;
+  estadisticasSeguridad: EstadisticasSeguridad;
+  actividadMensual: ActividadMensual;
 
   // Propiedades para el diálogo de búsqueda
   showSearchDialog: boolean = false;
@@ -185,18 +108,70 @@ export class SeguridadComponent implements OnInit {
   dt!: Table;
   data: any[] = [];
 
+  constructor(
+    private store: Store<AppState>,
+    private actions$: Actions
+  ) {}
+
   ngOnInit() {
-    this.inicializarGraficos();
+    this.store.dispatch(incrementarRequest({request: 1}));
+    this.store.dispatch(getSeguridadRequest());
+
+    this.actions$.pipe(
+      ofType(getSeguridadSuccess)
+    ).subscribe((data: any) => {
+    //  console.log(data.seguridad);
+      this.estadisticasUsuarios = data.seguridad.estadisticasUsuarios;
+      this.estadisticasActividad = data.seguridad.estadisticasActividad;
+      this.estadisticasSeguridad = data.seguridad.estadisticasSeguridad;
+      this.logs = data.seguridad.logs;
+      this.requests = data.seguridad.requests;
+      this.actividadMensual = data.seguridad.actividadMensual;
+
+      this.cards = [
+        {
+          titulo: 'Total Usuarios',
+          valor: this.estadisticasUsuarios.totalUsuarios,
+          incremento: `+${this.estadisticasUsuarios.incrementoUsuarios.porcentaje}% desde último mes`,
+          icono: 'pi pi-users'
+        },
+        {
+          titulo: 'Sesiones Activas',
+          valor: this.estadisticasActividad.sesionesUltimaSemana,
+          incremento: `+${this.estadisticasActividad.incrementoSesiones.porcentaje}% desde último mes`,
+          icono: 'pi pi-shield'
+        },
+        {
+          titulo: 'Intentos Fallidos',
+          valor: this.estadisticasSeguridad.intentosFallidos,
+          incremento: `+${this.estadisticasSeguridad.incrementoIntentosFallidos.porcentaje}% desde último mes`,
+          icono: 'pi pi-exclamation-triangle'
+        }
+      ];
+
+      // Inicializar gráficos después de tener los datos
+      setTimeout(() => {
+        this.inicializarGraficos();
+      }, 0);
+    });
   }
 
   inicializarGraficos() {
-    this.crearGraficoRoles();
-    this.crearGraficoUbicaciones();
-    this.crearGraficoActividad();
+    if (this.estadisticasUsuarios?.distribucionRoles) {
+      this.crearGraficoRoles();
+    }
+    if (this.estadisticasSeguridad?.ubicacionesAcceso) {
+      this.crearGraficoUbicaciones();
+    }
+    if (this.actividadMensual) {
+      this.crearGraficoActividad();
+    }
   }
 
   crearGraficoRoles() {
     const ctx = document.getElementById('graficoRoles') as HTMLCanvasElement;
+    if (!ctx) return;
+
     const config: ChartConfiguration = {
       type: 'pie',
       data: {
@@ -220,6 +195,8 @@ export class SeguridadComponent implements OnInit {
 
   crearGraficoUbicaciones() {
     const ctx = document.getElementById('graficoUbicaciones') as HTMLCanvasElement;
+    if (!ctx) return;
+
     const config: ChartConfiguration = {
       type: 'bar',
       data: {
@@ -249,10 +226,12 @@ export class SeguridadComponent implements OnInit {
 
   crearGraficoActividad() {
     const ctx = document.getElementById('graficoActividad') as HTMLCanvasElement;
+    if (!ctx) return;
+
     const config: ChartConfiguration = {
       type: 'bar',
       data: {
-        labels: ['Q1', 'Q2', 'Q3', 'Q4'],
+        labels: this.actividadMensual.labels,
         datasets: this.actividadMensual.datasets
       },
       options: {
@@ -316,12 +295,10 @@ export class SeguridadComponent implements OnInit {
     FileSaver.saveAs(data, 'requests_sistema_' + new Date().getTime() + EXCEL_EXTENSION);
   }
 
-  // Función para manejar cambios en el valor de búsqueda
   onSearchValueChange(value: string) {
     if (this.searchInput && this.searchInput.nativeElement) {
       const inputElement = this.searchInput.nativeElement as HTMLInputElement;
       inputElement.value = value;
-      // Disparar el evento input para activar el filtro
       const event = new Event('input', { bubbles: true });
       inputElement.dispatchEvent(event);
     }

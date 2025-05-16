@@ -18,7 +18,7 @@ export class PedidonacEffects {
         ofType(PedidonacActions.getPedidonacRequest),
         switchMap(() => this.pedidonacService.getPedidonac()
             .pipe(
-                map(pedidonac => PedidonacActions.getPedidonacSuccess({ pedidonac : pedidonac.data })),
+                map(pedidonac => PedidonacActions.getPedidonacSuccess({ pedidonac : pedidonac.data, colums: pedidonac.columns })),
                 catchError(error => of(PedidonacActions.pedidonacError({ error: error.message })))
             ))
     ));
@@ -73,6 +73,14 @@ export class PedidonacEffects {
                     recepcionarPedidoSuccess()
                 ]),
                 catchError(error => of(PedidonacActions.pedidonacError({ error: error.message })))
+            ))
+    ));
+
+    getPedidonacFiltrado = createEffect(() => this.actions.pipe(
+        ofType(PedidonacActions.aplicarFiltrosRequest),
+        switchMap((filtros:any) => this.pedidonacService.getPedidonacFiltrado(filtros)
+            .pipe(
+                map(pedidonac => PedidonacActions.aplicarFiltrosSuccess({ pedidonac : pedidonac.data, colums: pedidonac.columns })),
             ))
     ));
 }

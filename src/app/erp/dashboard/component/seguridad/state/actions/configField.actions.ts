@@ -14,3 +14,17 @@ export const configFieldError = createAction(
     '[ConfigField] ConfigField Error',
     props<{ error: string }>()
 );
+
+export const updateConfigFieldRequest = createAction(
+    '[ConfigField] Update ConfigField Request',
+    props<{ configField: any }>()
+);
+
+export const updateConfigFieldSuccess = createAction(
+    '[ConfigField] Update ConfigField Success',
+   
+);
+
+
+
+

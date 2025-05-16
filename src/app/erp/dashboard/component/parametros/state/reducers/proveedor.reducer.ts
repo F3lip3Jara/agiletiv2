@@ -7,12 +7,14 @@ export interface ProveedorState {
     proveedor: any[];
     error: string | null;
     loading: boolean;
+    colums: any[];
 }
 
 export const initialProveedorState: DataStateProveedor = {
     proveedor: [],
     error: null,
-    loading: false
+    loading: false,
+    colums: []
 };
 
 export const _proveedorReducer = createReducer(

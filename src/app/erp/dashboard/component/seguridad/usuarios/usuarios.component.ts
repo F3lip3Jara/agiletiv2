@@ -3,8 +3,8 @@ import { Observable, Subscription } from 'rxjs';
 import { Usuario, USUARIO_KEYS } from '../state/interface/usuarios.interface';
 import { AppState } from '../../app.state';
 import { Store } from '@ngrx/store';
-import { desactivarUsuarioRequest, desactivarUsuarioSuccess, getUsuariosRequest, reiniciarUsuarioRequest, reiniciarUsuarioSuccess, usuariosError } from '../state/actions/usuarios.actions';
-import { selectUsuarioById, selectUsuarios } from '../state/selectors/usuarios.selectors';
+import { desactivarUsuarioRequest, desactivarUsuarioSuccess, getUsuariosRequest, getUsuariosSuccess, reiniciarUsuarioRequest, reiniciarUsuarioSuccess, usuariosError , aplicarFiltrosRequest , aplicarFiltrosSuccess } from '../state/actions/usuarios.actions';
+import { selectUsuarioById } from '../state/selectors/usuarios.selectors';
 import { Table } from 'primeng/table';
 import { Router } from '@angular/router';
 import { incrementarRequest } from '../../state/actions/estado.actions';
@@ -22,6 +22,9 @@ import { MenuItem } from 'primeng/api';
 })
 export class UsuariosComponent {
 
+  
+  @ViewChild('searchInput') searchInput!: ElementRef;
+
   usuarios          : Observable<Usuario[]>  = new Observable;
   loading           : boolean        = false;
   globalFilterFields: string[]       = USUARIO_KEYS;
@@ -35,9 +38,12 @@ export class UsuariosComponent {
   items: MenuItem[] | undefined;
   selectedRow: any = null;
   actionItems: MenuItem[] = [];
-  showSearchDialog: boolean = false;
-  @ViewChild('searchInput') searchInput!: ElementRef;
-  dt!: Table;
+   // Propiedades para el diálogo de búsqueda
+   showSearchDialog: boolean = false;
+   dt!: Table;
+   sidebarVisible = false;
+   colums: any[] = [];
+   COMPONENT_SELECTOR = 'app-usuarios';
 
 
   constructor(private store: Store<AppState>,
@@ -77,11 +83,13 @@ export class UsuariosComponent {
     
    this.store.dispatch(getUsuariosRequest());
    this.store.dispatch(incrementarRequest({request: 1}));
-    // llama a la acción para obtener los todos
-     this.store.select(selectUsuarios).subscribe((data : any)=>{
-       this.data    = data.usuarios;
-       this.loading = data.loading;
-     });
+    this.actions$.pipe(
+      ofType(getUsuariosSuccess)
+    ).subscribe((data : any)=>{
+      this.data = data.usuarios;
+      this.colums = data.colums;
+    }); 
+   
      this.globalFilterFields = USUARIO_KEYS;
     }
 
@@ -181,4 +189,31 @@ edit(id: number) {
       inputElement.dispatchEvent(event);
     }
   }
+
+  
+  toggleSidebar() {
+    const event = new KeyboardEvent('keydown', {
+      key: 'a',
+      code: 'KeyA',
+      ctrlKey: true,
+      bubbles: true
+    });
+  
+    // Puedes despachar el evento en un elemento específico
+    const targetElement = document.activeElement || document.body;
+    targetElement.dispatchEvent(event);
+  }
+
+
+  onFilterApplied(filters: any[]) {
+   this.store.dispatch(incrementarRequest({request: 1}));
+   this.store.dispatch(aplicarFiltrosRequest({filtros: filters}));
+    this.actions$.pipe(
+      ofType(aplicarFiltrosSuccess)
+    ).subscribe((data : any)=>{
+      this.data = data.usuarios;
+      this.colums = data.colums;
+    });
+  }
+
 }

@@ -25,8 +25,9 @@ export class ProductoService {
    }
 
    getProductos(): Observable<any> {
-     return this.rest.get('trabProducto', this.token, this.parametros).pipe(
-        map((data: any) => data.data) // Asegúrate de importar 'map' de 'rxjs/operators'
+    let parametros = []
+     return this.rest.get('trabProducto', this.token, parametros).pipe(
+        map((data: any) => data) // Asegúrate de importar 'map' de 'rxjs/operators'
     );
   }
 
@@ -38,6 +39,13 @@ export class ProductoService {
 
   updateProducto(producto: Producto): Observable<any> {
     return this.rest.post('updProducto', this.token, producto).pipe(
+      map((data: any) => data)
+    );
+  }
+
+  aplicarFiltros(filtros: any[]): Observable<any> {
+    this.parametros = [{key: 'filter', value: btoa(JSON.stringify(filtros))}]
+    return this.rest.get('trabProducto', this.token, this.parametros).pipe(
       map((data: any) => data)
     );
   }

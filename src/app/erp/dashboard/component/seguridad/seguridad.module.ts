@@ -3,7 +3,7 @@ import { CommonModule } from '@angular/common';
 import { SeguridadRoutingModule } from './seguridad-routing.module';
 import { UsuariosComponent } from './usuarios/usuarios.component';
 import { TableModule } from 'primeng/table';
-import { FormsModule } from '@angular/forms';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { ButtonModule } from 'primeng/button';
 import { RippleModule } from 'primeng/ripple';
 import { ToastModule } from 'primeng/toast';
@@ -27,7 +27,6 @@ import { ImageCropperModule } from 'ngx-image-cropper';
 import { AvatarModule } from 'primeng/avatar';
 import { FileUploadModule } from 'primeng/fileupload';
 import { ConfirmPopupModule } from 'primeng/confirmpopup';
-import { ReactiveFormsModule } from '@angular/forms';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { FieldsetModule } from 'primeng/fieldset';
 import { UpUsuariosComponent } from './usuarios/up-usuarios/up-usuarios.component';
@@ -50,6 +49,11 @@ import { InsSubmoduloComponent } from './modulo/sub-modulo/ins-submodulo/ins-sub
 import { UpSubModuloComponent } from './modulo/sub-modulo/up-sub-modulo/up-sub-modulo.component';
 import { ProgressSpinnerModule } from 'primeng/progressspinner';
 import { SearchDialogComponent } from '../generales/search-dialog/search-dialog.component';
+import { ConfiguracionFieldComponent } from './configuracion-field/configuracion-field.component';
+import { MessageModule } from 'primeng/message';
+import { MessagesModule } from 'primeng/messages';
+import { FilterSidebarComponent } from '../generales/filter-sidebar/filter-sidebar.component';
+import { TagModule } from 'primeng/tag';
 @NgModule({
   declarations: [
     UsuariosComponent,
@@ -64,7 +68,8 @@ import { SearchDialogComponent } from '../generales/search-dialog/search-dialog.
     SubModuloComponent,
     InsSubmoduloComponent,  
     UpSubModuloComponent,
-    SeguridadComponent
+    SeguridadComponent,
+    ConfiguracionFieldComponent
   ],
   imports: [
     CommonModule,
@@ -105,7 +110,11 @@ import { SearchDialogComponent } from '../generales/search-dialog/search-dialog.
     PickListModule,
     ScrollPanelModule,
     ProgressSpinnerModule,
-    SearchDialogComponent 
+    SearchDialogComponent,
+    MessageModule,
+    MessagesModule,
+    FilterSidebarComponent,
+    TagModule
   ]
 })
 export class SeguridadModule { }

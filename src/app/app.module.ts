@@ -45,6 +45,11 @@ import { AlmacenEffects } from './erp/dashboard/component/parametros/state/effec
 import { PedidonacEffects } from './erp/dashboard/component/produccion/state/effects/pedidonac.effects';
 import { OrdenesEffects } from './erp/dashboard/component/wms/state/effects/ordenes.effects';
 import { SectorEffects } from './erp/dashboard/component/parametros/state/effects/sector.effects';
+import { ConfigFieldEffects } from './erp/dashboard/component/seguridad/state/effects/configField.effects';
+import { StockEffects } from './erp/dashboard/component/wms/state/effects/stock.effects';
+import { StockCajaEffects } from './erp/dashboard/component/wms/state/effects/stockCaja.effects';
+import { SeguridadEffects } from './erp/dashboard/component/seguridad/state/effects/seguridad.effects';
+import { ParametrosEffects } from './erp/dashboard/component/parametros/state/effects/parametros.effects';
 @NgModule({
     declarations: [AppComponent, NotfoundComponent ],
     imports: [  AppRoutingModule, 
@@ -78,7 +83,12 @@ import { SectorEffects } from './erp/dashboard/component/parametros/state/effect
                     AlmacenEffects,
                     PedidonacEffects,
                     OrdenesEffects,
-                    SectorEffects
+                    SectorEffects,
+                    ConfigFieldEffects,
+                    StockEffects,
+                    StockCajaEffects,
+                    SeguridadEffects,
+                    ParametrosEffects
                 ]),
                 StoreDevtoolsModule.instrument(),
                 FontAwesomeModule,

@@ -20,8 +20,11 @@ import {
   generarListaSuccess,
   checkListaStatusRequest,
   liberarOrdenesRequest,
-  liberarOrdenesSuccess
+  liberarOrdenesSuccess,
+  aplicarFiltrosRequest,
+  aplicarFiltrosSuccess
 } from '../../state/actions/ordenes.actions';
+
 
 @Component({
   selector: 'app-ordenes-entrada',
@@ -47,9 +50,8 @@ export class OrdenesEntradaComponent implements OnInit, OnDestroy {
   showSearchDialog: boolean = false;
   dt!: Table;
   sidebarVisible = false;
-  columnDefinitions = []; // Aquí se llenarán las definiciones desde el backend
-
-
+  colums: any[] = [];
+  COMPONENT_SELECTOR = 'app-ordenes-entrada';
 
   constructor(
     private store: Store<AppState>,
@@ -70,6 +72,8 @@ export class OrdenesEntradaComponent implements OnInit, OnDestroy {
         }
       }
     ];
+
+   
   }
 
   ngOnInit(): void {
@@ -79,9 +83,11 @@ export class OrdenesEntradaComponent implements OnInit, OnDestroy {
     this.subscription.add(
       this.action$.pipe(
         ofType(getOrdenesSuccess),
-        map(action => action.ordenes)
+        map(action => action)
       ).subscribe(data => {
-        this.data = data || [];
+       // console.log(data);
+        this.data = data.ordenes|| [];
+        this.colums = data.colums;
       })
     );
 
@@ -192,6 +198,27 @@ export class OrdenesEntradaComponent implements OnInit, OnDestroy {
   }
 
   toggleSidebar() {
-    this.sidebarVisible = !this.sidebarVisible;
+    const event = new KeyboardEvent('keydown', {
+      key: 'a',
+      code: 'KeyA',
+      ctrlKey: true,
+      bubbles: true
+    });
+  
+    // Puedes despachar el evento en un elemento específico
+    const targetElement = document.activeElement || document.body;
+    targetElement.dispatchEvent(event);
+  }
+
+
+  onFilterApplied(filters: any[]) {
+      this.store.dispatch(aplicarFiltrosRequest({filtros: filters}));
+      this.store.dispatch(incrementarRequest({request: 1}));
+      this.action$.pipe(
+        ofType(aplicarFiltrosSuccess)
+      ).subscribe(({ordenes}) => {
+         this.data = ordenes;
+        // console.log(ordenes);
+      }); 
   }
 }

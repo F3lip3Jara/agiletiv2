@@ -10,7 +10,7 @@ export const getUsuariosRequest = createAction(
 // Acción para indicar la obtención exitosa de todos los elementos de Usuarios
 export const getUsuariosSuccess = createAction(
     "[Usuarios] Get Usuarios Success",  // Identificador del tipo de acción
-    props<{ usuarios: Usuario[] }>()    // Carga útil que contiene el mensaje de error
+    props<{ usuarios: Usuario[] , colums: any[] }>()    // Carga útil que contiene el mensaje de error
 )
 
 export const usuariosError = createAction(
@@ -79,6 +79,18 @@ export const upconfiguserRequest = createAction(
 export const upconfiguserSuccess = createAction(
     "[Usuarios] Upconfiguser Success"
 )
+
+
+export const aplicarFiltrosRequest = createAction(
+    "[Usuarios] Aplicar Filtros Request",  // Identificador del tipo de acción
+    props<{filtros: any[] }>()   // Carga útil que contiene el id del usuario a desactivar
+)
+
+export const aplicarFiltrosSuccess = createAction(
+    "[Usuarios] Aplicar Filtros Success",  // Identificador del tipo de acción
+    props<{ usuarios: Usuario[] , colums: any[] }>()
+)
+
 
 
 

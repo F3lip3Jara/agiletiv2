@@ -12,6 +12,7 @@ export interface OrdenesState {
     jobId: number;
     status: string;
     url: string;
+    colums: any[];
 }
 
 export const initialOrdenesState: OrdenesState = {
@@ -22,14 +23,16 @@ export const initialOrdenesState: OrdenesState = {
     productos: [],
     jobId: 0,
     status: '',
-    url: ''
+    url: '',
+    colums: []
 };
 
 export const _ordenesReducer = createReducer(
     initialOrdenesState,
-    on(OrdenesActions.getOrdenesSuccess, (state, { ordenes }) => ({
+    on(OrdenesActions.getOrdenesSuccess, (state, { ordenes, colums }) => ({
         ...state,
-        ordenes
+        ordenes,
+        colums
     })),
     on(OrdenesActions.ordenesError, (state, { error }) => ({
         ...state,

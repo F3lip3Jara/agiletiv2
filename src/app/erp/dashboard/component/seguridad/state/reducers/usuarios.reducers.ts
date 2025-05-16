@@ -6,7 +6,8 @@ export const initialState: DataStateUsuarios = {
     usuarios: [],
     avatar: [],
     error: '',
-    loading: false
+    loading: false,
+    colums: []
 };
 
 export const _usuarioReducer = createReducer(

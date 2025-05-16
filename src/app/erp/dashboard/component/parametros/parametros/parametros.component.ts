@@ -1,11 +1,15 @@
 import { Component, OnInit } from '@angular/core';
-import { Chart as ChartJS } from 'chart.js';
+import { Chart as ChartJS, ChartConfiguration } from 'chart.js';
 import { registerables } from 'chart.js';
 import * as FileSaver from 'file-saver';
 import { Table } from 'primeng/table';
 import * as XLSX from 'xlsx';
 import { MessageService } from 'primeng/api';
-
+import { getParametrosRequest, getParametrosSuccess } from '../state/actions/parametros.actions';
+import { AppState } from '../../app.state';
+import { Store } from '@ngrx/store';
+import { Actions , ofType} from '@ngrx/effects';
+import { incrementarRequest } from '../../state/actions/estado.actions';
 // Registrar los componentes necesarios de Chart.js
 ChartJS.register(...registerables);
 
@@ -49,80 +53,11 @@ interface Alerta {
     providers: [MessageService]
 })
 export class ParametrosComponent implements OnInit {
-    cards: DashboardCard[] = [
-        {
-            titulo: 'Total Parámetros',
-            valor: 156,
-            incremento: '+12 este mes',
-            icono: 'pi pi-cog',
-            color: 'blue'
-        },
-        {
-            titulo: 'Modificaciones',
-            valor: 847,
-            incremento: '+24 última semana',
-            icono: 'pi pi-sync',
-            color: 'orange'
-        },
-        {
-            titulo: 'Personalizaciones',
-            valor: 35,
-            incremento: '+3 nuevas',
-            icono: 'pi pi-pencil',
-            color: 'green'
-        },
-        {
-            titulo: 'Empresas Activas',
-            valor: 12,
-            incremento: '+1 este mes',
-            icono: 'pi pi-building',
-            color: 'purple'
-        }
-    ];
-
-    logs: LogParametro[] = [
-        {
-            id: 1,
-            tipo: 'modificacion',
-            parametro: 'Color Primario',
-            valor_anterior: '#FF0000',
-            valor_nuevo: '#0000FF',
-            usuario: 'admin',
-            fecha: '2024-03-15 10:30',
-            empresa: 'Empresa A'
-        },
-        {
-            id: 2,
-            tipo: 'creacion',
-            parametro: 'Nuevo Color',
-            valor_anterior: '-',
-            valor_nuevo: '#00FF00',
-            usuario: 'usuario1',
-            fecha: '2024-03-15 09:45',
-            empresa: 'Empresa B'
-        }
-    ];
-
-    parametrosPopulares: ParametroPopular[] = [
-        {
-            nombre: 'Colores',
-            usos: 245,
-            tendencia: 'up',
-            descripcion: 'Alta demanda en personalización de temas'
-        },
-        {
-            nombre: 'Monedas',
-            usos: 180,
-            tendencia: 'stable',
-            descripcion: 'Uso consistente en transacciones'
-        },
-        {
-            nombre: 'Unidades',
-            usos: 156,
-            tendencia: 'down',
-            descripcion: 'Disminución en nuevas configuraciones'
-        }
-    ];
+    cards: DashboardCard[] = [];
+    logs: LogParametro[] = [];
+    parametrosPopulares: ParametroPopular[] = [];
+    private graficoCambios: ChartJS | null = null;
+    private graficoDistribucion: ChartJS | null = null;
 
     alertas: Alerta[] = [
         {
@@ -140,14 +75,12 @@ export class ParametrosComponent implements OnInit {
     ];
 
     cambiosMensuales = {
-        labels: ['Ene', 'Feb', 'Mar', 'Abr', 'May', 'Jun'],
-        datasets: [
-            {
-                label: 'Modificaciones',
-                data: [65, 59, 80, 81, 56, 55],
-                backgroundColor: '#42A5F5'
-            }
-        ]
+        labels: ['Ene', 'Feb', 'Mar', 'Abr', 'May', 'Jun', 'Jul', 'Ago', 'Sep', 'Oct', 'Nov', 'Dic'],
+        datasets: [{
+            label: 'Modificaciones',
+            data: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+            backgroundColor: '#42A5F5'
+        }]
     };
 
     distribucionConfig = {
@@ -160,10 +93,31 @@ export class ParametrosComponent implements OnInit {
         ]
     };
 
-    constructor(private messageService: MessageService) {}
+    constructor(private messageService: MessageService, private store: Store<AppState> , private actions$ : Actions) {}
 
     ngOnInit() {
-        this.inicializarGraficos();
+      this.store.dispatch(incrementarRequest({request: 1}));  
+        this.store.dispatch(getParametrosRequest());
+
+        this.actions$.pipe(
+            ofType(getParametrosSuccess)
+          ).subscribe((data: any) => {
+            
+            this.cards = data.parametros.dashboardCards;
+            console.log(this.cards);
+            this.logs = data.parametros.logs;
+            this.parametrosPopulares = data.parametros.parametrosPopulares;
+            this.cambiosMensuales = {
+                labels: [...data.parametros.cambiosMensuales.labels],
+                datasets: data.parametros.cambiosMensuales.datasets.map((dataset: any) => ({
+                    ...dataset,
+                    data: [...dataset.data]
+                }))
+            };
+            this.inicializarGraficos();
+          }
+        );
+     
     }
 
     inicializarGraficos() {
@@ -173,9 +127,18 @@ export class ParametrosComponent implements OnInit {
 
     crearGraficoCambios() {
         const ctx = document.getElementById('graficoCambios') as HTMLCanvasElement;
-        new ChartJS(ctx, {
+        if (this.graficoCambios) {
+            this.graficoCambios.destroy();
+        }
+        const config: ChartConfiguration = {
             type: 'bar',
-            data: this.cambiosMensuales,
+            data: {
+                labels: [...this.cambiosMensuales.labels],
+                datasets: this.cambiosMensuales.datasets.map(dataset => ({
+                    ...dataset,
+                    data: [...dataset.data]
+                }))
+            },
             options: {
                 responsive: true,
                 plugins: {
@@ -184,14 +147,24 @@ export class ParametrosComponent implements OnInit {
                     }
                 }
             }
-        });
+        };
+        this.graficoCambios = new ChartJS(ctx, config);
     }
 
     crearGraficoDistribucion() {
         const ctx = document.getElementById('graficoDistribucion') as HTMLCanvasElement;
-        new ChartJS(ctx, {
+        if (this.graficoDistribucion) {
+            this.graficoDistribucion.destroy();
+        }
+        const config: ChartConfiguration = {
             type: 'pie',
-            data: this.distribucionConfig,
+            data: {
+                labels: [...this.distribucionConfig.labels],
+                datasets: this.distribucionConfig.datasets.map(dataset => ({
+                    ...dataset,
+                    data: [...dataset.data]
+                }))
+            },
             options: {
                 responsive: true,
                 plugins: {
@@ -200,7 +173,8 @@ export class ParametrosComponent implements OnInit {
                     }
                 }
             }
-        });
+        };
+        this.graficoDistribucion = new ChartJS(ctx, config);
     }
 
     exportExcelLogs(table: Table) {

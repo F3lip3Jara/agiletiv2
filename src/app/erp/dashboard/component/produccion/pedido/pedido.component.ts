@@ -1,4 +1,4 @@
-import { Component, HostListener, OnInit } from '@angular/core';
+import { Component, ElementRef, HostListener, OnInit, ViewChild } from '@angular/core';
 import { Subscription } from 'rxjs';
 import { Roles, ROLES_KEYS } from '../../seguridad/state/interface/roles.interface';
 import { Pedidonac, PEDIDONAC_KEYS, PedidonacDet } from '../state/interface/pedidonac.interface';
@@ -11,7 +11,7 @@ import { Router } from '@angular/router';
 import { ExcelService } from '../../../service/excel.service';
 import { Actions, ofType } from '@ngrx/effects';
 import { selectPedidonac } from '../state/selectors/pedidonac.selectors';
-import { getPedidonacRequest, getPedidonacSuccess, getPedidoProductosRequest, getPedidoProductosSuccess, recepcionarPedidoRequest, recepcionarPedidoSuccess } from '../state/actions/pedidonac.actions';
+import { getPedidonacRequest, getPedidonacSuccess, getPedidoProductosRequest, getPedidoProductosSuccess, recepcionarPedidoRequest, recepcionarPedidoSuccess, aplicarFiltrosRequest, aplicarFiltrosSuccess } from '../state/actions/pedidonac.actions';
 import { incrementarRequest } from '../../state/actions/estado.actions';
 import { Table } from 'primeng/table';
 
@@ -24,7 +24,7 @@ import { Table } from 'primeng/table';
   ]
 })
 export class PedidoComponent implements OnInit {
-
+  @ViewChild('searchInput') searchInput!: ElementRef;
   data$              : Observable<any[]>;
   loading             : boolean        = false;
   globalFilterFields  : string[]       = PEDIDONAC_KEYS;
@@ -40,6 +40,15 @@ export class PedidoComponent implements OnInit {
   actionItems: MenuItem[] = [];
   visible: boolean = false;
   pedido: any;
+
+   // Propiedades para el diálogo de búsqueda
+   showSearchDialog: boolean = false;
+   dt!: Table;
+   sidebarVisible = false;
+   colums: any[] = [];
+   COMPONENT_SELECTOR = 'app-pedido';
+
+
  
   @HostListener('document:click', ['$event'])
   handleClick(event: MouseEvent) {
@@ -99,6 +108,8 @@ export class PedidoComponent implements OnInit {
       ofType(getPedidonacSuccess)
     ).subscribe((pedidoNac) => {
       this.data = pedidoNac.pedidonac;
+      this.colums = pedidoNac.colums;
+    //  console.log(this.colums);
     }); 
   }
 
@@ -207,6 +218,44 @@ export class PedidoComponent implements OnInit {
       'UBICADA': { class: 'bg-green-100 text-green-900', label: 'Ubicada' }
     };
     return estados[estado] || { class: 'bg-gray-100 text-gray-900', label: 'Desconocido' };
+  }
+
+
+  onSearchValueChange(value: string) {
+    if (this.searchInput && this.searchInput.nativeElement) {
+      const inputElement = this.searchInput.nativeElement as HTMLInputElement;
+      inputElement.value = value;
+      // Disparar el evento input para activar el filtro
+      const event = new Event('input', { bubbles: true });
+      inputElement.dispatchEvent(event);
+    }
+  }
+
+  
+  toggleSidebar() {
+    const event = new KeyboardEvent('keydown', {
+      key: 'a',
+      code: 'KeyA',
+      ctrlKey: true,
+      bubbles: true
+    });
+  
+    // Puedes despachar el evento en un elemento específico
+    const targetElement = document.activeElement || document.body;
+    targetElement.dispatchEvent(event);
+  }
+
+
+  onFilterApplied(filters: any[]) {
+    this.store.dispatch(incrementarRequest({request: 1}));
+    this.store.dispatch(aplicarFiltrosRequest({filtros: filters}));
+    this.actions$.pipe(
+      ofType(aplicarFiltrosSuccess)
+    ).subscribe((pedido) => {
+      this.data = pedido.pedidonac;
+      this.colums = pedido.colums;
+    
+    });
   }
 
   

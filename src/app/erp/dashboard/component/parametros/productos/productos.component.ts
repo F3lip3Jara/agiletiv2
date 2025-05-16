@@ -3,14 +3,14 @@ import {  selectProductosPending } from '../state/selectors/producto.selectors';
 import { Store } from '@ngrx/store';
 import { Observable } from 'rxjs';
 import { Producto, PRODUCTOS_KEYS } from '../state/interface/producto.interface';
-import { getProductosRequest } from '../state/actions/producto.actions';
+import { aplicarFiltrosRequest, aplicarFiltrosSuccess, getProductosRequest, getProductoSuccess } from '../state/actions/producto.actions';
 import { Table } from 'primeng/table';
 import { AppState } from '../../app.state';
 import { Router } from '@angular/router'; 
 import { incrementarRequest } from '../../state/actions/estado.actions';
 import { ExcelService } from '../../../service/excel.service';
 import { MenuItem } from 'primeng/api';
-
+import { Actions, ofType } from '@ngrx/effects';
 interface ProductoExtended extends Producto {
   imageLoaded?: boolean;
   imageError?: boolean;
@@ -22,7 +22,8 @@ interface ProductoExtended extends Producto {
   styleUrl: './productos.component.scss'
 })
 export class ProductosComponent implements OnInit {
-
+  
+     @ViewChild('searchInput') searchInput!: ElementRef;
     productos             : Observable<Producto[]> = new Observable;
     loading               : Observable<any>        = new Observable;
     productDialog       : boolean                = false;
@@ -40,15 +41,20 @@ export class ProductosComponent implements OnInit {
     previewImageLoaded: boolean = false;
     actionItems: MenuItem[] = [];
     selectedRow: any = null;
-    showSearchDialog: boolean = false;
-    @ViewChild('searchInput') searchInput!: ElementRef;
-    dt!: Table;
-
+  
+  
+       // Propiedades para el diálogo de búsqueda
+   showSearchDialog: boolean = false;
+   dt!: Table;
+   sidebarVisible = false;
+   colums: any[] = [];
+   COMPONENT_SELECTOR = 'app-productos';
     
   constructor(
     private router: Router,
     private store: Store<AppState>,
-    private excelService: ExcelService
+    private excelService: ExcelService,
+    private actions$: Actions
   ) {
 
 
@@ -61,24 +67,34 @@ export class ProductosComponent implements OnInit {
               this.edit(this.selectedRow);
             }
           }
-        },
-        
-       
-      ];
-      
-   }
-  
+        },      
+      ];      
+   }  
 
   ngOnInit(): void {
+    this.store.dispatch(incrementarRequest({request: 1}));
     this.store.dispatch(getProductosRequest())
     // llama a la acción para obtener los todos
-     this.store.select(selectProductosPending).subscribe((productos : any)=>{
+   /*  this.store.select(selectProductosPending).subscribe((productos : any)=>{
        this.data = productos.map((p: Producto) => ({
          ...p,
          imageLoaded: false,
          imageError: false
        }));      
-     });
+     });*/
+     this.actions$.pipe(
+      ofType(getProductoSuccess)
+    ).subscribe((productos : any) => {
+
+     // console.log(productos);
+      this.data = productos.productos.map((p: Producto) => ({
+        ...p,
+        imageLoaded: false,
+        imageError: false
+      }));
+     // console.log(productos.colums);
+     this.colums = productos.colums;
+    });
 
      this.globalFilterFields = Object.values(PRODUCTOS_KEYS);
      
@@ -97,9 +113,6 @@ edit(product: Producto) {
    let producto = btoa(JSON.stringify(product));
     this.router.navigate(['desk/parametros/productos/upproducto',producto]);  
 }
-
-
-
 
 hideDialog() {
     this.productDialog = false;
@@ -125,7 +138,7 @@ hideDialog() {
   showPreview(item: ProductoExtended) {
     this.selectedImage = item;
     this.previewVisible = true;
-    this.previewImageLoaded = false;
+   // this.previewImageLoaded = false;
   }
 
   downloadImage(item: ProductoExtended) {
@@ -173,4 +186,36 @@ hideDialog() {
       inputElement.dispatchEvent(event);
     }
   }
+
+  
+  toggleSidebar() {
+    const event = new KeyboardEvent('keydown', {
+      key: 'a',
+      code: 'KeyA',
+      ctrlKey: true,
+      bubbles: true
+    });
+  
+    // Puedes despachar el evento en un elemento específico
+    const targetElement = document.activeElement || document.body;
+    targetElement.dispatchEvent(event);
+  }
+
+
+  onFilterApplied(filters: any[]) {
+    this.store.dispatch(incrementarRequest({request: 1}));
+    this.store.dispatch(aplicarFiltrosRequest({filtros: filters}));
+    this.actions$.pipe(
+      ofType(aplicarFiltrosSuccess)
+    ).subscribe((productos : any) => {
+      this.data = productos.productos.map((p: Producto) => ({
+        ...p,
+        imageLoaded: false,
+        imageError: false
+      }));
+     // console.log(productos.colums);
+     this.colums = productos.colums;
+    });
+  }
+
 }
