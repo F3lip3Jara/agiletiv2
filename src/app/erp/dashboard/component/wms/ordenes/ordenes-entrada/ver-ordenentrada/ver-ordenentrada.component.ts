@@ -38,6 +38,7 @@ declare global {
 interface ProductoSeleccionado extends Producto {
   cantidad: number;
   subtotal: number;
+  cantidad_recibida: number;
   total: number;
 }
 
@@ -188,6 +189,7 @@ export class VerOrdenentradaComponent implements OnInit {
             const producto = this.productos.find(p => p.cod_pareo === row.ordDtlCustShortText1);
             if (producto) {
               const cantidad = parseInt(row.orddQtySol) || 1;
+              const cantidad_recibida = parseInt(row.orddQtyRecp) || 1;
               if (cantidad <= 0) {
                 this.messageService.add({
                   severity: 'warn',
@@ -196,10 +198,20 @@ export class VerOrdenentradaComponent implements OnInit {
                 });
                 return;
               }
-      
+
+              if (cantidad_recibida <= 0) {
+                this.messageService.add({
+                  severity: 'warn',
+                  summary: 'Cantidad inválida',
+                  detail: `La cantidad recibida para el SKU ${row.ordDtlCustShortText1} debe ser mayor a 0`
+                });
+                return;
+              }
+
               const nuevoProducto: ProductoSeleccionado = {
                 ...producto,
                 cantidad: cantidad,
+                cantidad_recibida: cantidad_recibida,
                 subtotal: producto.neto || 0,
                 total: (producto.neto || 0) * cantidad
               };

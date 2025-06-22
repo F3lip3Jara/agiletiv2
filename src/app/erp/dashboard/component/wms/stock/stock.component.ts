@@ -9,7 +9,7 @@ import { Store } from '@ngrx/store';
 import { ExcelService } from '../../../service/excel.service';
 import { Actions, ofType } from '@ngrx/effects';
 import { incrementarRequest } from '../../state/actions/estado.actions';
-import { getStockRequest, getStockSuccess } from '../state/actions/stock.actions';
+import { aplicarFiltrosRequest, aplicarFiltrosSuccess, getStockRequest, getStockSuccess } from '../state/actions/stock.actions';
 
 interface StockExtended extends Stock {
   imageLoaded?: boolean;
@@ -66,19 +66,10 @@ export class StockComponent {
   ngOnInit(): void {
     this.store.dispatch(incrementarRequest({request: 1}));
     this.store.dispatch(getStockRequest())
-    // llama a la acción para obtener los todos
-   /*  this.store.select(selectProductosPending).subscribe((productos : any)=>{
-       this.data = productos.map((p: Producto) => ({
-         ...p,
-         imageLoaded: false,
-         imageError: false
-       }));      
-     });*/
+ 
      this.actions$.pipe(
       ofType(getStockSuccess)
     ).subscribe((stock : any) => {
-
-      console.log(stock);
       this.data = stock.stock.map((p: Stock) => ({
         ...p,
         imageLoaded: false,
@@ -90,10 +81,6 @@ export class StockComponent {
     });
 
     this.globalFilterFields = Object.values(STOCK_KEYS);
-     
-    // obtiene los todos pendientes
-  //  this.tasksInProgress = this.store.select(selectTodosInProgress) // obtiene los todos en progreso
-   // this.tasksCompleted = this.store.select(selectTodosDone) // obtiene los todos completados
   }
 
 
@@ -189,18 +176,18 @@ hideDialog() {
 
   onFilterApplied(filters: any[]) {
     this.store.dispatch(incrementarRequest({request: 1}));
-   // this.store.dispatch(aplicarFiltrosRequest({filtros: filters}));
-    /*this.actions$.pipe(
+    this.store.dispatch(aplicarFiltrosRequest({filtros: filters}));
+    this.actions$.pipe(
       ofType(aplicarFiltrosSuccess)
-    ).subscribe((productos : any) => {
-      this.data = productos.productos.map((p: Producto) => ({
+    ).subscribe((stock : any) => {
+      this.data = stock.stock.map((p: Stock) => ({
         ...p,
         imageLoaded: false,
         imageError: false
       }));
      // console.log(productos.colums);
-     this.colums = productos.colums;
-    });*/
+     this.colums = stock.colums;
+    });
   }
 
 }

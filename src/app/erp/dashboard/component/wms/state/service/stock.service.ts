@@ -30,6 +30,13 @@ export class StockServices {
       ) 
     );
   }
+
+  aplicarFiltros(filtros: any[]): Observable<any> {
+    this.parametros = [{key: 'filter', value: btoa(JSON.stringify(filtros))}]
+    return this.rest.get('trabSdStock', this.token, this.parametros).pipe(
+      map((data: any) => data)
+    );
+  }
 /*
   createStock(stock: any): Observable<any> {
     let stock = {

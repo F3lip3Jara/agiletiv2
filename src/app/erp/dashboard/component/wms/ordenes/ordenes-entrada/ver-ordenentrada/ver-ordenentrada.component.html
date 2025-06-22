@@ -6,9 +6,9 @@
             <h2 class="text-2xl font-bold m-0">Visualizar Orden de Entrada</h2>
         </div>
         <div class="flex gap-2">     
-            <p-button icon="pi pi-file-pdf" label="PDF" 
+            <!-- <p-button icon="pi pi-file-pdf" label="PDF" 
                      styleClass="p-button-danger" (click)="descargarPDF()"
-                     [disabled]="productosSeleccionados.length === 0"></p-button>
+                     [disabled]="productosSeleccionados.length === 0"></p-button> -->
             <p-button icon="pi pi-file-excel" label="Excel" 
                      styleClass="p-button-success" (click)="descargarExcel()"
                      [disabled]="productosSeleccionados.length === 0"></p-button>
@@ -16,7 +16,7 @@
                     label="Volver" 
                     icon="pi pi-arrow-left" 
                     class="p-button-text p-button-secondary p-button-sm"
-                    routerLink="/desk/wms/ordenes-entrada">
+                    routerLink="/desk/wms/sd/orden_entrada">
             </button>
         </div>
     </div>
@@ -187,7 +187,8 @@
                                 <th>Producto</th>
                                 <th>Imagen</th>
                                 <th>Precio</th>                             
-                                <th>Cantidad</th>
+                                <th>Cantidad Solicitada</th>
+                                <th>Cantidad Recibida</th>
                                 <th>Subtotal</th>
                                 <th>IVA</th>
                                 <th>Total</th>
@@ -203,6 +204,7 @@
                                 </td>
                                 <td>{{producto.neto | currency:'CLP':'symbol-narrow':'1.0-0'}}</td>
                                 <td>{{producto.cantidad}}</td>
+                                <td>{{producto.cantidad_recibida}}</td>
                                 <td>{{ calcularSubtotal(producto) | currency:'CLP':'symbol-narrow':'1.0-0'}}</td>
                                 <td>{{ calcularIVA(calcularSubtotal(producto)) | currency:'CLP':'symbol-narrow':'1.0-0'}}</td>
                                 <td>{{ calcularTotalProducto(producto) | currency:'CLP':'symbol-narrow':'1.0-0'}}</td>

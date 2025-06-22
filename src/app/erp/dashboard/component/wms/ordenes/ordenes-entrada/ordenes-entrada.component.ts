@@ -33,6 +33,7 @@ import {
 })
 export class OrdenesEntradaComponent implements OnInit, OnDestroy {
   @ViewChild('searchInput') searchInput!: ElementRef;
+  @ViewChild('dt') dt!: Table;
   
   data$: Observable<any[]>;
   loading: boolean = false;
@@ -48,7 +49,6 @@ export class OrdenesEntradaComponent implements OnInit, OnDestroy {
   
   // Propiedades para el diálogo de búsqueda
   showSearchDialog: boolean = false;
-  dt!: Table;
   sidebarVisible = false;
   colums: any[] = [];
   COMPONENT_SELECTOR = 'app-ordenes-entrada';
@@ -138,7 +138,8 @@ export class OrdenesEntradaComponent implements OnInit, OnDestroy {
   }
 
   exportCSV() {
-    this.excelService.exportAsExcelFile(this.data, 'ordenes-entrada');
+    const tableElement = this.dt.el.nativeElement;
+    this.excelService.exportHTMLAsExcelFile(tableElement, 'ordenes-entrada');
   }
 
   refresh() {

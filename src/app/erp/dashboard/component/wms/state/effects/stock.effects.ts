@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { Actions, createEffect, ofType } from '@ngrx/effects';
 import { of } from 'rxjs';
-import { map, catchError, switchMap } from 'rxjs/operators';
+import { map, catchError, switchMap, exhaustMap } from 'rxjs/operators';
 import { StockServices } from '../service/stock.service';
 import * as StockActions from '../actions/stock.actions';
 
@@ -19,5 +19,14 @@ export class StockEffects {
                 map(stock => StockActions.getStockSuccess({ stock: stock.data, colums: stock.columns })),
                 catchError(error => of(StockActions.stockError({ error: error.message })))
             ))
+    ));
+
+    aplicarFiltros$ = createEffect(() => this.actions.pipe(
+        ofType(StockActions.aplicarFiltrosRequest),
+        exhaustMap((action) => this.stockService.aplicarFiltros(action.filtros)
+            .pipe(
+                map((resp: any) => StockActions.aplicarFiltrosSuccess({ stock: resp.data, colums: resp.columns }))
+            )
+        )
     ));
 }

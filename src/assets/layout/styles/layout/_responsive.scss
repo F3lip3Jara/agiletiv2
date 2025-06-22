@@ -46,6 +46,23 @@
                     margin-left: 0;
                     padding-left: 2rem;
                 }
+
+                .menu-hover-trigger {
+                    display: block;
+                    position: fixed;
+                    width: 50px;
+                    height: 100vh;
+                    left: 0;
+                    top: 0;
+                    z-index: 998;
+                }
+            }
+        }
+
+        &.layout-static.layout-static-inactive,
+        &.layout-overlay:not(.layout-overlay-active) {
+            .menu-hover-trigger {
+                display: block;
             }
         }
 
@@ -97,4 +114,14 @@
             }
         }
     }
+}
+
+.menu-hover-trigger {
+    display: none;
+    position: fixed;
+    width: 50px;
+    height: 100vh;
+    left: 0;
+    top: 0;
+    z-index: 998;
 }

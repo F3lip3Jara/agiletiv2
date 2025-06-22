@@ -1,5 +1,6 @@
 import { LOCALE_ID, NgModule } from '@angular/core';
 import { HashLocationStrategy, LocationStrategy, PathLocationStrategy, registerLocaleData } from '@angular/common';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { AppComponent } from './app.component';
 import { AppRoutingModule } from './app-routing.module';
 import { AppLayoutModule } from './layout/app.layout.module';
@@ -52,7 +53,9 @@ import { SeguridadEffects } from './erp/dashboard/component/seguridad/state/effe
 import { ParametrosEffects } from './erp/dashboard/component/parametros/state/effects/parametros.effects';
 @NgModule({
     declarations: [AppComponent, NotfoundComponent ],
-    imports: [  AppRoutingModule, 
+    imports: [  
+                BrowserAnimationsModule,
+                AppRoutingModule, 
                 AppLayoutModule ,   
                 ConfiguracionuserModule,
                 StoreModule.forRoot(ROOT_APP_REDUCER),

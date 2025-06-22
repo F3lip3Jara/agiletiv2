@@ -62,6 +62,7 @@
                             </th>
                             <th>Id</th>
                             <th>Orden</th>
+                            <th>Doc. Relacionado (ID)</th>
                             <th>Estado</th>
                             <th>Cliente</th>
                             <th>Proveedor</th>
@@ -81,6 +82,7 @@
                             </td>
                             <td><span class="font-medium">{{item.ordId}}</span></td>
                             <td>{{item.ordNumber}}</td>
+                            <td>{{item.ordHdrCustShortText1}}</td>
                             <td>
                                 <span class="tag-date" [ngClass]="getEstadoStyle(item.ordestatus).class">
                                     {{getEstadoStyle(item.ordestatus).label}}

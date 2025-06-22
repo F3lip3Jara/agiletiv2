@@ -9,6 +9,7 @@ import { PasswordModule } from 'primeng/password';
 import { InputTextModule } from 'primeng/inputtext';
 import { CambiodepassComponent } from './cambiodepass/cambiodepass.component';
 import { ToastModule } from 'primeng/toast';
+
 @NgModule({
     imports: [
         CommonModule,

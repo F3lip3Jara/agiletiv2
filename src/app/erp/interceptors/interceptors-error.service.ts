@@ -41,9 +41,9 @@ constructor(   private router : Router, private store: Store ) {
    let count = 0;   
 
    this.excludedLoad.forEach((element : any) => { 
-    //console.log(element);
-    if (req.url === element.url) {
-      console.log(element);
+  
+    if (req.url === element) {
+  
        count ++;
     }
    });
@@ -70,12 +70,14 @@ constructor(   private router : Router, private store: Store ) {
   }
   
   private handleHttpResponse(response: HttpResponse<any> , count: number): void {
-   // console.log(count);
-    if(count === 0 ){
+  // console.log(count);
+    if(count > 0){
+   //   console.log('response', response);
     this.store.dispatch(decrementarRequest());
     }
     switch (response.status) {
-      case 200:      
+      case 200: 
+      this.store.dispatch(decrementarRequest());     
         break;
       case 203:
         this.router.navigate(['auth/access']);

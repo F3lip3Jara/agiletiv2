@@ -20,6 +20,8 @@ export class AppLayoutComponent implements OnDestroy , OnInit  {
 
     profileMenuOutsideClickListener: any;
 
+    hoverTimer: any;
+
     @ViewChild(AppSidebarComponent) appSidebar!: AppSidebarComponent;
 
     @ViewChild(AppTopBarComponent) appTopbar!: AppTopBarComponent;
@@ -116,6 +118,35 @@ export class AppLayoutComponent implements OnDestroy , OnInit  {
         else {
             document.body.className = document.body.className.replace(new RegExp('(^|\\b)' +
                 'blocked-scroll'.split(' ').join('|') + '(\\b|$)', 'gi'), ' ');
+        }
+    }
+
+    onMenuMouseEnter() {
+        if (this.layoutService.config().menuMode === 'static' && this.layoutService.state.staticMenuDesktopInactive) {
+            this.layoutService.state.staticMenuDesktopInactive = false;
+            this.layoutService.state.menuHoverActive = true;
+            console.log('Menú (estático) expandido por hover en área de activación.');
+        } 
+        else if (this.layoutService.config().menuMode === 'overlay' && !this.layoutService.state.overlayMenuActive) {
+            this.layoutService.state.overlayMenuActive = true;
+            this.layoutService.state.menuHoverActive = true;
+            console.log('Menú (overlay) expandido por hover en área de activación.');
+        }
+    }
+
+    onMenuMouseLeave() {
+        clearTimeout(this.hoverTimer);
+        if (this.layoutService.state.menuHoverActive) {
+            if (this.layoutService.config().menuMode === 'static') {
+                this.layoutService.state.staticMenuDesktopInactive = true;
+                this.layoutService.state.menuHoverActive = false;
+                console.log('Menú (estático) contraído al salir de la barra lateral.');
+            } 
+            else if (this.layoutService.config().menuMode === 'overlay') {
+                this.layoutService.state.overlayMenuActive = false;
+                this.layoutService.state.menuHoverActive = false;
+                console.log('Menú (overlay) contraído al salir de la barra lateral.');
+            }
         }
     }
 

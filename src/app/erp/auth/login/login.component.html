@@ -1,51 +1,94 @@
 <div class="login-container">
-    <div class="login-background"></div>
-    <div class="login-card-container">
-        <div class="login-card">
-            <div class="login-header">
-                <img src="https://agileti.cl/wp-content/uploads/2023/12/cropped-logonew-e1702902489994-284x95.png" alt="Agileti" class="login-logo">
-                <h2 class="welcome-text">¡Bienvenido de nuevo!</h2>
-                <p class="subtitle-text">Ingresa tus credenciales para continuar</p>
+    <!-- Fondo animado con gradientes -->
+    <div class="animated-background">
+        <div class="floating-shapes">
+            <div class="shape shape-1"></div>
+            <div class="shape shape-2"></div>
+            <div class="shape shape-3"></div>
+        </div>
+    </div>
+
+    <!-- Contenedor principal del login -->
+    <div class="login-content">
+        <div class="login-card" [@slideInUp]>
+            <!-- Header con logo y título -->
+            <div class="login-header" [@fadeInDown]>
+                <div class="logo-container">
+                    <img src="https://agileti.cl/wp-content/uploads/2023/12/cropped-logonew-e1702902489994-284x95.png" 
+                         alt="Agileti" 
+                         class="login-logo"
+                         [@logoFloat]>
+                </div>
+                <h1 class="welcome-title">Bienvenido</h1>
+                <p class="welcome-subtitle">Ingresa tus credenciales para continuar</p>
             </div>
-            
-            <div class="login-form">
-                <div class="form-group">
-                    <label for="username">
-                        <i class="pi pi-user"></i>
-                        <span>Usuario</span>
-                    </label>
-                    <input id="username" type="text" pInputText placeholder="Ingresa tu usuario" #user>
+
+            <!-- Formulario de login -->
+            <form class="login-form" [@fadeInUp] (ngSubmit)="login(username)">
+                <!-- Campo de usuario -->
+                <div class="form-field" [@slideInLeft]>
+                    <div class="input-container">
+                        <i class="pi pi-user input-icon"></i>
+                        <input 
+                            pInputText 
+                            type="text" 
+                            id="username"
+                            name="username"
+                            [(ngModel)]="username"
+                            placeholder="Usuario"
+                            class="modern-input"
+                            [class.error]="showFieldError"
+                            (keyup.enter)="login(username)"
+                            autocomplete="username">
+                    </div>
                 </div>
 
-                <div class="form-group">
-                    <label for="password">
-                        <i class="pi pi-lock"></i>
-                        <span>Contraseña</span>
-                    </label>
-                    <p-password id="password" 
-                               [(ngModel)]="password" 
-                               [toggleMask]="true"
-                               placeholder="Ingresa tu contraseña"
-                               [feedback]="false"
-                               styleClass="p-password-modern">
-                    </p-password>
+                <!-- Campo de contraseña -->
+                <div class="form-field" [@slideInRight]>
+                    <div class="input-container">
+                        <i class="pi pi-lock input-icon"></i>
+                        <p-password 
+                            [(ngModel)]="password" 
+                            name="password"
+                            [toggleMask]="true"
+                            placeholder="Contraseña"
+                            [feedback]="false"
+                            styleClass="login-password"
+                            [class.error]="showFieldError"
+                            (keyup.enter)="login(username)">
+                        </p-password>
+                    </div>
                 </div>
 
-                <div class="form-actions">
-                    
-                </div>
-
-                <button pButton 
-                        class="login-button" 
+                <!-- Botón de login -->
+                <div class="form-actions" [@fadeInUp]>
+                    <button 
+                        pButton 
+                        type="submit"
+                        id="login-button"
+                        class="login-btn"
                         [loading]="enabled"
-                        (click)="login(user.value)"
-                        label="Iniciar Sesión">
-                </button>
-            </div>
+                        [disabled]="enabled"
+                        [class.shake]="shakeAnimation"
+                        label="Ingresar"
+                        icon="pi pi-sign-in"
+                        iconPos="right">
+                    </button>
+                </div>
+            </form>
 
-            <div class="login-footer">
-                <p>¿Necesitas ayuda? <a href="https://agileti.cl/contacto/" target="_blank">Contáctanos</a></p>
+            <!-- Footer -->
+            <div class="login-footer" [@fadeInUp]>
+                <p class="help-text">
+                    ¿Necesitas ayuda? 
+                    <a href="https://agileti.cl/contacto/" target="_blank" class="help-link">
+                        Contáctanos
+                    </a>
+                </p>
             </div>
         </div>
     </div>
 </div>
+
+<!-- Toast para mensajes -->
+<p-toast position="bottom-right"></p-toast>

@@ -53,6 +53,7 @@ export class UsersService {
     localStorage.removeItem('token');
     localStorage.removeItem('crf');
     localStorage.removeItem('user');
+    localStorage.removeItem('breadcrumb_history');
     this.setUsuario('','','','','','','','');
     this.menu     = [];
   }

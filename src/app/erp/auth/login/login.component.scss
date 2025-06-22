@@ -1,219 +1,391 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
+
+// Variables CSS
+:root {
+    --primary-color: #f7971e; // Orange accent
+    --primary-hover: #f57f0a;
+    --background: #f8f9fa;
+    --surface: #ffffff;
+    --text-primary: #343a40;
+    --text-secondary: #6c757d;
+    --border-color: #dee2e6;
+    --error-color: #ef4444;
+    --success-color: #10b981;
+    --shadow-sm: 0 1px 2px 0 rgb(0 0 0 / 0.05);
+    --shadow-md: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
+    --shadow-lg: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1);
+    --border-radius: 12px;
+    --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+// Estilos base
+* {
+    box-sizing: border-box;
+}
+
 .login-container {
-    width: 100vw;
-    height: 100vh;
+    min-height: 100vh;
+    width: 100%;
+    background-color: var(--background);
     display: flex;
     align-items: center;
     justify-content: center;
-    background: var(--surface-ground);
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
     position: relative;
     overflow: hidden;
 }
 
-.login-background {
+// Fondo animado
+.animated-background {
     position: absolute;
+    top: 0;
+    left: 0;
     width: 100%;
     height: 100%;
-    background: linear-gradient(135deg, var(--primary-color) 0%, var(--primary-color-text) 100%);
-    opacity: 0.1;
     z-index: 1;
+    pointer-events: none;
 }
 
-.login-card-container {
+.floating-shapes {
+    position: relative;
+    width: 100%;
+    height: 100%;
+}
+
+.shape {
+    position: absolute;
+    border-radius: 50%;
+    background: linear-gradient(135deg, var(--primary-color), #ffc107);
+    opacity: 0.15;
+    animation: float-scale 25s ease-in-out infinite;
+}
+
+.shape-1 {
+    width: 22rem;
+    height: 22rem;
+    top: -5rem;
+    left: -5rem;
+    animation-delay: 0s;
+}
+
+.shape-2 {
+    width: 18rem;
+    height: 18rem;
+    bottom: -5rem;
+    right: -5rem;
+    animation-delay: 8s;
+}
+
+.shape-3 {
+    width: 12rem;
+    height: 12rem;
+    top: 50%;
+    left: 20%;
+    transform: translateY(-50%);
+    animation-delay: 16s;
+}
+
+@keyframes float-scale {
+    0% {
+        transform: translateY(0px) scale(1);
+    }
+    50% {
+        transform: translateY(-40px) scale(1.05);
+    }
+    100% {
+        transform: translateY(0px) scale(1);
+    }
+}
+
+// Contenido principal
+.login-content {
     position: relative;
     z-index: 2;
     width: 100%;
-    max-width: 450px;
+    max-width: 420px;
     padding: 2rem;
 }
 
 .login-card {
-    background: var(--surface-card);
-    border-radius: 1rem;
-    padding: 2rem;
-    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
-    backdrop-filter: blur(10px);
-    border: 1px solid rgba(255, 255, 255, 0.1);
-    animation: fadeIn 0.5s ease-out;
+    background: var(--surface);
+    border-radius: var(--border-radius);
+    box-shadow: var(--shadow-lg);
+    padding: 3rem 2.5rem;
+    border: 1px solid #e9ecef;
+    position: relative;
+    overflow: hidden;
 }
 
+.login-card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 4px;
+    background: var(--primary-color);
+}
+
+// Header
 .login-header {
     text-align: center;
-    margin-bottom: 2rem;
+    margin-bottom: 2.5rem;
+}
+
+.logo-container {
+    margin-bottom: 1.5rem;
 }
 
 .login-logo {
-    width: 200px;
-    margin-bottom: 1.5rem;
-    animation: slideDown 0.5s ease-out;
+    max-width: 180px;
+    height: auto;
+    filter: drop-shadow(0 4px 6px rgba(0, 0, 0, 0.1));
 }
 
-.welcome-text {
-    color: var(--text-color);
-    font-size: 1.75rem;
+.welcome-title {
+    font-size: 2rem;
     font-weight: 600;
-    margin-bottom: 0.5rem;
+    color: var(--text-primary);
+    margin: 0 0 0.5rem 0;
+    letter-spacing: -0.025em;
 }
 
-.subtitle-text {
-    color: var(--text-color-secondary);
+.welcome-subtitle {
+    color: var(--text-secondary);
     font-size: 1rem;
+    font-weight: 400;
+    margin: 0;
 }
 
+// Formulario
 .login-form {
-    .form-group {
-        margin-bottom: 1.5rem;
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+}
 
-        label {
-            display: flex;
-            align-items: center;
-            gap: 0.5rem;
-            margin-bottom: 0.5rem;
-            color: var(--text-color);
-            font-weight: 500;
+.or-divider {
+    text-align: center;
+    margin: 1.5rem 0;
+    color: var(--text-secondary);
+    font-weight: 500;
+    display: flex;
+    align-items: center;
+    gap: 1rem;
 
-            i {
-                color: var(--primary-color);
-                font-size: 1.1rem;
-            }
-        }
-
-        input, :host ::ng-deep .p-password input {
-            width: 100%;
-            padding: 1rem;
-            border-radius: 0.5rem;
-            border: 1px solid var(--surface-border);
-            transition: all 0.3s ease;
-            background: var(--surface-ground);
-
-            &:focus {
-                border-color: var(--primary-color);
-                box-shadow: 0 0 0 2px rgba(var(--primary-color-rgb), 0.1);
-            }
-        }
+    &::before, &::after {
+        content: '';
+        flex-grow: 1;
+        height: 1px;
+        background: var(--border-color);
     }
 }
 
-.form-actions {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-bottom: 1.5rem;
+.form-field {
+    position: relative;
+}
 
-    .remember-me {
+.input-container {
+    position: relative;
+    display: flex;
+    align-items: center;
+}
+
+.input-icon {
+    position: absolute;
+    left: 1rem;
+    color: var(--text-secondary);
+    font-size: 1.1rem;
+    z-index: 2;
+    transition: var(--transition);
+}
+
+// Estilos para inputs de PrimeNG
+:host ::ng-deep {
+    .modern-input,
+    .login-password .p-password-input {
+        width: 100%;
+        padding: 1rem 1rem 1rem 3rem;
+        border: 1px solid var(--border-color);
+        background: #fff;
+        border-radius: var(--border-radius);
+        font-size: 1rem;
+        font-weight: 400;
+        color: var(--text-primary);
+        transition: var(--transition);
+        outline: none;
+        box-shadow: var(--shadow-sm);
+
+        &:focus {
+            border-color: var(--primary-color);
+            box-shadow: 0 0 0 3px rgba(247, 151, 30, 0.2);
+        }
+
+        &::placeholder {
+            color: var(--text-secondary);
+            font-weight: 400;
+        }
+
+        &.error {
+            border-color: var(--error-color);
+            box-shadow: 0 0 0 3px rgba(239, 68, 68, 0.1);
+        }
+    }
+
+    .login-password {
+        width: 100%;
+        display: block;
+        
+        .p-password-input {
+            padding-right: 3rem;
+        }
+        
+        .p-password-toggle {
+            position: absolute;
+            right: 1rem;
+            top: 50%;
+            transform: translateY(-50%);
+            background: none;
+            border: none;
+            color: var(--text-secondary);
+            cursor: pointer;
+            padding: 0.25rem;
+            border-radius: 4px;
+            transition: var(--transition);
+            
+            &:hover {
+                color: var(--primary-color);
+                background: rgba(247, 151, 30, 0.1);
+            }
+        }
+    }
+
+    .p-password-panel {
+        display: none !important;
+    }
+
+    // Botón de login
+    #login-button  {
+        width: 100%;
+        padding: 1rem 2rem;
+        background: var(--primary-color);
+        border: none;
+        border-radius: var(--border-radius);
+        color: white;
+        font-size: 1rem;
+        font-weight: 600;
+        cursor: pointer;
+        transition: var(--transition);
+        box-shadow: var(--shadow-md);
+        position: relative;
+        overflow: hidden;
         display: flex;
         align-items: center;
+        justify-content: center;
         gap: 0.5rem;
-    }
 
-    .forgot-password {
-        color: var(--primary-color);
-        text-decoration: none;
-        font-size: 0.875rem;
-        transition: color 0.3s ease;
-
-        &:hover {
-            color: var(--primary-600);
-            text-decoration: underline;
-        }
-    }
-}
-
-:host ::ng-deep {
-    .login-button {
-        width: 100%;
-        padding: 1rem;
-        border-radius: 0.5rem;
-        font-weight: 600;
-        transition: all 0.3s ease;
-        background: var(--primary-color) !important;
-        border: none;
-        color: var(--primary-color-text) !important;
-
-        &:enabled:hover {
-            background: var(--primary-600) !important;
-            transform: translateY(-1px);
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        &:hover:not(:disabled) {
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-lg);
+            background: var(--primary-hover) !important;
+            color: #fff !important;
         }
 
-        &:enabled:active {
-            transform: translateY(1px);
-            background: var(--primary-700) !important;
+        &:active:not(:disabled) {
+            transform: translateY(0);
         }
 
-        &.p-button-loading {
-            background: var(--primary-700) !important;
-        }
-    }
-}
-
-.login-footer {
-    text-align: center;
-    margin-top: 2rem;
-    color: var(--text-color-secondary);
-    font-size: 0.875rem;
-
-    a {
-        color: var(--primary-color);
-        text-decoration: none;
-        font-weight: 500;
-
-        &:hover {
-            text-decoration: underline;
-        }
-    }
-}
-
-@keyframes fadeIn {
-    from {
-        opacity: 0;
-        transform: translateY(20px);
-    }
-    to {
-        opacity: 1;
-        transform: translateY(0);
-    }
-}
-
-@keyframes slideDown {
-    from {
-        opacity: 0;
-        transform: translateY(-20px);
-    }
-    to {
-        opacity: 1;
-        transform: translateY(0);
-    }
-}
-
-:host ::ng-deep {
-    .p-password-modern {
-        width: 100%;
-
-        input {
-            width: 100%;
-            padding: 1rem;
+        &:disabled {
+            background: #fcdba7 !important;
+            opacity: 0.9;
+            cursor: not-allowed;
+            transform: none;
+            color: #fff !important;
         }
 
-        i {
-            color: var(--primary-color);
+        &.shake {
+            animation: shake 0.5s cubic-bezier(.36,.07,.19,.97) both;
+        }
+
+        .p-button-icon {
             font-size: 1.1rem;
         }
     }
 
-    .p-checkbox {
-        .p-checkbox-box {
-            border-radius: 0.25rem;
-            border: 2px solid var(--surface-border);
+   
+}
 
-            &.p-highlight {
-                background: var(--primary-color);
-                border-color: var(--primary-color);
-            }
-        }
+// Footer
+.login-footer {
+    margin-top: 2rem;
+    text-align: center;
+}
+
+.help-text {
+    color: var(--text-secondary);
+    font-size: 0.9rem;
+    margin: 0;
+}
+
+.help-link {
+    color: var(--primary-color);
+    text-decoration: none;
+    font-weight: 500;
+    transition: var(--transition);
+    
+    &:hover {
+        color: var(--primary-hover);
+        text-decoration: underline;
     }
 }
 
-@media (max-width: 768px) {
-   
+// Animaciones
+@keyframes shake {
+    10%, 90% { transform: translate3d(-1px, 0, 0); }
+    20%, 80% { transform: translate3d(2px, 0, 0); }
+    30%, 50%, 70% { transform: translate3d(-4px, 0, 0); }
+    40%, 60% { transform: translate3d(4px, 0, 0); }
 }
+
+@keyframes logoFloat {
+    0%, 100% {
+        transform: translateY(0px);
+    }
+    50% {
+        transform: translateY(-8px);
+    }
+}
+
+// Responsive
+@media (max-width: 480px) {
+    .login-content {
+        padding: 1rem;
+    }
+    
+    .login-card {
+        padding: 2rem 1.5rem;
+    }
+    
+    .welcome-title {
+        font-size: 1.75rem;
+    }
+    
+    .shape {
+        display: none;
+    }
+}
+
+// Efectos de hover en inputs
+.input-container:hover .input-icon {
+    color: var(--primary-color);
+}
+
+// Efecto de focus en iconos
+:host ::ng-deep {
+    .modern-input:focus ~ .input-icon,
+    .login-password .p-password-input:focus ~ .input-icon {
+        color: var(--primary-color);
+    }
+}
+
 
