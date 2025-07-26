@@ -10,7 +10,7 @@ import { AppState } from '../../../app.state';
 @Injectable({
   providedIn: 'root'
 })
-export class ColorServices {  
+export class LoginServices {  
   token      : string     = '';
   parametros : any        = [];
 
@@ -20,40 +20,37 @@ export class ColorServices {
               private store   : Store<AppState>
   ) {  }
 
-   getColor(): Observable<any> {
+   getLogin(): Observable<any> {
+    this.token = this.userSer.getToken();
     
-       return this.rest.get('trabColor', this.token, this.parametros).pipe(
+       return this.rest.get('trabLogin', this.token, this.parametros).pipe(
         map(
           (data: any) => data
           
       ) 
     );
   }
-
-  getColorInfo(colCod: string): Observable<any> {
-    let parametros = [{key: 'colCod', value: colCod}];
-    return this.rest.get('colorInfo', this.token, parametros).pipe(
-      map((data: any) => data)
-    );
-  } 
-
-  createColor(color: any): Observable<any> {
-   
-    return this.rest.post('insColor', this.token, color).pipe(
+/*
+  createLogin(login: any): Observable<any> {
+    let login = {
+      loginDes: login
+    }
+    return this.rest.post('insLogin', this.token, login).pipe(
       map((data: any) => data)
     );
   }
 
-  updateColor(color: any): Observable<any> { 
-    return this.rest.post('updColor', this.token,color).pipe(
+  updateLogin(login: any): Observable<any> {
+ 
+    return this.rest.post('updLogin', this.token,login).pipe(
       map((data: any) => data)
     );  
   }
 
-  deleteColor(color: any): Observable<any> {
+  deleteLogin(login: any): Observable<any> {
 
-    return this.rest.post('delColor', this.token, color).pipe(
+    return this.rest.post('delLogin', this.token, login).pipe(
       map((data: any) => data)
     );  
-  }
+  }*/
 }

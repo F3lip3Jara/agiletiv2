@@ -9,7 +9,7 @@ import { Store } from '@ngrx/store';
 import { ExcelService } from '../../../service/excel.service';
 import { Actions, ofType } from '@ngrx/effects';
 import { incrementarRequest } from '../../state/actions/estado.actions';
-import { getStockCajaRequest, getStockCajaSuccess } from '../state/actions/stockCaja.actions';
+import { aplicarFiltrosRequest, aplicarFiltrosSuccess, getStockCajaRequest, getStockCajaSuccess } from '../state/actions/stockCaja.actions';
 
 
 
@@ -182,18 +182,18 @@ toggleSidebar() {
 
 onFilterApplied(filters: any[]) {
   this.store.dispatch(incrementarRequest({request: 1}));
- // this.store.dispatch(aplicarFiltrosRequest({filtros: filters}));
-  /*this.actions$.pipe(
+ this.store.dispatch(aplicarFiltrosRequest({filtros: filters}));
+  this.actions$.pipe(
     ofType(aplicarFiltrosSuccess)
-  ).subscribe((productos : any) => {
-    this.data = productos.productos.map((p: Producto) => ({
+  ).subscribe((stockCaja : any) => {
+    this.data = stockCaja.stockCaja.map((p: StockCaja) => ({
       ...p,
       imageLoaded: false,
       imageError: false
     }));
    // console.log(productos.colums);
-   this.colums = productos.colums;
-  });*/
+   this.colums = stockCaja.colums;
+  });
 }
 
 }

@@ -33,9 +33,17 @@ export class ExcelService {
    FileSaver.saveAs(data, fileName + '_export_' + new  Date().getTime() + EXCEL_EXTENSION);
   }
 
-  public exportHTMLAsExcelFile(html : any , excelFileName: string ){
-    console.log(html);
-    const worksheet: XLSX.WorkSheet = XLSX.utils.table_to_sheet(html);
+  public exportHTMLAsExcelFile(data: any[], columns: any[], excelFileName: string) {
+    const exportData = data.map(row =>
+      columns.reduce((acc, col) => {
+        acc[col.header] = row[col.field];
+        return acc;
+      }, {} as any)
+    );
+    // Muestra en consola el JSON que se va a exportar
+    console.log('Datos exportados a Excel:', exportData);
+
+    const worksheet: XLSX.WorkSheet = XLSX.utils.json_to_sheet(exportData);
     const workbook: XLSX.WorkBook = { Sheets: { 'data': worksheet }, SheetNames: ['data'] };
     const excelBuffer: any = XLSX.write(workbook, { bookType: 'xlsx', type: 'array' });
     this.saveAsExcelFile(excelBuffer, excelFileName);

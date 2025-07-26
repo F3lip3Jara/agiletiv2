@@ -1,7 +1,7 @@
 <p-sidebar [(visible)]="visible" position="right" [transitionOptions]="'.3s cubic-bezier(0, 0, 0.2, 1)'" [style]="{'width': '500px', 'overflow-y': 'hidden'}" styleClass="modern-sidebar" >
     <div class="profile-sidebar h-full">
         <!-- Información del perfil con animación -->
-        <div class="flex flex-column align-items-center p-2 animate-fade-in">
+        <div class="flex flex-row align-items-center p-3 animate-fade-in">     
            <div class="avatar-container hover-effect">
             <p-avatar *ngIf="!img || img.length === 0"
                       [label]="label"
@@ -21,15 +21,14 @@
                 <i class="pi pi-camera"></i>
             </div>
         </div>
-            <h3 class="mt-3 mb-1 animate-fade-in">{{nombreUsr}}</h3>
-            <p class="text-gray-300 m-0 animate-fade-in">{{nombreEmp}} / {{empresa}}</p>
-           
-            <div class="user-status mt-2 flex align-items-center gap-2">
-                <i class="pi pi-circle-fill text-green-500" style="font-size: 0.5rem"></i>
-                <span class="text-sm">En línea</span>
-            </div>
+        <div class="user-status mt-2   gap-2">
+            <span class="text-xl font-semibold">{{nombreUsr}}</span><br>
+            <span class="text-sm font-semibold">{{nombreEmp}}</span><br>   
+            <span class="text-sm font-semibold">{{empresa}}</span><br>   
+            <i class="pi pi-circle-fill text-green-500" style="font-size: 0.5rem"></i>
+            <span class="text-sm"> En línea</span>
+        </div>      
         </div>
-
         <p-tabView styleClass="modern-tabs">
             <!-- Pestaña Hoy -->
             <p-tabPanel header="Hoy">
@@ -84,7 +83,35 @@
                             <div class="flex justify-content-between align-items-center mb-3">
                                 <h3 class="text-xl font-medium m-0">Configuraciones Adicionales</h3>                             
                             </div>
-                            <div class="flex flex-column gap-3">
+                            <div class="flex flex-column gap-3">     
+                                 <!-- Brillo -->
+                                 <div class="flex align-items-center justify-content-between p-3 border-round surface-100 hover:surface-200 transition-colors transition-duration-150">
+                                    <div class="flex align-items-center">
+                                        <i class="pi pi-arrows-alt mr-2 text-xl" [ngClass]="{'text-primary': surface >= 1, 'text-yellow-500': surface < 8}"></i>
+                                        <div class="flex flex-column">
+                                            <span class="font-medium">Surface</span>
+                                            <span class="text-sm text-500">Ajustar el nivel de brillo para el fondo los temas</span>
+                                        </div>
+                                    </div>
+                                    <div class="flex align-items-center gap-2">
+                                        <button icon="pi pi-minus" 
+                                                type="button" 
+                                                pButton 
+                                                    (click)="decrementSurface()" 
+                                                class="p-button-text p-button-rounded w-2rem h-2rem"
+                                                [disabled]="surface === surfaces[0]">
+                                        </button>
+                                        <span class="text-sm font-medium" [ngClass]="{'text-primary': surface >= 1, 'text-yellow-500': surface < 8}">{{surface}}</span>
+                                        <button icon="pi pi-plus" 
+                                                type="button" 
+                                                pButton 
+                                                (click)="incrementSurface()" 
+                                                class="p-button-text p-button-rounded w-2rem h-2rem"
+                                                [disabled]="surface === surfaces[surfaces.length - 1]">
+                                        </button>
+                                    </div>
+                                </div>
+
                                 <!-- Escalar -->
                                 <div class="flex align-items-center justify-content-between p-3 border-round surface-100 hover:surface-200 transition-colors transition-duration-150">
                                     <div class="flex align-items-center">
@@ -154,12 +181,13 @@
                                     </div>
                                 </div>
 
-                                <!-- Menu Tipo -->
+                                <!-- Menu Mode -->
+                               <div *ngIf="!isMobile"> 
                                 <div class="flex align-items-center justify-content-between p-3 border-round surface-100 hover:surface-200 transition-colors transition-duration-150">
                                     <div class="flex align-items-center">
                                         <i class="pi pi-list mr-2 text-xl"></i>
                                         <div class="flex flex-column">
-                                            <span class="font-medium">Menu Tipo</span>
+                                            <span class="font-medium">Menu Modo</span>
                                             <span class="text-sm text-500">{{menuMode === 'static' ? 'Cambiar a dinámico' : 'Cambiar a fijo'}}</span>
                                         </div>
                                     </div>
@@ -174,7 +202,28 @@
                                         </p-inputSwitch>
                                     </div>
                                 </div>
-
+                              
+                                 <!-- Menu Tipo -->
+                                 <div class="flex align-items-center justify-content-between p-3 border-round surface-100 hover:surface-200 transition-colors transition-duration-150">
+                                    <div class="flex align-items-center">
+                                        <i class="pi pi-palette mr-2 text-xl"></i>
+                                        <div class="flex flex-column">
+                                            <span class="font-medium">Menu Tipo</span>
+                                            <span class="text-sm text-500">{{menuTipo === 'clasico' ? 'Cambiar a moderno' : 'Cambiar a Clasico'}}</span>
+                                        </div>
+                                    </div>
+                                    <div class="flex align-items-center gap-2">
+                                        <span class="text-sm font-medium" [ngClass]="{'text-primary': menuTipo === 'moderno', 'text-yellow-500': menuTipo === 'clasico'}">
+                                            {{menuTipo === 'moderno' ? 'Moderno' : 'Clasico'}}
+                                        </span>
+                                        <p-inputSwitch [(ngModel)]="val3" 
+                                                     (onChange)="menuTipo = menuTipo === 'clasico' ? 'moderno' : 'clasico'"
+                                                     styleClass="modern-switch"
+                                                     [style]="{'transform': 'scale(0.8)'}">
+                                        </p-inputSwitch>
+                                    </div>
+                                </div>
+                            </div>
                                 <!-- Tema de la Aplicación -->
                                 <div class="flex flex-column gap-3 p-3 border-round surface-100">
                                     <div class="flex align-items-center justify-content-between">

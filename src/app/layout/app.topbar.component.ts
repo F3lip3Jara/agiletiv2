@@ -1,4 +1,4 @@
-import { Component, ElementRef, ViewChild, HostListener } from '@angular/core';
+import { Component, ElementRef, ViewChild, HostListener, Renderer2 } from '@angular/core';
 import { MenuItem, MessageService } from 'primeng/api';
 import { LayoutService } from "./service/app.layout.service";
 import { UsersService } from 'src/app/erp/service/users.service';
@@ -28,6 +28,7 @@ export class AppTopBarComponent {
     filteredOptions: any[] = [];
     allMenuOptions: any[] = [];
     mensajes: any[] = [];
+    _el: any = document.getElementById('layout-main-container');
 
     themes = [
         {
@@ -100,7 +101,8 @@ export class AppTopBarComponent {
         private userService: UsersService,
         private router: Router,
         private store: Store<AppState>,
-        private messageService: MessageService
+        private messageService: MessageService,
+        private renderer: Renderer2
     ) {
         this.setGreeting();
         this.initializeSearchOptions();
@@ -110,12 +112,7 @@ export class AppTopBarComponent {
     ngOnInit() {
         // Obtener información del usuario
         const user = this.userService.getUser();
-        if (user) {
-            this.nombreUsr = user.usuario || '';
-            this.img = user.img || '';
-            this.empresaLetra = user.empresa ? user.empresa.substring(0,1) : '';
-            this.empresaNombreFormateado = user.empresa ? user.empresa.replace(/-/g, ' ') : '';
-        }
+        this.avatarConfig(user);
 
         // Suscripción al estado de la aplicación
         this.store.select(selectEstado).subscribe((estado) => {
@@ -186,9 +183,24 @@ export class AppTopBarComponent {
             }
         ];
         
-        this.layoutService.disparador.subscribe((themei) => {
-            this.isDarkMode = !themei;
+        this.layoutService.configUpdate$.subscribe((valor: any) => {            
+            this.isDarkMode = valor.colorScheme == 'dark' ? true : false;     
+          /*  if( valor.toogleSidebar === true && valor.menuMode === 'overlay'){
+                this.renderer.removeStyle(this._el, 'margin-left');
+                console.log('aqui', 'margin-left', '0px');
+            }else{
+                console.log('aqui', 'margin-left', '165px');
+                this.renderer.setStyle(this._el, 'margin-left', '165px'); 
+            }*/
+            
         });
+
+        //Escucho cambios de usuario 
+        this.userService.disparador.subscribe((user: any) => {
+            this.avatarConfig(user);
+        }); 
+
+     
     }
 
     onConfigButtonClick() {
@@ -248,11 +260,13 @@ export class AppTopBarComponent {
                 this.layoutService.config.update((config) => ({
                     ...config,
                     theme: darkVariant.value,
-                    colorScheme: 'dark'
+                    colorScheme: this.isDarkMode ? 'dark' : 'light'
                 }));
+
+               // console.log(this.layoutService.config());
                 // Guardar la configuración
-                this.saveThemeConfig(darkVariant.value);
-                this.layoutService.disparador2.emit(true);
+                this.saveThemeConfig(darkVariant.value);               
+               // this.layoutService.disparador2.emit(true);
                 // Actualizar el menú con el nuevo tema
                 this.updateMenuItems();
             }else{
@@ -266,6 +280,10 @@ export class AppTopBarComponent {
                     styleClass: 'notification-toast'
                 });
                 this.isDarkMode = false;
+                this.layoutService.config.update((config) => ({
+                    ...config,
+                    colorScheme: 'light'
+                }));
             }
         }
     }
@@ -478,5 +496,24 @@ export class AppTopBarComponent {
              window.location.reload();
         });
        
+    }
+
+    toggleSidebar() {
+        this.layoutService.config().toogleSidebar = !this.layoutService.config().toogleSidebar;    
+
+        this.layoutService.onConfigUpdate();
+        
+        this.layoutService.onMenuToggle();
+     //   console.log(this.layoutService.config());
+    }
+
+    avatarConfig(user: any){       
+        if (user) {
+            console.log(user);
+            this.nombreUsr = user.empNom || '';
+            this.img = user.img || '';
+            this.empresaLetra = user.empresa ? user.empresa.substring(0,1) : '';
+            this.empresaNombreFormateado = user.empresa ? user.empresa.replace(/-/g, ' ') : '';
+        }
     }
 }

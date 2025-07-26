@@ -14,6 +14,7 @@ import { InsSubmoduloComponent } from './modulo/sub-modulo/ins-submodulo/ins-sub
 import { SeguridadComponent } from './seguridad/seguridad.component';
 import { UpSubModuloComponent } from './modulo/sub-modulo/up-sub-modulo/up-sub-modulo.component';
 import { ConfiguracionFieldComponent } from './configuracion-field/configuracion-field.component';
+import { LogComponent } from './log/log.component';
 
 interface DashboardSeguridad {
   estadisticasUsuarios: {
@@ -109,6 +110,10 @@ const routes: Routes = [
       {
         path: 'fieldnegocio',
         component:ConfiguracionFieldComponent
+      },
+      {
+        path: 'log',
+        component:LogComponent
       },
         
         { path: 'administracion', loadChildren: () => import('./administracion/administracion.module').then(m => m.AdministracionModule) }

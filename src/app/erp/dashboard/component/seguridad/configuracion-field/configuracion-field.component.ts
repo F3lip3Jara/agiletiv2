@@ -35,6 +35,7 @@ export class ConfiguracionFieldComponent {
   globalFilterFields  : string[]       =CONFIG_FIELD_KEYS;
   importDialogVisible: boolean = false;
   uploadedFiles: any[] = [];
+  
     // Propiedades para el diálogo de búsqueda
     showSearchDialog: boolean = false;
     dt!: Table;
@@ -100,6 +101,7 @@ export class ConfiguracionFieldComponent {
   onUpload(event: any) {
     this.loading = true;
     const file = event.files[0];
+
     const reader = new FileReader();
 
     reader.onload = (e: any) => {

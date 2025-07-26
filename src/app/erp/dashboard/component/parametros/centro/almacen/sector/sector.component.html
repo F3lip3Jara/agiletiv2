@@ -4,23 +4,30 @@
             <p-toast></p-toast>            
             <!-- Header con título y búsqueda -->
             <div class="admin-header">
-                <h2 class="header-title">Administración Sectores</h2>
+                <h2 class="header-title">Administración Sectores y Ubicaciones</h2>
                 <div class="header-actions">
                     <span class="p-input-icon-left">
                         <i class="pi pi-search"></i>
-                        <input pInputText type="text" (input)="onGlobalFilter(dt, $event)" placeholder="Buscar..." class="p-inputtext-sm"/>
+                        <input #searchInput pInputText type="text" (input)="onGlobalFilter(dt, $event)" placeholder="Buscar... (Ctrl+Q)" class="p-inputtext-sm"/>
                     </span>
-                    <button pButton pRipple label="Nuevo" icon="pi pi-plus" class="p-button-primary p-button-sm" (click)="openNew()"></button>
+                    <button pButton pRipple label="Nuevo Sector" icon="pi pi-plus" class="p-button-primary p-button-sm" (click)="openNew()"></button>
+                    <button pButton pRipple label="Importar Ubicaciones" icon="pi pi-upload" class="p-button-success p-button-sm" (click)="showImportDialog()"></button>
                     <button pButton pRipple label="Actualizar" icon="pi pi-refresh" class="p-button-info p-button-sm" (click)="refresh()"></button>
-                    <button pButton pRipple label="Exportar" icon="pi pi-upload" class="p-button-outlined p-button-sm" (click)="exportCSV()"></button>
+                    <button pButton pRipple label="Exportar" icon="pi pi-download" class="p-button-outlined p-button-sm" (click)="exportCSV()"></button>
                 </div>
             </div>
 
-            <!-- Tabla -->
+                 <!-- Componente de búsqueda -->
+                 <app-search-dialog 
+                 [(visible)]="showSearchDialog"
+                 [data]="data"
+                 (searchValueChange)="onSearchValueChange($event)">
+             </app-search-dialog>
+
+            <!-- Tree Table -->
             <div class="admin-table">
-                <p-table #dt [value]="data" 
-                        [columns]="cols" 
-                        styleClass="p-datatable-sm"
+                <p-treeTable #dt [value]="treeData" 
+                        styleClass="p-treetable-sm"
                         [tableStyle]="{'min-width': '50rem'}"
                         [paginator]="true" 
                         [rows]="10" 
@@ -33,27 +40,37 @@
                     
                     <ng-template pTemplate="header">
                         <tr>
-                             <th>Id</th>
-                            <th>Centro</th>
-                            <th>Almacen</th>
-                            <th>Sector</th>
-                            <th>Codigo</th>                          
-                            <th class="text-center">Acciones</th>
+                            <th style="width: 25%">Sector/Ubicación</th>
+                            <th style="width: 15%">Código</th>
+                            <th style="width: 10%">Activo</th>
+                            <th style="width: 10%">Alto (cm)</th>
+                            <th style="width: 10%">Ancho (cm)</th>
+                            <th style="width: 10%">Largo (cm)</th>
+                            <th style="width: 10%">Volumen (cm³)</th>
+                            <th style="width: 10%" class="text-center">Acciones</th>
                         </tr>
                     </ng-template>
                     
-                    <ng-template pTemplate="body" let-item>
-                        <tr [ngClass]="{'selected-row': selectedRow?.sectorId === item.sectorId}">
-                              <td> <span class="font-medium">{{item.sectorId}}</span>
-                              </td>
-                              <td> {{almacen.cenDes}}</td>
-                              <td> {{almacen.almDes}}</td>
-                              <td> {{item.secDes}}</td>
-                              <td> {{item.secCod}}</td>
-                              <td>
-                                <div class="actions-column" (click)="onActionClick(item)">
+                    <ng-template pTemplate="body" let-rowNode let-rowData="rowData">
+                        <tr [ngClass]="{'selected-row': selectedRow?.id === rowData.id}">
+                            <td>
+                                <p-treeTableToggler [rowNode]="rowNode"></p-treeTableToggler>
+                                <span class="font-medium">{{rowData.name}}</span>
+                                <span *ngIf="rowData.type === 'ubicacion'" class="text-sm text-gray-500 ml-2">(Ubicación)</span>
+                            </td>
+                            <td>{{rowData.code}}</td>
+                            <td>
+                                <span *ngIf="rowData.active === 1" class="font-medium text-green-500">Activo</span>
+                                <span *ngIf="rowData.active === 0" class="font-medium text-red-500">Inactivo</span>
+                            </td>
+                            <td>{{rowData.height || '-'}}</td>
+                            <td>{{rowData.width || '-'}}</td>
+                            <td>{{rowData.length || '-'}}</td>
+                            <td>{{rowData.volume || '-'}}</td>
+                            <td>
+                                <div class="actions-column">
                                     <p-splitButton 
-                                        [model]="actionItems"
+                                        [model]="getActionItems(rowData)"
                                         styleClass="p-button-text p-button-secondary"
                                         appendTo="body">
                                     </p-splitButton>
@@ -64,7 +81,7 @@
                     
                     <ng-template pTemplate="emptymessage">
                         <tr>
-                            <td colspan="6">
+                            <td colspan="8">
                                 <div class="empty-message">
                                     <i class="pi pi-folder-open"></i>
                                     <span>No se encontraron registros</span>
@@ -72,7 +89,7 @@
                             </td>
                         </tr>
                     </ng-template>
-                </p-table>
+                </p-treeTable>
             </div>
             <div class="flex justify-content-end mt-4 px-4">    
                 <button pButton pRipple 
@@ -85,3 +102,134 @@
         </div>
     </div>
 </div>
+
+<!-- Diálogo de Importación de Ubicaciones -->
+<p-dialog header="Importar Ubicaciones por Excel" [(visible)]="importDialogVisible" [style]="{width: '60vw'}" [modal]="true">
+    <div class="p-fluid">
+        <div class="p-field">
+            <p-fileUpload #fileUpload 
+                name="file" 
+                [customUpload]="true" 
+                (uploadHandler)="onUpload($event)"
+                accept=".xlsx,.xls"
+                [maxFileSize]="1000000"
+                [showUploadButton]="true"
+                [showCancelButton]="true"
+                [auto]="false">
+                <ng-template pTemplate="content">
+                    <div *ngIf="uploadedFiles.length; else noFile">
+                        <div *ngFor="let file of uploadedFiles" class="file-card">
+                            <i class="pi pi-file-excel"></i>
+                            <div class="file-info">
+                                <span class="file-name">{{file.name}}</span>
+                                <span class="file-size">{{file.size | number}} bytes</span>
+                            </div>
+                            <button pButton icon="pi pi-times" class="p-button-rounded p-button-danger p-button-sm"
+                                (click)="removeFile(file)"></button>
+                        </div>
+                    </div>
+                    <ng-template #noFile>
+                        <span class="no-file-text">No hay archivos seleccionados</span>
+                    </ng-template>
+                </ng-template>
+            </p-fileUpload>
+        </div>
+        
+        <div class="p-mt-3">
+            <p-message severity="info" text="Instrucciones de importación de ubicaciones:"></p-message>
+            <div class="p-ml-4">
+                <p><strong>Formato requerido del Excel:</strong></p>
+                <ul>
+                    <li><strong>Sector:</strong> Nombre del sector (obligatorio)</li>
+                    <li><strong>Ubicación:</strong> Código de la ubicación (obligatorio)</li>
+                    <li><strong>Activo:</strong> 1 para activo, 0 para inactivo (obligatorio)</li>
+                    <li><strong>cm3:</strong> Volumen en centímetros cúbicos (opcional)</li>
+                    <li><strong>Alto:</strong> Altura en centímetros (opcional)</li>
+                    <li><strong>Ancho:</strong> Ancho en centímetros (opcional)</li>
+                    <li><strong>Largo:</strong> Largo en centímetros (opcional)</li>
+                </ul>
+                
+                <p class="p-mt-2"><strong>Ejemplo de datos:</strong></p>
+                <div class="example-table">
+                    <table class="p-datatable-sm">
+                        <thead>
+                            <tr>
+                                <th>Sector</th>
+                                <th>Ubicación</th>
+                                <th>Activo</th>
+                                <th>cm3</th>
+                                <th>Alto</th>
+                                <th>Ancho</th>
+                                <th>Largo</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>Sector A</td>
+                                <td>U001</td>
+                                <td>1</td>
+                                <td>1000</td>
+                                <td>10</td>
+                                <td>10</td>
+                                <td>10</td>
+                            </tr>
+                            <tr>
+                                <td>Sector A</td>
+                                <td>U002</td>
+                                <td>1</td>
+                                <td>2000</td>
+                                <td>20</td>
+                                <td>10</td>
+                                <td>10</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <ng-template pTemplate="footer">
+        <button pButton pRipple label="Cancelar" icon="pi pi-times" class="p-button-text" (click)="importDialogVisible = false"></button>
+    </ng-template>
+</p-dialog>
+
+<!-- Diálogo de Ubicación -->
+<p-dialog header="Gestionar Ubicación" [(visible)]="ubicacionDialogVisible" [style]="{width: '40vw'}" [modal]="true">
+    <div class="p-fluid">
+        <div class="p-field">
+            <label for="ubicacionCode">Código de Ubicación</label>
+            <input id="ubicacionCode" type="text" pInputText [(ngModel)]="ubicacion.code" required />
+        </div>
+        
+        <div class="p-field">
+            <label for="ubicacionActive">Estado</label>
+            <p-dropdown id="ubicacionActive" [options]="activeOptions" [(ngModel)]="ubicacion.active" optionLabel="label" optionValue="value" placeholder="Seleccionar estado"></p-dropdown>
+        </div>
+        
+        <div class="p-field">
+            <label for="ubicacionVolume">Volumen (cm³)</label>
+            <input id="ubicacionVolume" type="number" pInputText [(ngModel)]="ubicacion.volume" />
+        </div>
+        
+        <div class="p-grid">
+            <div class="p-col-4">
+                <label for="ubicacionHeight">Alto (cm)</label>
+                <input id="ubicacionHeight" type="number" pInputText [(ngModel)]="ubicacion.height" />
+            </div>
+            <div class="p-col-4">
+                <label for="ubicacionWidth">Ancho (cm)</label>
+                <input id="ubicacionWidth" type="number" pInputText [(ngModel)]="ubicacion.width" />
+            </div>
+            <div class="p-col-4">
+                <label for="ubicacionLength">Largo (cm)</label>
+                <input id="ubicacionLength" type="number" pInputText [(ngModel)]="ubicacion.length" />
+            </div>
+        </div>
+    </div>
+    
+    <ng-template pTemplate="footer">
+        <button pButton pRipple label="Cancelar" icon="pi pi-times" class="p-button-text" (click)="ubicacionDialogVisible = false"></button>
+        <button pButton pRipple label="Guardar" icon="pi pi-check" class="p-button-primary" (click)="saveUbicacion()"></button>
+    </ng-template>
+</p-dialog> 

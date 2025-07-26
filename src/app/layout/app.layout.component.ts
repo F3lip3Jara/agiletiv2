@@ -1,4 +1,4 @@
-import { Component, HostListener, OnDestroy, Renderer2, ViewChild, ChangeDetectorRef, OnInit } from '@angular/core';
+import { Component, HostListener, OnDestroy, Renderer2, ViewChild, ChangeDetectorRef, OnInit, ElementRef } from '@angular/core';
 import { NavigationEnd, Router } from '@angular/router';
 import { filter, Subscription, Observable, of, BehaviorSubject } from 'rxjs';
 import { LayoutService } from "./service/app.layout.service";
@@ -16,11 +16,15 @@ export class AppLayoutComponent implements OnDestroy , OnInit  {
 
     overlayMenuOpenSubscription: Subscription;
 
+    surface: string = ''; // valor por defecto  
+
     menuOutsideClickListener: any;
 
     profileMenuOutsideClickListener: any;
 
     hoverTimer: any;
+
+    isDarkMode: boolean = false;
 
     @ViewChild(AppSidebarComponent) appSidebar!: AppSidebarComponent;
 
@@ -44,7 +48,7 @@ export class AppLayoutComponent implements OnDestroy , OnInit  {
   altura$: BehaviorSubject<number> = new BehaviorSubject<number>(0);
   isLoading$: Observable<boolean>  = of(true);
 
-    constructor(public layoutService: LayoutService, public renderer: Renderer2, public router: Router , private store: Store ,private cd: ChangeDetectorRef) {
+    constructor(public layoutService: LayoutService, public renderer: Renderer2, public el: ElementRef, public router: Router , private store: Store ,private cd: ChangeDetectorRef) {
         this.overlayMenuOpenSubscription = this.layoutService.overlayOpen$.subscribe(() => {
             if (!this.menuOutsideClickListener) {
                 this.menuOutsideClickListener = this.renderer.listen('document', 'click', event => {
@@ -74,6 +78,8 @@ export class AppLayoutComponent implements OnDestroy , OnInit  {
             if (this.layoutService.state.staticMenuMobileActive) {
                 this.blockBodyScroll();
             }
+
+          
         });
 
         this.router.events.pipe(filter(event => event instanceof NavigationEnd))
@@ -125,12 +131,12 @@ export class AppLayoutComponent implements OnDestroy , OnInit  {
         if (this.layoutService.config().menuMode === 'static' && this.layoutService.state.staticMenuDesktopInactive) {
             this.layoutService.state.staticMenuDesktopInactive = false;
             this.layoutService.state.menuHoverActive = true;
-            console.log('Menú (estático) expandido por hover en área de activación.');
+          //  console.log('Menú (estático) expandido por hover en área de activación.');
         } 
         else if (this.layoutService.config().menuMode === 'overlay' && !this.layoutService.state.overlayMenuActive) {
             this.layoutService.state.overlayMenuActive = true;
             this.layoutService.state.menuHoverActive = true;
-            console.log('Menú (overlay) expandido por hover en área de activación.');
+          // console.log('Menú (overlay) expandido por hover en área de activación.');
         }
     }
 
@@ -140,12 +146,12 @@ export class AppLayoutComponent implements OnDestroy , OnInit  {
             if (this.layoutService.config().menuMode === 'static') {
                 this.layoutService.state.staticMenuDesktopInactive = true;
                 this.layoutService.state.menuHoverActive = false;
-                console.log('Menú (estático) contraído al salir de la barra lateral.');
+                //console.log('Menú (estático) contraído al salir de la barra lateral.');
             } 
             else if (this.layoutService.config().menuMode === 'overlay') {
                 this.layoutService.state.overlayMenuActive = false;
                 this.layoutService.state.menuHoverActive = false;
-                console.log('Menú (overlay) contraído al salir de la barra lateral.');
+             //   console.log('Menú (overlay) contraído al salir de la barra lateral.');
             }
         }
     }
@@ -185,7 +191,67 @@ export class AppLayoutComponent implements OnDestroy , OnInit  {
             this.cd.detectChanges();
            
         });
+
+       this.layoutService.configUpdate$.subscribe((valor: any) => {
+        this.isDarkMode = valor.colorScheme == 'dark' ? true : false;
+        let surface = valor.surface;
+        this.setSurfaceColor(surface);
+        console.log('surface', surface);
+        //Rederizo lo del menu moderno en layout-menu
+        const el = document.getElementById('layout-main-container');
+        const el2 = document.getElementById('layout-wrapper');
+       
+
+        if(this.isDarkMode){
+            this.renderer.setStyle(el2, 'background-color', '#111827');
+        }else{
+            this.renderer.setStyle(el2, 'background-color', this.surface);
+        }
+
+        if(valor.menuTipo === 'moderno'){
+       //     console.log('menuStylexx', document.getElementById('layout-main-container'));
+            this.renderer.addClass(el, 'layout-main-container-modern');          
+           
+        }else{           
+            this.renderer.removeClass(el, 'layout-main-container-modern');      
+               
+        }
+      //Rederizo el margen del menu moderno;
+        const _el = document.getElementById('layout-main-container');
+     
+        if( valor.toogleSidebar === true  && valor.menuTipo ==='moderno'){
+            this.renderer.removeStyle( _el, 'margin-left');
+            console.log('aqui', 'margin-left', '0px');
+        }else{
+           if(valor.menuTipo === 'moderno'){                  
+              if(valor.menuMode === 'overlay'){
+                this.renderer.removeStyle( _el, 'margin-left');
+                console.log('aqui3', 'margin-left', '0px');
+              }else{
+                this.renderer.setStyle( _el, 'margin-left', '165px');
+                console.log('aqui2', 'margin-left', '165px');
+              }
+           }else{
+            this.renderer.removeStyle( _el, 'margin-left');
+           }
+        }
+
+        console.log('valor', valor);
+       });
     }
 
+    setSurfaceColor(surface: number) {
+        switch(surface){
+            case 1: this.surface = '#f2f5fa'; break;
+            case 2: this.surface = '#e5e7eb'; break;
+            case 3: this.surface = '#d1d5db'; break;
+            case 4: this.surface = '#9ca3af'; break;
+            case 5: this.surface = '#6b7280'; break;
+            case 6: this.surface = '#374151'; break;
+            case 7: this.surface = '#1f2937'; break;
+            case 8: this.surface = '#111827'; break;
+            default: this.surface = '#f2f5fa';
+        }
+    }
  
 }

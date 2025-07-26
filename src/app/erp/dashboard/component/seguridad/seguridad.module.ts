@@ -54,6 +54,7 @@ import { MessageModule } from 'primeng/message';
 import { MessagesModule } from 'primeng/messages';
 import { FilterSidebarComponent } from '../generales/filter-sidebar/filter-sidebar.component';
 import { TagModule } from 'primeng/tag';
+import { LogComponent } from './log/log.component';
 @NgModule({
   declarations: [
     UsuariosComponent,
@@ -69,7 +70,8 @@ import { TagModule } from 'primeng/tag';
     InsSubmoduloComponent,  
     UpSubModuloComponent,
     SeguridadComponent,
-    ConfiguracionFieldComponent
+    ConfiguracionFieldComponent,
+    LogComponent
   ],
   imports: [
     CommonModule,

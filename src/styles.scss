@@ -262,7 +262,7 @@ $text-error-final-font-size:1em;
 }
 
 .layout-sidebar {
-  max-height: calc(100vh - 2rem);
+  max-height: calc(93vh - 2rem);
   overflow-y: auto;
   scrollbar-width: thin;
   scrollbar-color: var(--surface-400) transparent;
@@ -764,12 +764,17 @@ html {
 
 // media queries para dispositivos medianos
 
-@media (max-width: 991px) {
+@media (max-width: 992px) {
   .layout-topbar .layout-menu-button {
       margin-left: 0; 
       order: 0;
       
   }
+
+  .layout-main-container-modern{
+    margin-left: 0;
+  }
+
 
   #menu-topbar {
     div{
@@ -892,4 +897,9 @@ html {
   }
 }
 // ... existing code ...
+.layout-sidebar-modern{
+  width: 176px !important;
+  border-top-right-radius: 24px;
+  overflow: auto;
+}
 

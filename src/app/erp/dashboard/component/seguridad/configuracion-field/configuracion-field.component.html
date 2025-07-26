@@ -101,9 +101,20 @@
                 [showCancelButton]="true"
                 [auto]="false">
                 <ng-template pTemplate="content">
-                    <ul *ngIf="uploadedFiles.length">
-                        <li *ngFor="let file of uploadedFiles">{{file.name}} - {{file.size}} bytes</li>
-                    </ul>
+                    <div *ngIf="uploadedFiles.length; else noFile">
+                        <div *ngFor="let file of uploadedFiles" class="file-card">
+                            <i class="pi pi-file-excel"></i>
+                            <div class="file-info">
+                                <span class="file-name">{{file.name}}</span>
+                                <span class="file-size">{{file.size | number}} bytes</span>
+                            </div>
+                            <button pButton icon="pi pi-times" class="p-button-rounded p-button-danger p-button-sm"
+                                (click)="removeFile(file)"></button>
+                        </div>
+                    </div>
+                    <ng-template #noFile>
+                        <span class="no-file-text">No hay archivos seleccionados</span>
+                    </ng-template>
                 </ng-template>
             </p-fileUpload>
         </div>

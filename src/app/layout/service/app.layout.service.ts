@@ -8,6 +8,9 @@ export interface AppConfig {
     ripple: boolean;
     menuMode: string;
     scale: number;
+    surface: number;
+    menuTipo: string;
+    toogleSidebar: boolean;
 }
 
 interface LayoutState {
@@ -17,6 +20,7 @@ interface LayoutState {
     configSidebarVisible: boolean;
     staticMenuMobileActive: boolean;
     menuHoverActive: boolean;
+   
 }
 
 @Injectable({
@@ -31,10 +35,13 @@ export class LayoutService {
         colorScheme: 'light',
         theme: 'lara-light-indigo',
         scale: 13,
+        surface: 1,
+        menuTipo: 'clasico',
+        toogleSidebar: false
     };
 
-    disparador : EventEmitter<boolean> = new EventEmitter<boolean>();
-    disparador2 : EventEmitter<boolean> = new EventEmitter<boolean>();
+  //  disparador  : EventEmitter<boolean> = new EventEmitter<boolean>();
+    //disparador2 : EventEmitter<boolean> = new EventEmitter<boolean>();
     
     config = signal<AppConfig>(this._config);
 

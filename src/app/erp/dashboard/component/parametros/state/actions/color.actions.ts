@@ -34,5 +34,12 @@ export const updateColorSuccess = createAction(
     '[Color] Update Color Success'
 );
 
+export const deleteColorRequest = createAction(
+    '[Color] Delete Color Request',
+    props<{ data: any }>()
+);
 
+export const deleteColorSuccess = createAction(
+    '[Color] Delete Color Success'
+);
 

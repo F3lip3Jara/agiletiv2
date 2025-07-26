@@ -53,19 +53,20 @@ export class ConfiguracionuserComponent implements OnInit {
   ngOnInit() {
     // Cargar datos del usuario actual
     const userData = this.userService.getUser();
-    this.name = userData.usuario;
-   
     
     if (userData) {
-      console.log(userData);
+      this.name = userData.usuario;
       
       this.configForm.patchValue({
         nombre: userData.empNom,
         apellido: userData.empApe,
-        fechaNacimiento: userData.fechaNacimiento
+        fechaNacimiento: userData.fechaNacimiento,
       });
       this.avatar = userData.img || '';
-      this.label = userData.nombre?.substring(0, 2) || '';
+      this.label = this.avatar.length <= 0 ? (userData.empNom ? userData.empNom.substring(0,1) : 'U') : '';
+    } else {
+      // Inicializar con valores por defecto si no hay usuario
+      this.label = 'U';
     }
 
     // Validación de contraseñas
@@ -85,6 +86,31 @@ export class ConfiguracionuserComponent implements OnInit {
       )
       .subscribe(() => {
         this.validatePasswords();
+      });
+
+    // Actualizar label cuando cambie el nombre
+    this.configForm.get('nombre')?.valueChanges
+      .pipe(
+        debounceTime(300),
+        distinctUntilChanged()
+      )
+      .subscribe((nombre) => {
+        if (!this.avatar || this.avatar.length <= 0) {
+          this.label = nombre ? nombre.substring(0, 1) : 'U';
+        }
+      });
+
+    // Actualizar label cuando cambie el apellido (usar primera letra del nombre)
+    this.configForm.get('apellido')?.valueChanges
+      .pipe(
+        debounceTime(300),
+        distinctUntilChanged()
+      )
+      .subscribe(() => {
+        if (!this.avatar || this.avatar.length <= 0) {
+          const nombre = this.configForm.get('nombre')?.value;
+          this.label = nombre ? nombre.substring(0, 1) : 'U';
+        }
       });
   }
 
@@ -122,7 +148,7 @@ export class ConfiguracionuserComponent implements OnInit {
 
   clearAvatar(): void {
     this.avatar = '';
-    this.label = this.configForm.get('nombre')?.value?.substring(0, 2) || '';
+    this.label = this.configForm.get('nombre')?.value?.substring(0, 1) || 'U';
     if (this.inputAvatar) {
       this.inputAvatar.nativeElement.value = '';
     }
@@ -164,9 +190,10 @@ export class ConfiguracionuserComponent implements OnInit {
           'empName'         : formData.nombre,
           'empApe'          : formData.apellido,         
           'emploAvatar'     : this.avatar,          
-          'password'        : formData.newPassword,
+          'password'        : formData.currentPassword,
           'mantenerPassword': this.showPasswordSection ? 1 : 0,
-          'name'            : this.name
+          'name'            : this.name,
+          'newPassword'     : formData.newPassword
       } 
      
       this.store.dispatch(incrementarRequest({request:1}));
@@ -176,8 +203,16 @@ export class ConfiguracionuserComponent implements OnInit {
         ofType(upconfiguserSuccess),
         take(1)
       ).subscribe(() => {
-         
-      });
+         //modifico el usuario en el store para que se actualice en el menu
+         const userData = this.userService.getUser();
+         console.log(userData);
+         userData.empNom = formData.nombre;
+         userData.empApe = formData.apellido;
+         userData.img = this.avatar;
+         this.userService.setUsuario(userData.usuario, userData.rol, userData.menu, userData.img, userData.empresa, userData.imgEmp, userData.empNom, userData.empApe);
+         this.userService.disparador.emit(userData);
+         this.loading = false;
+        });
 
     }
   }

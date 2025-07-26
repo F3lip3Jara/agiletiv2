@@ -1,10 +1,11 @@
-<div class="layout-wrapper" [ngClass]="containerClass">
+<div class="layout-wrapper" [ngClass]="containerClass"  id="layout-wrapper">
     <div class="menu-hover-trigger" (mouseenter)="onMenuMouseEnter()"></div>
     <app-topbar></app-topbar>
     <div class="layout-sidebar" (mouseleave)="onMenuMouseLeave()">
         <app-sidebar></app-sidebar> 
     </div>
-    <div class="layout-main-container">
+    <div class="layout-main-container " id="layout-main-container"
+    [ngStyle]="!isDarkMode ? {'background-color': surface} : null" >
         <app-breadcrumb></app-breadcrumb>
         <div id="loading" *ngIf="isLoading$">
             <div class="loading-overlay loading-content" [style.height.px]="altura$ | async">

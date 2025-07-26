@@ -32,6 +32,7 @@ import { _stockReducer } from "./wms/state/reducers/stock.reducer";
 import { _stockCajaReducer } from "./wms/state/reducers/stockCaja.reducer";
 import { _seguridadReducer } from "./seguridad/state/reducers/seguridad.reducer";
 import { _parametrosReducer } from "./parametros/state/reducers/parametros.reducer";
+import { _logReducer } from "./seguridad/state/reducers/log.reducer";
 export interface AppState {
     usuarios    : DataStateUsuarios,
     productos   : DataStateProductos,
@@ -64,7 +65,8 @@ export interface AppState {
     stock       : DataStateStock ,    
     stockCaja   : DataStateStockCaja,
     seguridad   : DataStateSeguridad,
-    parametros  : DataStateParametros
+    parametros  : DataStateParametros,
+    log         : DataStateLog
 }
 
 export interface DataStateUsuarios {
@@ -277,6 +279,12 @@ export interface DataStateParametros{
     loading: boolean,
 }
 
+export interface DataStateLog {
+    log: any[],
+    error?: string,
+    loading: boolean,
+}
+
 export const ROOT_APP_REDUCER: ActionReducerMap<AppState> = {
     usuarios    : _usuarioReducer, 
     productos   :_productoReducer,
@@ -309,5 +317,6 @@ export const ROOT_APP_REDUCER: ActionReducerMap<AppState> = {
     stock       : _stockReducer,
     stockCaja   : _stockCajaReducer,
     seguridad   : _seguridadReducer,
-    parametros  : _parametrosReducer  
+    parametros  : _parametrosReducer  ,
+    log         : _logReducer
   };

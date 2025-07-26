@@ -1,6 +1,6 @@
 import { Component, OnInit, OnDestroy, ViewChild, ElementRef } from '@angular/core';
 import { Subscription, Observable } from 'rxjs';
-import { map } from 'rxjs/operators';
+import { map, take } from 'rxjs/operators';
 import { Store } from '@ngrx/store';
 import { Router } from '@angular/router';
 import { incrementarRequest } from '../../state/actions/estado.actions';
@@ -10,8 +10,9 @@ import { MenuItem } from 'primeng/api';
 import { ExcelService } from 'src/app/erp/dashboard/service/excel.service';
 import { MessageService } from 'primeng/api';
 import { selectColor } from '../state/selectors/color.selectors';
-import { getColorRequest } from '../state/actions/color.actions';
+import { deleteColorSuccess, deleteColorRequest, getColorRequest } from '../state/actions/color.actions';
 import { COLOR_KEYS } from '../state/interface/color.interface';
+import { Actions, ofType } from '@ngrx/effects';
 @Component({
   selector: 'app-color',
   templateUrl: './color.component.html',
@@ -36,7 +37,8 @@ export class ColorComponent  {
     private store: Store<AppState>,
     private router: Router,
     private excelService: ExcelService,
-    private messageService: MessageService
+    private messageService: MessageService,
+    private action$: Actions
   ) {
     this.data$ = this.store.select(selectColor).pipe(
       map(data => Array.isArray(data) ? data : [])
@@ -88,8 +90,16 @@ export class ColorComponent  {
   }
 
   del(data: any) {
-    this.store.dispatch(incrementarRequest({request: 2}));
-   // this.store.dispatch(delete{INTERFACE_NAME}Request({{data: data}}));
+    this.store.dispatch(incrementarRequest({request: 1}));
+    this.store.dispatch(deleteColorRequest({data: data}));
+    this.action$.pipe(
+      ofType(deleteColorSuccess),
+      take(1)
+    ).subscribe(() => {
+      this.refresh();
+
+    });
+   
   }
 
   ngOnDestroy(): void {

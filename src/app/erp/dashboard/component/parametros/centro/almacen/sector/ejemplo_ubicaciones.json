@@ -1,0 +1,65 @@
+{
+  "headers": ["Sector", "Ubicación", "Activo", "cm3", "Alto", "Ancho", "Largo"],
+  "data": [
+    {
+      "sector": "Sector A",
+      "ubicacion": "U001",
+      "activo": 1,
+      "cm3": 1000,
+      "alto": 10,
+      "ancho": 10,
+      "largo": 10
+    },
+    {
+      "sector": "Sector A",
+      "ubicacion": "U002",
+      "activo": 1,
+      "cm3": 2000,
+      "alto": 20,
+      "ancho": 10,
+      "largo": 10
+    },
+    {
+      "sector": "Sector A",
+      "ubicacion": "U003",
+      "activo": 0,
+      "cm3": 1500,
+      "alto": 15,
+      "ancho": 10,
+      "largo": 10
+    },
+    {
+      "sector": "Sector B",
+      "ubicacion": "U004",
+      "activo": 1,
+      "cm3": 3000,
+      "alto": 30,
+      "ancho": 10,
+      "largo": 10
+    },
+    {
+      "sector": "Sector B",
+      "ubicacion": "U005",
+      "activo": 1,
+      "cm3": 2500,
+      "alto": 25,
+      "ancho": 10,
+      "largo": 10
+    },
+    {
+      "sector": "Sector C",
+      "ubicacion": "U006",
+      "activo": 1,
+      "cm3": 1800,
+      "alto": 18,
+      "ancho": 10,
+      "largo": 10
+    }
+  ],
+  "metadata": {
+    "description": "Ejemplo de datos para importación de ubicaciones",
+    "version": "1.0",
+    "created": "2024-01-01",
+    "notes": "Este archivo sirve como referencia para el formato esperado en la importación de ubicaciones"
+  }
+} 

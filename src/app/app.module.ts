@@ -51,6 +51,7 @@ import { StockEffects } from './erp/dashboard/component/wms/state/effects/stock.
 import { StockCajaEffects } from './erp/dashboard/component/wms/state/effects/stockCaja.effects';
 import { SeguridadEffects } from './erp/dashboard/component/seguridad/state/effects/seguridad.effects';
 import { ParametrosEffects } from './erp/dashboard/component/parametros/state/effects/parametros.effects';
+import { LogEffects } from './erp/dashboard/component/seguridad/state/effects/log.effects';
 @NgModule({
     declarations: [AppComponent, NotfoundComponent ],
     imports: [  
@@ -91,7 +92,8 @@ import { ParametrosEffects } from './erp/dashboard/component/parametros/state/ef
                     StockEffects,
                     StockCajaEffects,
                     SeguridadEffects,
-                    ParametrosEffects
+                    ParametrosEffects,
+                    LogEffects
                 ]),
                 StoreDevtoolsModule.instrument(),
                 FontAwesomeModule,

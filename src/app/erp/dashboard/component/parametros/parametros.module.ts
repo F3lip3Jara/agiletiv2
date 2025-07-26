@@ -5,6 +5,8 @@ import { ParametrosRoutingModule } from './parametros-routing.module';
 import { ToastModule } from 'primeng/toast';
 import { ToolbarModule } from 'primeng/toolbar';
 import { TableModule } from 'primeng/table';
+import { TreeTableModule } from 'primeng/treetable';
+import { FileUploadModule } from 'primeng/fileupload';
 import { DialogModule } from 'primeng/dialog';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { DropdownModule } from 'primeng/dropdown';
@@ -77,6 +79,7 @@ import { InsSectorComponent } from './centro/almacen/sector/ins-sector/ins-secto
 import { UpSectorComponent } from './centro/almacen/sector/up-sector/up-sector.component';
 import { SearchDialogComponent } from '../generales/search-dialog/search-dialog.component';
 import { FilterSidebarComponent } from '../generales/filter-sidebar/filter-sidebar.component';
+
 @NgModule({
   declarations: [
     ProductosComponent,
@@ -129,6 +132,8 @@ import { FilterSidebarComponent } from '../generales/filter-sidebar/filter-sideb
     ToastModule,
     ToolbarModule,
     TableModule,
+    TreeTableModule,
+    FileUploadModule,
     DialogModule,
     FormsModule,
     ReactiveFormsModule,
@@ -148,7 +153,6 @@ import { FilterSidebarComponent } from '../generales/filter-sidebar/filter-sideb
     CalendarModule,
     GoogleMapsModule,
     SelectButtonModule,
-    DialogModule,
     CheckboxModule,
     NgSelectModule,
     ColorPickerModule,
@@ -165,4 +169,4 @@ import { FilterSidebarComponent } from '../generales/filter-sidebar/filter-sideb
     Environment
   ]
 })
-export class ParametrosModule { }
+export class ParametrosModule { } 

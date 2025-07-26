@@ -14,3 +14,13 @@ export const stockCajaError = createAction(
     '[StockCaja] StockCaja Error',
     props<{ error: string }>()
 );
+
+export const aplicarFiltrosRequest = createAction(
+    '[StockCaja] Aplicar Filtros Request',
+    props<{ filtros: any[] }>()
+);
+
+export const aplicarFiltrosSuccess = createAction(
+    '[Stock] Aplicar Filtros Success',
+    props<{ stockCaja: StockCaja[] ,  colums: any[]}>()
+);

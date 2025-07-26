@@ -5,7 +5,7 @@ import { map, catchError, switchMap, mergeMap } from 'rxjs/operators';
 import { ColorServices } from '../service/color.service';
 import * as ColorActions from '../actions/color.actions';
 import { getColorInfoSuccess, getColorInfoRequest } from '../../../seguridad/state/actions/acciones.actions';
-import { colorError, createColorRequest, createColorSuccess, getColorSuccess, updateColorRequest, updateColorSuccess } from '../actions/color.actions';
+import { colorError, createColorRequest, createColorSuccess, getColorSuccess, updateColorRequest, updateColorSuccess , deleteColorRequest, deleteColorSuccess } from '../actions/color.actions';
 import { getColorRequest } from '../actions/color.actions';
 import { getMensajesSuccess } from '../../../state/actions/mensajes.actions';
 
@@ -53,6 +53,18 @@ export class ColorEffects {
                 mergeMap(resp => [
                     getMensajesSuccess({ mensaje: resp }),
                     updateColorSuccess()
+                ]),
+                catchError(error => of(colorError({ error: error.message })))
+            ))
+    ));
+
+    deleteColor = createEffect(() => this.actions.pipe(
+        ofType(deleteColorRequest),
+        switchMap(({ data }) => this.colorService.deleteColor(data)
+            .pipe(
+                mergeMap(resp => [
+                    getMensajesSuccess({ mensaje: resp }),
+                    deleteColorSuccess()
                 ]),
                 catchError(error => of(colorError({ error: error.message })))
             ))

@@ -20,6 +20,12 @@
                         pTooltip="Guardar consulta actual"
                         (click)="showSaveQuery($event, op)">
                 </button>
+                <button pButton 
+                        [icon]="activeAccordionIndexes.length === 0 ? 'pi pi-plus' : 'pi pi-minus'"
+                        class="p-button-rounded p-button-text p-button-secondary"
+                        pTooltip="Expandir/Contraer todos los filtros"
+                        (click)="toggleAllAccordions()">
+                </button>
                 <span class="p-badge p-badge-info" *ngIf="activeFilters > 0">{{activeFilters}}</span>
             </div>
         </div>
@@ -56,7 +62,7 @@
     </p-overlayPanel>
 
     <div class="filter-container">
-        <p-accordion [multiple]="true" [activeIndex]="activeAccordionIndexes" styleClass="filter-accordion">
+        <p-accordion [multiple]="true" [activeIndex]="activeAccordionIndexes" styleClass="filter-accordion" (onChange)="onAccordionChange($event)">
             <p-accordionTab header="Filtros Generales">
                 <div class="flex flex-column gap-2">
                     <div class="p-inputgroup">

@@ -9,8 +9,18 @@
                 <!-- Avatar Section -->
                 <div class="mb-5 flex flex-column align-items-center">
                     <div class="avatar-container mb-3">
-                        <p-avatar *ngIf="!avatar" [label]="label" styleClass="mr-2" size="xlarge" shape="circle"></p-avatar>
-                        <p-avatar *ngIf="avatar" [image]="avatar" styleClass="mr-2" size="xlarge" shape="circle"></p-avatar>
+                        <p-avatar *ngIf="!avatar || avatar.length <= 0" 
+                            [label]="label || 'U'" 
+                            styleClass="mr-2" 
+                            size="xlarge" 
+                            shape="circle">
+                        </p-avatar>
+                        <p-avatar *ngIf="avatar && avatar.length > 0" 
+                            [image]="avatar" 
+                            styleClass="mr-2" 
+                            size="xlarge" 
+                            shape="circle">
+                        </p-avatar>
                     </div>
                     <div class="flex gap-2">
                         <input type="file" class="hidden" (change)="fileChangeEvent($event)" accept="image/*" #inputAvatar>

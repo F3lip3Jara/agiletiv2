@@ -1,44 +1,124 @@
-<ul class="layout-menu">
+<ul class="layout-menu" [ngClass]="{'modern-menu': menuStyle === 'modern', 'classic-menu': menuStyle === 'classic'}">
     <!-- Perfil del usuario en la parte superior -->
+    @if(menuStyle === 'classic' && !isMobile){
     <li class="user-profile mb-4">
-        <div class="flex flex-column align-items-center p-3">
-            <div class="avatar-container">
+        <div class="flex flex-column align-items-center justify-content-center p-4 text-center">
+            <div class="avatar-container mb-3">
                 <p-avatar *ngIf="!img || img.length === 0" 
-                    label="{{label}}" 
+                    [label]="label || 'U'" 
                     size="xlarge" 
                     shape="circle"
                     [style]="{ 'transition': 'all 0.3s ease'}"
                     styleClass="cursor-pointer shadow-4">
                 </p-avatar>
                 <p-avatar *ngIf="img && img.length > 0" 
-                    image="{{img}}" 
+                    [image]="img" 
                     size="xlarge" 
                     shape="circle"
                     styleClass="cursor-pointer shadow-4">
                 </p-avatar>
             </div>
-            <span class="text-xl font-semibold mt-3">{{nombreUsr}}</span>
-            <span class="text-sm font-semibold mt-1">{{nombre_completo}}</span>
-            <span class="text-sm font-semibold mt-1">{{rol}}</span>
+            <div class="user-info">              
+                <span class="text-sm font-semibold block">{{nombre_completo}}</span>
+                <span class="text-sm font-semibold text-primary">{{rol}}</span>
+            </div>
+        </div>
+    </li>
+}@else{
+    <li class="user-profile">
+        <div class="flex flex-column align-items-center justify-content-center p-4 text-center">
+            <div class="avatar-container mb-3">
+                <p-avatar *ngIf="!img || img.length === 0" 
+                    [label]="label || 'U'" 
+                    size="xlarge" 
+                    shape="circle"
+                    [style]="{ 'transition': 'all 0.3s ease'}"
+                    styleClass="cursor-pointer shadow-4">
+                </p-avatar>
+                <p-avatar *ngIf="img && img.length > 0" 
+                    [image]="img" 
+                    size="xlarge" 
+                    shape="circle"
+                    styleClass="cursor-pointer shadow-4">
+                </p-avatar>
+            </div>
+            <div class="user-info">              
+                <span class="text-sm font-semibold block">{{nombre_completo}}</span>
+                <span class="text-sm font-semibold text-primary">{{rol}}</span>
+            </div>
+        </div>
+    </li>
+}
+
+    <!-- Selector de estilo de menú (oculto en mobile) -->
+    <li class="menu-style-selector mb-3" *ngIf="!isMobile">
+        <div class="flex justify-content-center">
+            <span class="text-sm text-500 p-button-text">
+                <i class="pi pi-palette mr-1" style="opacity: 0.7;"></i>
+                Menú {{this.layoutService.config().menuTipo === 'moderno' ? 'Moderno' : 'Clásico'}}
+            </span>
         </div>
     </li>
 
-    <!-- Items del menú -->
-    <ng-container *ngFor="let item of model; let i = index;">
-        <li app-menuitem *ngIf="!item.separator" 
-            [item]="item" 
-            [index]="i" 
-            [root]="true"
-            class="menu-item">
-        </li>
-        <li *ngIf="item.separator" class="menu-separator my-2">
-            <div class="mx-2 border-top-1 surface-border"></div>
-        </li>
+    <!-- Indicador de menú clásico en mobile -->
+    <li class="mobile-menu-indicator mb-2" *ngIf="isMobile">
+        <div class="flex justify-content-center">
+            <div class="mobile-indicator">
+                <i class="pi pi-mobile text-primary mr-2"></i>
+                <span class="text-sm text-500">Menú Clásico</span>
+            </div>
+        </div>
+    </li>
+
+
+
+    <!-- Menú Clásico -->
+    <ng-container *ngIf="menuStyle === 'classic' || isMobile">
+        <ng-container *ngFor="let item of model; let i = index;">
+            <li app-menuitem *ngIf="!item.separator" 
+                [item]="item" 
+                [index]="i" 
+                [root]="true"
+                class="menu-item">
+            </li>
+            <li *ngIf="item.separator" class="menu-separator my-2">
+                <div class="mx-2 border-top-1 surface-border"></div>
+            </li>
+        </ng-container>
+    </ng-container>
+
+    <!-- Menú Moderno con Iconos Grandes -->
+    <ng-container *ngIf="menuStyle === 'modern' && !isMobile">
+        <ng-container *ngFor="let item of model; let i = index;">
+            <li *ngIf="!item.separator" class="modern-menu-item mb-5 mt-5">
+                <div class="modern-menu-card" 
+                     [class.has-submenu]="item.items && item.items.length > 0"
+                     (mouseenter)="showSubmenu(i, $event)"
+                     (mouseleave)="hideSubmenu(i)">
+                    
+                    <!-- Icono grande del módulo -->
+                    <div class="modern-menu-icon">
+                        <i [class]="item.icon" [style]="{'font-size': '2.5rem'}"></i>
+                    </div>
+                    
+                    <!-- Nombre del módulo -->
+                    <div class="modern-menu-label">
+                        <span class="module-name">{{item.label}}</span>
+                        <span class="module-count" *ngIf="item.items && item.items.length > 0">
+                            {{item.items.length}} opciones
+                        </span>
+                    </div>
+                </div>
+            </li>
+            <li *ngIf="item.separator" class="menu-separator my-2">
+                <div class="mx-2 border-top-1 surface-border"></div>
+            </li>
+        </ng-container>
     </ng-container>
 
     <!-- Footer del menú -->
     <li class="mt-auto">
-        <div class="mt-4 surface-section p-3 border-round-xl mx-2">
+        <div class="mt-4  p-3 border-round-xl mx-2">
             <div class="flex align-items-center justify-content-center">
                 <i class="pi pi-info-circle text-primary mr-2"></i>
                 <span class="text-sm">Versión 1.0.0</span>

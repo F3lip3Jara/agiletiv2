@@ -83,7 +83,7 @@ export class FilterSidebarComponent implements OnInit {
   filterValues: { [key: string]: any[] } = {};
   dateRanges: { [key: string]: DateRange } = {};
   activeFilters: number = 0;
-  activeAccordionIndexes: number[] = []; // Iniciar con todos los acordeones cerrados
+  activeAccordionIndexes: number[] = [0]; // Iniciar con el primer acordeón abierto
   savedQueries: SavedQuery[] = [];
   queryName: string = '';
   readonly STORAGE_KEY = 'filter_sidebar_saved_queries';
@@ -109,17 +109,32 @@ export class FilterSidebarComponent implements OnInit {
     this.visible = !this.visible;
     this.visibleChange.emit(this.visible);
     
-    // Si se está abriendo el sidebar, resetear los acordeones a cerrados
+    // Si se está abriendo el sidebar, abrir el primer acordeón
     if (this.visible) {
-      this.activeAccordionIndexes = [];
+      this.activeAccordionIndexes = [0];
     }
   }
 
   onSidebarHide() {
     this.visible = false;
     this.visibleChange.emit(false);
-    // Resetear los acordeones a cerrados cuando se cierra el sidebar
-    this.activeAccordionIndexes = [];
+    // Mantener el estado del acordeón al cerrar
+  }
+
+  // Método para manejar cambios en el acordeón
+  onAccordionChange(event: any) {
+    this.activeAccordionIndexes = event.index;
+  }
+
+  // Método para expandir/contraer todos los acordeones
+  toggleAllAccordions() {
+    if (this.activeAccordionIndexes.length === 0) {
+      // Expandir todos los acordeones
+      this.activeAccordionIndexes = [0, 1, 2];
+    } else {
+      // Contraer todos los acordeones
+      this.activeAccordionIndexes = [];
+    }
   }
 
   ngOnInit() {
@@ -145,6 +160,9 @@ export class FilterSidebarComponent implements OnInit {
    // console.log(this.dateRanges['created_at'].to);
     this.onDateRangeChange('created_at', this.dateRanges['created_at']);
     this.loadSavedQueries();
+    
+    // Asegurar que el primer acordeón esté abierto por defecto
+    this.activeAccordionIndexes = [0];
   }
 
   getInputType(dataType: string): string {
@@ -221,6 +239,13 @@ export class FilterSidebarComponent implements OnInit {
     });
     this.filterApplied.emit(filters);
     this.visibleChange.emit(false);
+    
+    // Mantener el estado del acordeón después de aplicar filtros
+    setTimeout(() => {
+      if (this.activeAccordionIndexes.length === 0) {
+        this.activeAccordionIndexes = [0];
+      }
+    }, 100);
 
    
   }

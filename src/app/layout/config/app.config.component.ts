@@ -29,8 +29,12 @@ export class AppConfigComponent {
     indicadores: any[] = [];
     val       : boolean = false;
     val2      : boolean = false;
+    val3      : boolean = false;
     darkMode  : boolean = false;
     notifications: boolean = true;
+    surface: number = 1;
+    surfaces: number[] = [1, 2, 3, 4];
+    isMobile:boolean = window.innerWidth <= 768;
       
 
     @Input() minimal: boolean = false;
@@ -40,6 +44,11 @@ export class AppConfigComponent {
     menuOptions = [
         { label: 'Fijo', value: 'static', icon: 'pi pi-lock' },
         { label: 'Dinámico', value: 'overlay', icon: 'pi pi-sync' }
+    ];
+
+    menuTipoOptions = [
+        { label: 'Clásico', value: 'clasico', icon: 'pi pi-lock' },
+        { label: 'Moderno', value: 'moderno', icon: 'pi pi-sync' }
     ];
 
     indicadoresEconomicos = {
@@ -110,7 +119,7 @@ export class AppConfigComponent {
 
     ngOnInit() {
         const storedConfig = localStorage.getItem(this.getStorageKey());
-
+        
         if(storedConfig){
             const parsedConfig = JSON.parse(storedConfig);
             this.selectedThemeVariant = parsedConfig.themeVariant;
@@ -119,26 +128,13 @@ export class AppConfigComponent {
         }
         
         const user = this.UserService.getUser();
-        if (user) {
-            this.nombreUsr = user.usuario || '';
-            this.rol = user.rol || '';
-            this.img = user.img || '';
-            this.nombreEmp = (user.empNom || '') + ' ' + (user.empApe || '');
-            this.empresa = user.empresa || '';
-            
-            if (!this.img || this.img.length === 0) {
-                this.label = this.nombreUsr ? this.nombreUsr.substring(0,1) : '';
-            }
-        }
-
+        this.avatarConfig(user);
         this.token = this.UserService.getToken();
         // Cargar configuración guardada
         this.loadSavedConfig();
      //   this.store.dispatch(getIndicadorRequest());
         this.store.select(selectIndicador).subscribe((indicador : any) => {  
-           // console.log(indicador);
-                     
-            if(indicador.length > 0 ){
+               if(indicador.length > 0 ){
             this.indicadoresEconomicos.dolares = indicador.map((indicador: any) => {
                 const tendencia = indicador.valor_actual.valor > indicador.valor_anterior.valor ? 'up' : 'down';
                 return {
@@ -159,11 +155,12 @@ export class AppConfigComponent {
     
    
         // Inicializar estados de los switches
-        this.val = this.menuMode === 'overlay';
+        this.val  = this.menuMode === 'overlay';
         this.val2 = this.inputStyle === 'filled';
+        this.val3 = this.menuTipo === 'moderno';
 
-        this.layoutService.disparador2.subscribe((themei) => { 
-         //   console.log(themei);
+      
+        this.layoutService.configUpdate$.subscribe((valor: any) => {
             const storedConf = localStorage.getItem(this.getStorageKey());
             if(storedConf){
                 const parsedConfig = JSON.parse(storedConf);
@@ -172,6 +169,12 @@ export class AppConfigComponent {
                 this.selectedThemeVariant = this.themes.find(t => t.name === 'lara')?.variants[0];
             }
         });
+
+        //Escucho cambios de usuario 
+        this.UserService.disparador.subscribe((user: any) => {
+            this.avatarConfig(user);
+        }); 
+        
     }
 
     private getStorageKey(): string {
@@ -183,7 +186,6 @@ export class AppConfigComponent {
             const savedConfig = localStorage.getItem(this.getStorageKey());
             if (savedConfig) {
                 const config = JSON.parse(savedConfig);
-                
                 // Restaurar tema
                 if (config.themeFamily && config.themeVariant) {
                     this.selectedThemeFamily = config.themeFamily;
@@ -193,6 +195,8 @@ export class AppConfigComponent {
 
                 // Restaurar otras configuraciones
                 if (config.scale !== undefined) this.scale = config.scale;
+                if (config.surface !== undefined) this.surface = config.surface;
+
                 if (config.ripple !== undefined) this.ripple = config.ripple;
                 if (config.inputStyle !== undefined) {
                     this.inputStyle = config.inputStyle;
@@ -202,6 +206,11 @@ export class AppConfigComponent {
                     this.menuMode = config.menuMode;
                     this.val = config.menuMode === 'overlay';
                 }
+                if (config.menuTipo !== undefined) {
+                    this.menuTipo = config.menuTipo;
+                    this.val3 = config.menuTipo === 'moderno';
+                }
+             
             }
         } catch (error) {
             console.error('Error al cargar la configuración:', error);
@@ -210,14 +219,22 @@ export class AppConfigComponent {
 
     private saveConfig() {
         try {
-            const config = {
+         
+            const config = {    
                 themeFamily : this.selectedThemeFamily,
                 themeVariant: this.selectedThemeVariant,
                 scale       : this.scale,
                 ripple      : this.ripple,
                 inputStyle  : this.inputStyle,
-                menuMode    : this.menuMode
+                menuMode    : this.menuMode,
+                surface     : this.surface,
+                menuTipo    : this.menuTipo
             };
+            
+            this.layoutService.config.update((config) => ({
+                ...config,
+                surface: this.surface,
+            }));
             localStorage.setItem(this.getStorageKey(), JSON.stringify(config));
         } catch (error) {
             console.error('Error al guardar la configuración:', error);
@@ -242,6 +259,19 @@ export class AppConfigComponent {
         this.saveConfig();
     }
 
+    get surface2(): number {
+        return this.layoutService.config().surface;
+    }
+    set surface2(_val: number) {        
+        this.layoutService.config.update((config) => ({
+            ...config,
+            surface: _val,
+        }));
+        this.saveConfig();
+    }
+
+
+
     get menuMode(): string {
         return this.layoutService.config().menuMode;
     }
@@ -251,6 +281,19 @@ export class AppConfigComponent {
             menuMode: _val,
         }));
         this.saveConfig();
+    }
+
+
+    get menuTipo(): string {
+        return this.layoutService.config().menuTipo;
+    }
+    set menuTipo(_val: string) {
+        this.layoutService.config.update((config) => ({
+            ...config,
+            menuTipo: _val,
+        }));
+        this.saveConfig();
+       // console.log('menuTipo', this.menuTipo);
     }
 
     get inputStyle(): string {
@@ -310,7 +353,7 @@ export class AppConfigComponent {
             this.theme = this.selectedThemeVariant.value;
             this.colorScheme = this.selectedThemeVariant.isDark ? 'dark' : 'light';
             this.themei = !this.selectedThemeVariant.isDark;           
-            this.layoutService.disparador.emit(this.themei);
+            //this.layoutService.disparador.emit(this.themei);
         }
     }
 
@@ -320,7 +363,33 @@ export class AppConfigComponent {
 
     incrementScale() {
         this.scale++;
+        
+    }
+
+    decrementSurface() {
+        this.surface--;
+        this.surface2 = this.surface;
+    }
+
+    incrementSurface() {
+        this.surface++;
+        this.surface2 = this.surface;
     }
 
     showMenuModeButton = signal(!this.router.url.includes('auth'));
+
+    avatarConfig(user: any){
+       
+            this.nombreUsr = user.usuario || '';
+            this.rol = user.rol || '';
+            this.img = user.img || '';
+            this.nombreEmp = (user.empNom || '') + ' ' + (user.empApe || '');
+            this.empresa = user.empresa || '';
+            
+            if (!this.img || this.img.length === 0) {
+                this.label = this.nombreUsr ? this.nombreUsr.substring(0,1) : '';
+            }
+        
+
+    }
 }

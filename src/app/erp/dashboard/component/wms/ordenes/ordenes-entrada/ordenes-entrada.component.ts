@@ -138,8 +138,13 @@ export class OrdenesEntradaComponent implements OnInit, OnDestroy {
   }
 
   exportCSV() {
-    const tableElement = this.dt.el.nativeElement;
-    this.excelService.exportHTMLAsExcelFile(tableElement, 'ordenes-entrada');
+    console.log(this.data);
+   // this.excelService.exportHTMLAsExcelFile(exportData, this.cols, 'log');
+
+    //const tableElement = this.dt.el.nativeElement;
+   
+    console.log(this.cols);
+    //this.excelService.exportHTMLAsExcelFile(this.data, this.cols, 'ordenes-entrada');
   }
 
   refresh() {
