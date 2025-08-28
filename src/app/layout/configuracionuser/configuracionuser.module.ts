@@ -18,7 +18,7 @@ import { ConfiguracionuserRoutingModule } from './configuracionuser.routing';
 import { FieldsetModule } from 'primeng/fieldset';
 @NgModule({
   declarations: [
-    ConfiguracionuserComponent
+    ConfiguracionuserComponent,
   ],
   imports: [
     CommonModule,

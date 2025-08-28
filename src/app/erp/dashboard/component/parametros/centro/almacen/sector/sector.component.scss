@@ -67,11 +67,48 @@
 .actions-column {
   display: flex;
   justify-content: center;
+  gap: 0.5rem;
+  flex-wrap: wrap;
   
-  ::ng-deep .p-splitbutton {
+  .p-button {
+    transition: all 0.2s ease;
+    min-width: 2.5rem;
+    height: 2.5rem;
+    
+    &:hover {
+      transform: scale(1.1);
+      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+    }
+    
+    &.p-button-primary:hover {
+      background-color: var(--primary-color);
+      color: white;
+    }
+    
+    &.p-button-success:hover {
+      background-color: var(--green-500);
+      color: white;
+    }
+    
+    &.p-button-danger:hover {
+      background-color: var(--red-500);
+      color: white;
+    }
+    
+    &.p-button-secondary:hover {
+      background-color: var(--surface-600);
+      color: white;
+    }
+  }
+  
+  // Responsive para pantallas pequeñas
+  @media (max-width: 768px) {
+    gap: 0.25rem;
+    
     .p-button {
-      min-width: auto;
-      padding: 0.5rem;
+      min-width: 2rem;
+      height: 2rem;
+      font-size: 0.875rem;
     }
   }
 }
@@ -105,6 +142,23 @@
     .file-size {
       font-size: 0.875rem;
       color: var(--text-color-secondary);
+    }
+  }
+}
+
+// Estilos para el botón de descarga del formato
+.format-download-section {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1rem;
+  
+  .format-download-button {
+    transition: all 0.3s ease;
+    
+    &:hover {
+      transform: translateY(-1px);
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
     }
   }
 }

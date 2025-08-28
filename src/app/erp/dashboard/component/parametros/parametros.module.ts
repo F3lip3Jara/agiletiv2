@@ -54,6 +54,8 @@ import { UpColorComponent } from './color/up-color/up-color.component';
 import { ProgressSpinnerModule } from 'primeng/progressspinner';
 import { ParametrosComponent } from './parametros/parametros.component';
 import { MessageModule } from 'primeng/message';
+import { TooltipModule } from 'primeng/tooltip';
+import { MenuModule } from 'primeng/menu';
 import { InsGrupoComponent } from './grupo/ins-grupo/ins-grupo.component';
 import { UpGrupoComponent } from './grupo/up-grupo/up-grupo.component';
 import { InsSubgrupoComponent } from './sub-grupo/ins-subgrupo/ins-subgrupo.component';
@@ -158,6 +160,8 @@ import { FilterSidebarComponent } from '../generales/filter-sidebar/filter-sideb
     ColorPickerModule,
     ProgressSpinnerModule,
     MessageModule,
+    TooltipModule,
+    MenuModule,
     EditorModule,
     ChipModule,
     TabViewModule,

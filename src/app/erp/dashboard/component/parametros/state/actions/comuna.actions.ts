@@ -7,7 +7,7 @@ export const getComunaRequest = createAction(
 
 export const getComunaSuccess = createAction(
     '[Comuna] Get Comuna Success',
-    props<{ comuna: Comuna[] }>()
+    props<{ comuna: any , colums: any }>()
 );
 
 export const comunaError = createAction(
@@ -24,6 +24,17 @@ export const getComunaByCiudadSuccess = createAction(
     '[Comuna] Get Comuna By Ciudad Success',
     props<{ comuna: Comuna[] }>()
 );
+
+export const aplicarFiltrosRequest = createAction(
+    '[Comuna] Aplicar Filtros Request',
+    props<{ filtros: any[] }>()
+);
+
+export const aplicarFiltrosSuccess = createAction(
+    '[Comuna] Aplicar Filtros Success',
+    props<{ comuna: Comuna[] ,  colums: any}>()
+);
+
 
 
 

@@ -1,0 +1,329 @@
+<div class="warehouse-dashboard" *ngIf="!loading && dashboardData">
+  <!-- Header Section -->
+  <div class="warehouse-header">
+    <div class="warehouse-info">
+      <h1 class="warehouse-title">{{ dashboardData.warehouse.id }} - {{ dashboardData.warehouse.name }}</h1>
+      <p class="warehouse-description">{{ dashboardData.warehouse.description }}</p>
+      
+      <div class="warehouse-details">
+        <div class="detail-item">
+          <span class="detail-label">Location:</span>
+          <span class="detail-value">{{ dashboardData.warehouse.location }}</span>
+        </div>
+        <div class="detail-item">
+          <span class="detail-label">Type:</span>
+          <span class="detail-value">{{ dashboardData.warehouse.type }}</span>
+        </div>
+        <div class="detail-item">
+          <span class="detail-label">Owner:</span>
+          <span class="detail-value">{{ dashboardData.warehouse.owner }}</span>
+        </div>
+        <div class="detail-item">
+          <span class="detail-label">Existence Period:</span>
+          <span class="detail-value">
+            {{ dashboardData.warehouse.existencePeriod.start | date:'MMM dd, yyyy' }} - 
+            {{ dashboardData.warehouse.existencePeriod.end | date:'MMM dd, yyyy' }}
+          </span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Dashboard Cards Section -->
+  <div class="dashboard-cards">
+    <!-- Over & Under Stocks Card -->
+    <p-card class="dashboard-card">
+      <ng-template pTemplate="header">
+        <div class="card-header">
+          <h3>Over & Under stocks</h3>
+          <span class="total-items">{{ dashboardData.overUnderStocks.total }} items</span>
+        </div>
+      </ng-template>
+      
+      <div class="chart-container">
+        <p-chart type="doughnut" [data]="stockChartData" [options]="stockChartOptions" [style]="{'width': '100%', 'height': '200px'}"></p-chart>
+        <div class="percentage-display">{{ dashboardData.overUnderStocks.percentage }}%</div>
+      </div>
+      
+      <div class="chart-legend">
+        <div class="legend-item" *ngFor="let item of dashboardData.overUnderStocks.items">
+          <div class="legend-color" [style.background-color]="item.color"></div>
+          <span class="legend-label">{{ item.label }}</span>
+          <span class="legend-count">{{ item.count }} items</span>
+        </div>
+      </div>
+    </p-card>
+
+    <!-- Daily Capacity Change Card -->
+    <p-card class="dashboard-card">
+      <ng-template pTemplate="header">
+        <div class="card-header">
+          <h3>Daily Capacity Change</h3>
+        </div>
+      </ng-template>
+      
+      <div class="chart-container">
+        <p-chart type="line" [data]="capacityChartData" [options]="capacityChartOptions" [style]="{'width': '100%', 'height': '200px'}"></p-chart>
+      </div>
+      
+      <div class="chart-legend">
+        <div class="legend-item">
+          <div class="legend-color" style="background-color: #ef4444;"></div>
+          <span class="legend-label">Outbounded</span>
+        </div>
+        <div class="legend-item">
+          <div class="legend-color" style="background-color: #10b981;"></div>
+          <span class="legend-label">Inbounded</span>
+        </div>
+        <div class="legend-item">
+          <div class="legend-color" style="background-color: #3b82f6;"></div>
+          <span class="legend-label">Total items</span>
+        </div>
+      </div>
+    </p-card>
+
+    <!-- Recent Activities Card -->
+    <p-card class="dashboard-card">
+      <ng-template pTemplate="header">
+        <div class="card-header">
+          <h3>Recent Activities</h3>
+          <span class="activity-date">
+            {{ dashboardData.recentActivities.date | date:'dd.MM.yyyy' }} {{ dashboardData.recentActivities.day }}
+          </span>
+        </div>
+      </ng-template>
+      
+      <p-scrollPanel [style]="{'width': '100%', 'height': '200px'}">
+        <div class="activity-list">
+          <div class="activity-item" *ngFor="let activity of dashboardData.recentActivities.activities">
+            <div class="activity-content">
+              <div class="activity-item-name">{{ activity.itemName }}</div>
+              <div class="activity-item-id">{{ activity.itemId }}</div>
+              <div class="activity-action" [ngClass]="getActivityColor(activity.type)">
+                <i [class]="getActivityIcon(activity.type)"></i>
+                {{ activity.quantity }} unit {{ activity.action }}
+              </div>
+            </div>
+          </div>
+        </div>
+      </p-scrollPanel>
+    </p-card>
+  </div>
+
+  <!-- Items Table Section -->
+  <div class="items-section">
+    <p-tabView [(activeIndex)]="activeTabIndex">
+      <p-tabPanel header="Inbound Items">
+        <div class="table-container">
+          <!-- Filters -->
+          <div class="filters-section">
+            <div class="filter-group">
+              <label>Filter by:</label>
+              <p-dropdown 
+                [options]="dashboardData.filters.quantity" 
+                [(ngModel)]="selectedQuantityFilter"
+                placeholder="Quantity">
+              </p-dropdown>
+              <p-dropdown 
+                [options]="dashboardData.filters.pool" 
+                [(ngModel)]="selectedPoolFilter"
+                placeholder="Pool">
+              </p-dropdown>
+              <p-dropdown 
+                [options]="dashboardData.filters.stockType" 
+                [(ngModel)]="selectedStockTypeFilter"
+                placeholder="Stock Type">
+              </p-dropdown>
+              <p-button 
+                label="Clear Filters" 
+                icon="pi pi-times" 
+                severity="secondary" 
+                size="small"
+                (onClick)="clearFilters()">
+              </p-button>
+            </div>
+            
+            <div class="search-group">
+              <span class="p-input-icon-left">
+                <i class="pi pi-search"></i>
+                <input 
+                  pInputText 
+                  type="text" 
+                  [(ngModel)]="searchText"
+                  placeholder="Search" />
+              </span>
+            </div>
+          </div>
+
+          <!-- Table -->
+          <p-table 
+            [value]="getCurrentItems()" 
+            [paginator]="true" 
+            [rows]="10"
+            [showCurrentPageReport]="true"
+            currentPageReportTemplate="Showing {first} to {last} of {totalRecords} entries"
+            [rowsPerPageOptions]="[10, 25, 50]"
+            styleClass="p-datatable-sm">
+            
+            <ng-template pTemplate="header">
+              <tr>
+                <th style="width: 50px">
+                  <p-tableHeaderCheckbox></p-tableHeaderCheckbox>
+                </th>
+                <th pSortableColumn="partNumber">Part Number <p-sortIcon field="partNumber"></p-sortIcon></th>
+                <th pSortableColumn="name">Name <p-sortIcon field="name"></p-sortIcon></th>
+                <th pSortableColumn="quantity">Quantity <p-sortIcon field="quantity"></p-sortIcon></th>
+                <th pSortableColumn="location">Location <p-sortIcon field="location"></p-sortIcon></th>
+                <th pSortableColumn="stockType">Stock Type <p-sortIcon field="stockType"></p-sortIcon></th>
+                <th pSortableColumn="measures">Measures <p-sortIcon field="measures"></p-sortIcon></th>
+                <th pSortableColumn="scu">SCU <p-sortIcon field="scu"></p-sortIcon></th>
+              </tr>
+            </ng-template>
+            
+            <ng-template pTemplate="body" let-item>
+              <tr>
+                <td>
+                  <p-tableCheckbox [value]="item"></p-tableCheckbox>
+                </td>
+                <td>{{ item.partNumber }}</td>
+                <td>{{ item.name }}</td>
+                <td>
+                  <div class="quantity-cell">
+                    <span>{{ item.quantity }}</span>
+                    <p-tag 
+                      *ngIf="getStockStatusTag(item.quantity, item.maxQuantity) !== 'in_stock'"
+                      [value]="getStockStatusLabel(getStockStatusTag(item.quantity, item.maxQuantity))"
+                      [severity]="getStockStatusSeverity(getStockStatusTag(item.quantity, item.maxQuantity))"
+                      size="small">
+                    </p-tag>
+                    <p-tooltip 
+                      *ngIf="getStockStatusTag(item.quantity, item.maxQuantity) !== 'in_stock'"
+                      [value]="item.quantity + '/' + item.maxQuantity">
+                    </p-tooltip>
+                  </div>
+                </td>
+                <td>
+                  <a href="#" class="location-link">
+                    Pool: {{ item.location.pool }}, Shelf: {{ item.location.shelf }}
+                  </a>
+                </td>
+                <td>{{ item.stockType }}</td>
+                <td>{{ item.measures.weight }}, {{ item.measures.length }}</td>
+                <td>{{ item.scu }}</td>
+              </tr>
+            </ng-template>
+          </p-table>
+        </div>
+      </p-tabPanel>
+      
+      <p-tabPanel header="Outbound Items">
+        <div class="table-container">
+          <!-- Filters -->
+          <div class="filters-section">
+            <div class="filter-group">
+              <label>Filter by:</label>
+              <p-dropdown 
+                [options]="dashboardData.filters.quantity" 
+                [(ngModel)]="selectedQuantityFilter"
+                placeholder="Quantity">
+              </p-dropdown>
+              <p-dropdown 
+                [options]="dashboardData.filters.pool" 
+                [(ngModel)]="selectedPoolFilter"
+                placeholder="Pool">
+              </p-dropdown>
+              <p-dropdown 
+                [options]="dashboardData.filters.stockType" 
+                [(ngModel)]="selectedStockTypeFilter"
+                placeholder="Stock Type">
+              </p-dropdown>
+              <p-button 
+                label="Clear Filters" 
+                icon="pi pi-times" 
+                severity="secondary" 
+                size="small"
+                (onClick)="clearFilters()">
+              </p-button>
+            </div>
+            
+            <div class="search-group">
+              <span class="p-input-icon-left">
+                <i class="pi pi-search"></i>
+                <input 
+                  pInputText 
+                  type="text" 
+                  [(ngModel)]="searchText"
+                  placeholder="Search" />
+              </span>
+            </div>
+          </div>
+
+          <!-- Table -->
+          <p-table 
+            [value]="getCurrentItems()" 
+            [paginator]="true" 
+            [rows]="10"
+            [showCurrentPageReport]="true"
+            currentPageReportTemplate="Showing {first} to {last} of {totalRecords} entries"
+            [rowsPerPageOptions]="[10, 25, 50]"
+            styleClass="p-datatable-sm">
+            
+            <ng-template pTemplate="header">
+              <tr>
+                <th style="width: 50px">
+                  <p-tableHeaderCheckbox></p-tableHeaderCheckbox>
+                </th>
+                <th pSortableColumn="partNumber">Part Number <p-sortIcon field="partNumber"></p-sortIcon></th>
+                <th pSortableColumn="name">Name <p-sortIcon field="name"></p-sortIcon></th>
+                <th pSortableColumn="quantity">Quantity <p-sortIcon field="quantity"></p-sortIcon></th>
+                <th pSortableColumn="location">Location <p-sortIcon field="location"></p-sortIcon></th>
+                <th pSortableColumn="stockType">Stock Type <p-sortIcon field="stockType"></p-sortIcon></th>
+                <th pSortableColumn="measures">Measures <p-sortIcon field="measures"></p-sortIcon></th>
+                <th pSortableColumn="scu">SCU <p-sortIcon field="scu"></p-sortIcon></th>
+              </tr>
+            </ng-template>
+            
+            <ng-template pTemplate="body" let-item>
+              <tr>
+                <td>
+                  <p-tableCheckbox [value]="item"></p-tableCheckbox>
+                </td>
+                <td>{{ item.partNumber }}</td>
+                <td>{{ item.name }}</td>
+                <td>
+                  <div class="quantity-cell">
+                    <span>{{ item.quantity }}</span>
+                    <p-tag 
+                      *ngIf="getStockStatusTag(item.quantity, item.maxQuantity) !== 'in_stock'"
+                      [value]="getStockStatusLabel(getStockStatusTag(item.quantity, item.maxQuantity))"
+                      [severity]="getStockStatusSeverity(getStockStatusTag(item.quantity, item.maxQuantity))"
+                      size="small">
+                    </p-tag>
+                    <p-tooltip 
+                      *ngIf="getStockStatusTag(item.quantity, item.maxQuantity) !== 'in_stock'"
+                      [value]="item.quantity + '/' + item.maxQuantity">
+                    </p-tooltip>
+                  </div>
+                </td>
+                <td>
+                  <a href="#" class="location-link">
+                    Pool: {{ item.location.pool }}, Shelf: {{ item.location.shelf }}
+                  </a>
+                </td>
+                <td>{{ item.stockType }}</td>
+                <td>{{ item.measures.weight }}, {{ item.measures.length }}</td>
+                <td>{{ item.scu }}</td>
+              </tr>
+            </ng-template>
+          </p-table>
+        </div>
+      </p-tabPanel>
+    </p-tabView>
+  </div>
+</div>
+
+<!-- Loading State -->
+<div class="loading-container" *ngIf="loading">
+  <p-progressSpinner></p-progressSpinner>
+  <p>Cargando datos del almacén...</p>
+</div>

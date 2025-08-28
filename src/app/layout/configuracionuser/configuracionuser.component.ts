@@ -126,15 +126,6 @@ export class ConfiguracionuserComponent implements OnInit {
     return newPassword === confirmPassword ? null : { mismatch: true };
   }
 
-  fileChangeEvent(event: any): void {
-    this.imageChangedEvent = event;
-    this.display = true;
-  }
-
-  imageCropped(event: ImageCroppedEvent) {
-    this.croppedImage = event.blob;
-  }
-
   acceptCrop(): void {
     this.resizeImage(this.croppedImage).then(resizedImage => {
       this.avatar = resizedImage as string;
@@ -154,38 +145,56 @@ export class ConfiguracionuserComponent implements OnInit {
     }
   }
 
+  fileChangeEvent(event: any): void {  
+    //console.log(event);     
+    this.imageChangedEvent = event;
+    this.display = true; // Muestra el popup al seleccionar una imagen  
+  }
+
+  imageCropped(event: ImageCroppedEvent): void {
+    this.croppedImage = event.blob;        
+  }
+  
+  loadImageFailed(): void {
+    this.avatar = '';
+    this.inputAvatar.nativeElement.value = '';
+    this.croppedImage = '';
+  }
+  
   resizeImage(file: File): Promise<string | ArrayBuffer | null> {
-    return new Promise((resolve, reject) => {
-      const reader = new FileReader();
-      reader.onload = (e: any) => {
-        const img = new Image();
-        img.src = e.target.result;
-
-        img.onload = () => {
-          const canvas = document.createElement('canvas');
-          const ctx = canvas.getContext('2d');
-          canvas.width = 150;
-          canvas.height = 150;
-          ctx?.drawImage(img, 0, 0, canvas.width, canvas.height);
-          const resizedImage = canvas.toDataURL('image/jpeg');
-          resolve(resizedImage);
+      return new Promise((resolve, reject) => {
+        const reader = new FileReader();
+        reader.onload = (e: any) => {
+          const img = new Image();
+          img.src = e.target.result;
+  
+          img.onload = () => {
+            const canvas = document.createElement('canvas');
+            const ctx = canvas.getContext('2d');
+            // Ajusta el tamaño deseado, por ejemplo, 800x600
+            canvas.width  = 150;
+            canvas.height = 150;
+            // Dibuja la imagen en el lienzo
+            ctx?.drawImage(img, 0, 0, canvas.width, canvas.height);
+            // Convierte el lienzo a base64
+            const resizedImage = canvas.toDataURL('image/jpeg');
+            resolve(resizedImage);
+          };
+  
+          img.onerror = (error) => {
+            reject(error);
+          };
         };
-
-        img.onerror = (error) => {
-          reject(error);
-        };
-      };
-
-      reader.readAsDataURL(file);
-    });
+  
+        reader.readAsDataURL(file);
+      });
+    
   }
 
   onSubmit() {
     if (this.configForm.valid && !this.loading) {
       this.loading = true;
-      const formData = this.configForm.value;
-      
-      
+      const formData = this.configForm.value;    
       let usuariox : any = {        
           'empName'         : formData.nombre,
           'empApe'          : formData.apellido,         
@@ -196,6 +205,7 @@ export class ConfiguracionuserComponent implements OnInit {
           'newPassword'     : formData.newPassword
       } 
      
+      console.log(usuariox);
       this.store.dispatch(incrementarRequest({request:1}));
       this.store.dispatch(upconfiguserRequest({usuario:usuariox}));
      

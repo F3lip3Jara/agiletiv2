@@ -9,6 +9,8 @@ import { selectMensaje } from 'src/app/erp/dashboard/component/state/selectors/m
 import { selectIndicador } from 'src/app/erp/dashboard/component/state/selectors/indicador.selectors';
 import { getIndicadorRequest } from 'src/app/erp/dashboard/component/state/actions/indicador.actions';
 import { incrementarRequest } from 'src/app/erp/dashboard/component/state/actions/estado.actions';
+import { WeatherService, WeatherData } from './weather.service';
+import { IndicatorsComponent } from './indicators.component';
 @Component({
     selector: 'app-config',
     templateUrl: './app.config.component.html',
@@ -35,6 +37,9 @@ export class AppConfigComponent {
     surface: number = 1;
     surfaces: number[] = [1, 2, 3, 4];
     isMobile:boolean = window.innerWidth <= 768;
+    isRefreshing: boolean = false;
+    weatherData: WeatherData | null = null;
+    weatherError: boolean = false;
       
 
     @Input() minimal: boolean = false;
@@ -107,6 +112,7 @@ export class AppConfigComponent {
     }
 
     private readonly STORAGE_KEY_PREFIX = 'app_config_';
+    private readonly INDICATORS_STORAGE_KEY = 'indicadores_economicos';
 
     constructor(
         public layoutService: LayoutService,
@@ -114,7 +120,8 @@ export class AppConfigComponent {
         private router: Router, 
         private UserService: UsersService,
        // private rest: RestService,
-        private store: Store
+        private store: Store,
+        private weatherService: WeatherService
     ) {}
 
     ngOnInit() {
@@ -132,24 +139,36 @@ export class AppConfigComponent {
         this.token = this.UserService.getToken();
         // Cargar configuración guardada
         this.loadSavedConfig();
-     //   this.store.dispatch(getIndicadorRequest());
+        
+        // Cargar indicadores económicos
+        this.loadIndicatorsFromStorage();
+        
+        // Cargar datos del clima
+        this.loadWeatherData();
+        
         this.store.select(selectIndicador).subscribe((indicador : any) => {  
-               if(indicador.length > 0 ){
-            this.indicadoresEconomicos.dolares = indicador.map((indicador: any) => {
-                const tendencia = indicador.valor_actual.valor > indicador.valor_anterior.valor ? 'up' : 'down';
-                return {
-                    label: indicador.codigo,
-                    valor: indicador.valor_actual.valor,
-                    icono: 'pi pi-dollar',
-                    tendencia: tendencia,
-                    fecha: indicador.valor_actual.fecha,
-                    valorAnterior: indicador.valor_anterior.valor,
-                    fechaAnterior: indicador.valor_anterior.fecha
-                };
-            });
-            }else{
-                this.store.dispatch(incrementarRequest({ request: 1 }));
-                this.store.dispatch(getIndicadorRequest());
+            if(indicador.length > 0 ){
+                this.indicadoresEconomicos.dolares = indicador.map((indicador: any) => {
+                    const tendencia = indicador.valor_actual.valor > indicador.valor_anterior.valor ? 'up' : 'down';
+                    return {
+                        label: indicador.codigo,
+                        valor: indicador.valor_actual.valor,
+                        icono: 'pi pi-dollar',
+                        tendencia: tendencia,
+                        fecha: indicador.valor_actual.fecha,
+                        valorAnterior: indicador.valor_anterior.valor,
+                        fechaAnterior: indicador.valor_anterior.fecha
+                    };
+                });
+                
+                // Guardar en localStorage
+                this.saveIndicatorsToStorage(this.indicadoresEconomicos.dolares);
+            } else {
+                // Solo hacer request si no hay datos en localStorage para hoy
+                if (!this.hasIndicatorsForToday()) {
+                    this.store.dispatch(incrementarRequest({ request: 1 }));
+                    this.store.dispatch(getIndicadorRequest());
+                }
             }
         });
     
@@ -392,4 +411,146 @@ export class AppConfigComponent {
         
 
     }
+
+
+
+    // Método para refrescar indicadores
+    refreshIndicators() {
+        this.isRefreshing = true;
+        
+        // Limpiar localStorage para forzar nueva carga
+        this.clearIndicatorsStorage();
+        
+        // Hacer request para obtener datos frescos
+        this.store.dispatch(incrementarRequest({ request: 1 }));
+        this.store.dispatch(getIndicadorRequest());
+        
+        // Simular tiempo de carga
+        setTimeout(() => {
+            this.isRefreshing = false;
+        }, 2000);
+    }
+
+    // Método para agregar evento al calendario (maqueta)
+    addEvent() {
+        // Aquí se implementaría la lógica para agregar eventos
+        console.log('Agregar evento al calendario');
+        // Se podría abrir un modal o navegar a una página de eventos
+    }
+
+    // Método para ver calendario completo (maqueta)
+    viewFullCalendar() {
+        // Aquí se implementaría la lógica para ver el calendario completo
+       // console.log('Ver calendario completo');
+        // Se podría navegar a una página dedicada al calendario
+    }
+
+    // Métodos para manejar localStorage de indicadores económicos
+    private loadIndicatorsFromStorage() {
+        try {
+            const storedData = localStorage.getItem(this.INDICATORS_STORAGE_KEY);
+            if (storedData) {
+                const data = JSON.parse(storedData);
+                const today = new Date().toDateString();
+                
+                // Verificar si los datos son de hoy
+                if (data.fecha === today && data.indicadores && data.indicadores.length > 0) {
+                    this.indicadoresEconomicos.dolares = data.indicadores;
+               //     console.log('Indicadores cargados desde localStorage');
+                    return;
+                }
+            }
+        } catch (error) {
+            console.error('Error al cargar indicadores desde localStorage:', error);
+        }
+        
+        // Si no hay datos válidos en localStorage, hacer request
+        this.store.dispatch(incrementarRequest({ request: 1 }));
+        this.store.dispatch(getIndicadorRequest());
+    }
+
+    private saveIndicatorsToStorage(indicadores: any[]) {
+        try {
+            const data = {
+                fecha: new Date().toDateString(),
+                indicadores: indicadores,
+                timestamp: new Date().getTime()
+            };
+            localStorage.setItem(this.INDICATORS_STORAGE_KEY, JSON.stringify(data));
+           // console.log('Indicadores guardados en localStorage');
+        } catch (error) {
+            console.error('Error al guardar indicadores en localStorage:', error);
+        }
+    }
+
+    private hasIndicatorsForToday(): boolean {
+        try {
+            const storedData = localStorage.getItem(this.INDICATORS_STORAGE_KEY);
+            if (storedData) {
+                const data = JSON.parse(storedData);
+                const today = new Date().toDateString();
+                return data.fecha === today && data.indicadores && data.indicadores.length > 0;
+            }
+        } catch (error) {
+            console.error('Error al verificar indicadores en localStorage:', error);
+        }
+        return false;
+    }
+
+    // Método para limpiar localStorage de indicadores (útil para testing)
+    clearIndicatorsStorage() {
+        localStorage.removeItem(this.INDICATORS_STORAGE_KEY);
+       // console.log('Indicadores eliminados del localStorage');
+    }
+
+    // Métodos para manejar el clima
+    private loadWeatherData() {
+        // Primero intentar cargar desde localStorage
+        const storedWeather = this.weatherService.loadWeatherFromStorage();
+        if (storedWeather) {
+            this.weatherData = storedWeather;
+            this.weatherError = false;
+           // console.log('Clima cargado desde localStorage');
+            return;
+        }
+
+        // Si no hay datos en localStorage, hacer request a la API
+        this.weatherService.getWeatherData().subscribe({
+            next: (weatherData) => {
+                this.weatherData = weatherData;
+                this.weatherError = false;
+                this.weatherService.saveWeatherToStorage(weatherData);
+               //  console.log('Clima obtenido de la API');
+            },
+            error: (error) => {
+                this.weatherError = true;
+               // console.error('Error obteniendo datos del clima:', error);
+            }
+        });
+    }
+
+
+
+
+
+    // Método para refrescar datos del clima
+    refreshWeather() {
+        this.weatherService.clearWeatherStorage();
+        this.loadWeatherData();
+    }
+
+    // Método para probar que la API no sea interceptada
+    testWeatherInterceptor() {
+     //   console.log('Probando exclusión del interceptor para OpenWeatherMap...');
+        this.weatherService.testWeatherAPI().subscribe({
+            next: (response) => {
+                console.log('✅ Éxito: La URL no fue interceptada', response);
+            },
+            error: (error) => {
+                console.error('❌ Error en la prueba:', error);
+            }
+        });
+    }
+
+
 }

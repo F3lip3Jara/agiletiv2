@@ -22,8 +22,8 @@ export class InterceptorsErrorService implements HttpInterceptor  {
 private servidor: string = 'http://127.0.0.1:8000/';
 //private servidor: string = 'https://app.back.qa.agileti.cl/';
 private excludedUrl  : any [] = [
-  
-
+  'https://api.openweathermap.org/',
+  'https://api.openweathermap.org/data/2.5/weather'
 ]; 
 private excludedLoad : any [] = [
   'regPai',
@@ -39,18 +39,26 @@ constructor(   private router : Router, private store: Store ) {
 
   intercept(req: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
    let count = 0;   
+   let shouldExclude = false;
+
+   // Verificar si la URL debe ser excluida
+   this.excludedUrl.forEach((element : any) => { 
+    if (req.url.includes(element)) {
+       shouldExclude = true;
+    }
+   });
 
    this.excludedLoad.forEach((element : any) => { 
-  
     if (req.url === element) {
-  
        count ++;
     }
    });
 
-
-    const cloneReq = req.clone({ url: this.servidor + req.url });
-    return next.handle(cloneReq).pipe(
+   // Si la URL debe ser excluida, no agregar el servidor
+   const finalUrl = shouldExclude ? req.url : this.servidor + req.url;
+   const cloneReq = req.clone({ url: finalUrl });
+   
+   return next.handle(cloneReq).pipe(
       tap(event => {
         this.handleHttpEvent(event , count);
         let altura = document.getElementsByTagName('body')[0].offsetHeight + 70;

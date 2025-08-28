@@ -44,14 +44,14 @@ export class StockCajaComponent {
   previewImageLoaded: boolean                  = false;
   actionItems: MenuItem[]                      = [];
   selectedRow: any                             = null;
-  
+  colums: any[] = [];
+ COMPONENT_SELECTOR = 'app-stock-caja';
 
      // Propiedades para el diálogo de búsqueda
  showSearchDialog: boolean = false;
  dt!: Table;
  sidebarVisible = false;
- colums: any[] = [];
- COMPONENT_SELECTOR = 'app-stock-caja';
+ 
   
 constructor(
   private router: Router,

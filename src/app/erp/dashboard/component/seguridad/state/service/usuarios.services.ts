@@ -41,7 +41,9 @@ export class UsuariosService {
   }
 
   updateUsuario(usuario: any): Observable<any> {  
-    let xuser = {'user':btoa(JSON.stringify(usuario))};
+    const json = JSON.stringify(usuario);
+    const base64 = btoa(unescape(encodeURIComponent(json)));
+    let xuser = {'user':base64};
     return this.rest.post('upUsuario', this.token, xuser).pipe(
       map(
         (data: any) => data // Se devuelve el resultado de la llamada a la API
@@ -49,8 +51,7 @@ export class UsuariosService {
     );
   }
 
-  dataUsuario(usuario: any): Observable<any> { 
-    
+  dataUsuario(usuario: any): Observable<any> {     
     let id = usuario.id;
     this.parametros = [{key : 'userid', value:id}];
     return this.rest.get('getUsuarios', this.token, this.parametros).pipe(
@@ -63,7 +64,11 @@ export class UsuariosService {
   desactivarUsuario(usuario: any): Observable<any> { 
     let user          = {usrid : usuario.id , name:usuario.name };
     let activado      = usuario.activado;
-    let xuser         = {'user':btoa(JSON.stringify(user))};
+    const json = JSON.stringify(user);
+    const base64 = btoa(unescape(encodeURIComponent(json)));
+    let xuser = {'user':base64};
+    
+
     if(activado == 'ACTIVADO'){
     return this.rest.post('deshabilitar', this.token, xuser).pipe(
       map(
@@ -81,7 +86,9 @@ export class UsuariosService {
 
 reiniciarUsuario(usuario: any): Observable<any> { 
   let user = {usrid : usuario.id , name:usuario.name };
-  let xuser = {'user':btoa(JSON.stringify(user))};
+  const json = JSON.stringify(user);
+  const base64 = btoa(unescape(encodeURIComponent(json)));
+  let xuser = {'user':base64};
   return this.rest.post('reiniciar', this.token, xuser).pipe(
     map(
       (data: any) => data // Se devuelve el resultado de la llamada a la API
@@ -90,7 +97,9 @@ reiniciarUsuario(usuario: any): Observable<any> {
 }
 
 upconfiguser(usuario: any): Observable<any> {
-  let xuser = {'user':btoa(JSON.stringify(usuario))};
+  const json = JSON.stringify(usuario);
+  const base64 = btoa(unescape(encodeURIComponent(json)));
+  let xuser = {'user':base64};
   return this.rest.post('upUsuario2', this.token, xuser).pipe(
     map(
       (data: any) => data // Se devuelve el resultado de la llamada a la API

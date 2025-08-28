@@ -24,10 +24,9 @@
                             <input id="accion-input" 
                                    type="text" 
                                    pInputText 
-                                   formControlName="secCod"
-                                   oninput="this.value = this.value.toUpperCase()"
-                                   [ngClass]="(up.controls['secCod'].hasError('required'))
-                                   ? 'was-validated' : 'is-valid'">
+                                   value="{{this.sector.code}}"
+                                   disabled
+                                   >
                             <label for="accion-input">Código</label>
                         </span>
                         <div *ngIf="up.controls['secCod'].hasError('required')">

@@ -16,7 +16,6 @@
                     <button pButton pRipple label="Exportar" icon="pi pi-download" class="p-button-outlined p-button-sm" (click)="exportCSV()"></button>
                 </div>
             </div>
-
                  <!-- Componente de búsqueda -->
                  <app-search-dialog 
                  [(visible)]="showSearchDialog"
@@ -39,26 +38,25 @@
                         [globalFilterFields]="globalFilterFields">
                     
                     <ng-template pTemplate="header">
-                        <tr>
-                            <th style="width: 25%">Sector/Ubicación</th>
-                            <th style="width: 15%">Código</th>
-                            <th style="width: 10%">Activo</th>
-                            <th style="width: 10%">Alto (cm)</th>
-                            <th style="width: 10%">Ancho (cm)</th>
-                            <th style="width: 10%">Largo (cm)</th>
-                            <th style="width: 10%">Volumen (cm³)</th>
-                            <th style="width: 10%" class="text-center">Acciones</th>
+                        <tr>                       
+                            <th >Código</th>
+                            <th >Activo</th>
+                            <th >Alto (cm)</th>
+                            <th >Ancho (cm)</th>
+                            <th >Largo (cm)</th>
+                            <th >Volumen (cm³)</th>
+                            <th class="text-center">Acciones</th>
                         </tr>
                     </ng-template>
                     
                     <ng-template pTemplate="body" let-rowNode let-rowData="rowData">
-                        <tr [ngClass]="{'selected-row': selectedRow?.id === rowData.id}">
+                        <tr >
                             <td>
                                 <p-treeTableToggler [rowNode]="rowNode"></p-treeTableToggler>
-                                <span class="font-medium">{{rowData.name}}</span>
+                                <span class="font-medium">{{rowData.code}}</span>
                                 <span *ngIf="rowData.type === 'ubicacion'" class="text-sm text-gray-500 ml-2">(Ubicación)</span>
                             </td>
-                            <td>{{rowData.code}}</td>
+                         
                             <td>
                                 <span *ngIf="rowData.active === 1" class="font-medium text-green-500">Activo</span>
                                 <span *ngIf="rowData.active === 0" class="font-medium text-red-500">Inactivo</span>
@@ -69,11 +67,33 @@
                             <td>{{rowData.volume || '-'}}</td>
                             <td>
                                 <div class="actions-column">
-                                    <p-splitButton 
-                                        [model]="getActionItems(rowData)"
-                                        styleClass="p-button-text p-button-secondary"
-                                        appendTo="body">
-                                    </p-splitButton>
+                                    <!-- Menú de acciones para sectores -->
+                                    <div *ngIf="rowData.type === 'sector'">
+                                        <!-- Botón de prueba temporal -->                                      
+                                        <div class="actions-column" (click)="onActionClick(rowData)">
+                                            <p-splitButton 
+                                                [model]="actionItems"
+                                                styleClass="p-button-text p-button-secondary"
+                                                appendTo="body">
+                                            </p-splitButton>
+                                        </div>                                       
+                                    </div>
+                                    
+                                    <!-- Botones de acción para ubicaciones -->
+                                    <div *ngIf="rowData.type === 'ubicacion'">
+                                        <button pButton pRipple 
+                                            icon="pi pi-pencil" 
+                                            class="p-button-rounded p-button-text p-button-primary p-button-sm"
+                                            (click)="editUbicacion(rowData)"
+                                            pTooltip="Editar Ubicación">
+                                        </button>
+                                        <button pButton pRipple 
+                                            icon="pi pi-trash" 
+                                            class="p-button-rounded p-button-text p-button-danger p-button-sm"
+                                            (click)="delUbicacion(rowData)"
+                                            pTooltip="Eliminar Ubicación">
+                                        </button>
+                                    </div>
                                 </div>
                             </td>
                         </tr>
@@ -106,6 +126,15 @@
 <!-- Diálogo de Importación de Ubicaciones -->
 <p-dialog header="Importar Ubicaciones por Excel" [(visible)]="importDialogVisible" [style]="{width: '60vw'}" [modal]="true">
     <div class="p-fluid">
+        <div class="format-download-section">
+           
+            <button pButton pRipple 
+                label="Descargar Formato" 
+                icon="pi pi-download" 
+                class="p-button-outlined p-button-success p-button-sm format-download-button"
+                (click)="downloadFormat()">
+            </button>
+        </div>
         <div class="p-field">
             <p-fileUpload #fileUpload 
                 name="file" 
@@ -133,6 +162,7 @@
                     </ng-template>
                 </ng-template>
             </p-fileUpload>
+           
         </div>
         
         <div class="p-mt-3">
@@ -165,7 +195,7 @@
                         </thead>
                         <tbody>
                             <tr>
-                                <td>Sector A</td>
+                                <td>SEC01</td>
                                 <td>U001</td>
                                 <td>1</td>
                                 <td>1000</td>
@@ -174,7 +204,7 @@
                                 <td>10</td>
                             </tr>
                             <tr>
-                                <td>Sector A</td>
+                                <td>SEC02</td>
                                 <td>U002</td>
                                 <td>1</td>
                                 <td>2000</td>

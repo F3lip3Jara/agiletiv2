@@ -756,9 +756,9 @@ export class AppMenuComponent implements OnInit, OnDestroy {
             this.nombre_completo = user.empNom + ' ' + user.empApe || '';
             this.rol = user.rol || '';
 
-            console.log('img', this.img);
-            console.log('img.length', this.img.length);
-            console.log('nombreLetra', this.nombreLetra);
+            //console.log('img', this.img);
+            //console.log('img.length', this.img.length);
+            //console.log('nombreLetra', this.nombreLetra);
         }
     }
 

@@ -1,0 +1,51 @@
+<div class="modern-card surface-card p-3 border-round-xl shadow-3 indicators-container-compact">
+    <p-progressBar mode="indeterminate" *ngIf="!indicadoresEconomicos.dolares.length"></p-progressBar>
+    
+    <div class="indicators-grid-compact" *ngIf="indicadoresEconomicos.dolares.length">
+        <div class="indicator-card-compact" 
+             [ngClass]="getIndicatorClass(indicador.label)"
+             *ngFor="let indicador of indicadoresEconomicos.dolares; trackBy: trackByIndicator">
+            <div class="indicator-header-compact">
+                <div class="indicator-icon-compact">
+                    <i [class]="indicador.icono"></i>
+                </div>
+                <div class="indicator-trend-compact" [ngClass]="'trend-' + indicador.tendencia">
+                    <i [class]="'pi pi-arrow-' + indicador.tendencia"></i>
+                </div>
+            </div>
+            <div class="indicator-content-compact">
+                <span class="indicator-label-compact">{{indicador.label}}</span>
+                <span class="indicator-value-compact">{{formatCurrency(indicador.valor)}}</span>
+                <span class="indicator-change-compact" [ngClass]="'change-' + indicador.tendencia">
+                    {{getChangePercentage(indicador)}}%
+                </span>
+            </div>
+        </div>
+        
+        <!-- Widget de Clima -->
+        <div class="weather-widget-compact p-2" *ngIf="weatherData && !weatherError">
+            <div class="flex align-items-center justify-content-between mb-1">
+                <h4 class="text-sm font-semibold m-0">Clima</h4>
+                <i class="pi pi-map-marker text-primary"></i>
+            </div>
+            <div class="weather-content-compact">
+                <div class="flex align-items-center justify-content-between">
+                    <div class="weather-info-compact">
+                        <div class="temperature-compact">{{weatherData.temperature}}°C</div>
+                        <div class="location-compact">{{weatherData.location}}</div>
+                        <div class="description-compact">{{weatherData.description}}</div>
+                    </div>
+                    <div class="weather-icon-compact">
+                        <i [class]="getWeatherIcon(weatherData.icon)" class="text-xl"></i>
+                    </div>
+                </div>
+                <div class="weather-details-compact mt-1">
+                    <div class="flex justify-content-between text-xs">
+                        <span>Humedad: {{weatherData.humidity}}%</span>
+                        <span>Viento: {{weatherData.windSpeed}} km/h</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div> 

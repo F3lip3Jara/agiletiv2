@@ -34,18 +34,17 @@ import { PickListModule } from 'primeng/picklist';
 import { ScrollPanelModule } from 'primeng/scrollpanel';
 import { ProgressSpinnerModule } from 'primeng/progressspinner';
 import { NgSelectModule } from '@ng-select/ng-select';
-import { WmsRoutingModule } from './wms-routing.module';
 import { TimelineModule } from 'primeng/timeline';
 import { SkeletonModule } from 'primeng/skeleton';
 import { FilterSidebarComponent } from '../generales/filter-sidebar/filter-sidebar.component';
 import { StockComponent } from './stock/stock.component';
 import { SearchDialogComponent } from '../generales/search-dialog/search-dialog.component';
 import { StockCajaComponent } from './stock-caja/stock-caja.component';
+import { WmsRoutingModule } from './wms-routing.module';
   @NgModule({
   declarations: [
     StockComponent,
     StockCajaComponent
-
   ],
   imports: [
     WmsRoutingModule,
@@ -89,7 +88,8 @@ import { StockCajaComponent } from './stock-caja/stock-caja.component';
     TimelineModule,
     SkeletonModule,
     FilterSidebarComponent,
-    SearchDialogComponent
+    SearchDialogComponent,
+   
   ]
 })
 export class WmsModule { }

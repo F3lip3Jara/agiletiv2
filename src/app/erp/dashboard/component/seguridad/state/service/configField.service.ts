@@ -28,7 +28,6 @@ export class ConfigFieldServices {
 
   updateConfigFieldFromExcel(data: any[]): Observable<any> {
 
-    console.log(data);
     return this.rest.post('updateConfigField', this.token, data).pipe(
       map((response: any) => response)
     );

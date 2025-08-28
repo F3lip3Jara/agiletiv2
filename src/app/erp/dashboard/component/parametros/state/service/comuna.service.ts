@@ -37,6 +37,14 @@ export class ComunaServices {
       map((data: any) => data)
     );
   }
+
+  aplicarFiltros(filtros: any[]): Observable<any> {
+    this.parametros = [{key: 'filter', value: btoa(JSON.stringify(filtros))}]
+    return this.rest.get('trabComuna', this.token, this.parametros).pipe(
+      map((data: any) => data)
+    );
+  }
+
 /*
   createComuna(comuna: any): Observable<any> {
     let comuna = {

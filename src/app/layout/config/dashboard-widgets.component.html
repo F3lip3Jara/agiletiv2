@@ -1,0 +1,109 @@
+<div class="dashboard-widgets-container">
+  <!-- Widget de Reloj Digital (Top Left) -->
+  <div class="widget clock-widget" [class.top-left]="true">
+    <div class="digital-clock">
+      <div class="time-display">{{getCurrentTimeString()}}</div>
+    </div>
+  </div>
+
+  <!-- Widget del Clima (Top Right) -->
+  <div class="widget weather-widget" [class.top-right]="true" *ngIf="weatherData && !weatherError">
+    <div class="weather-header">
+      <div class="location">
+        <i class="pi pi-map-marker"></i>
+        <span>{{weatherData.location}}</span>
+      </div>
+    </div>
+    <div class="weather-main">
+      <div class="temperature">{{weatherData.temperature}}°</div>
+      <div class="weather-icon">
+        <i [class]="getWeatherIcon(weatherData.icon)"></i>
+      </div>
+    </div>
+    <div class="weather-details">
+      <div class="detail-item">
+        <span>💨 Viento: {{weatherData.windSpeed || 0}} km/h</span>
+      </div>
+      <div class="detail-item">
+        <span>💧 Humedad: {{weatherData.humidity || 0}}%</span>
+      </div>
+      <div class="detail-item">
+        <span>🌡️ Temp: {{weatherData.tempMin || weatherData.temperature}}°C - {{weatherData.tempMax || weatherData.temperature}}°C</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- Widget de Calendario (Bottom) -->
+  <div class="widget calendar-widget" [class.bottom]="true">
+    <div class="calendar-container">
+      <!-- Columna izquierda - Fecha prominente -->
+      <div class="calendar-date-display">
+        <div class="month-name">{{getCurrentMonthShort()}}</div>
+        <div class="day-number">{{getCurrentDayNumber()}}</div>
+      </div>
+      
+      <!-- Columna derecha - Calendario completo -->
+      <div class="calendar-full">
+        <div class="calendar-header">
+          <h3>{{getCurrentMonthLong()}}</h3>
+        </div>
+        <div class="calendar-grid">
+          <div class="calendar-days">
+            <span>Lun</span>
+            <span>Mar</span>
+            <span>Mié</span>
+            <span>Jue</span>
+            <span>Vie</span>
+            <span>Sáb</span>
+            <span>Dom</span>
+          </div>
+          <div class="calendar-dates">
+            <!-- Fechas del calendario -->
+            <span *ngFor="let day of getCalendarDays()" 
+                  [class.current-day]="day === getCurrentDayNumber()"
+                  [class.other-month]="day === 0">
+              {{day === 0 ? '' : day}}
+            </span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Widget de Indicadores Económicos -->
+  <div class="widget indicators-widget" [class.bottom]="true">
+    <div class="indicators-header">
+      <h3>Indicadores Económicos</h3>
+      <button pButton icon="pi pi-refresh" 
+              class="p-button-text p-button-rounded"
+              [disabled]="isRefreshing"
+              (click)="onRefreshIndicators()"
+              pTooltip="Actualizar indicadores">
+      </button>
+    </div>
+    
+    <div class="indicators-list" *ngIf="indicadoresEconomicos.dolares.length">
+      <div class="indicator-item" 
+           *ngFor="let indicador of indicadoresEconomicos.dolares; trackBy: trackByIndicator">
+        <div class="indicator-info">
+          <div class="indicator-title">{{indicador.label}}</div>
+          <div class="indicator-subtitle">{{getIndicatorSubtitle(indicador.label)}}</div>
+        </div>
+        <div class="indicator-graph">
+          <div class="trend-line" [ngClass]="'trend-' + (getVariationPercentage(indicador) >= 0 ? 'up' : 'down')"></div>
+        </div>
+        <div class="indicator-values">
+          <div class="indicator-current">{{formatSimpleCurrency(indicador.valor)}}</div>
+          <div class="indicator-change" [ngClass]="'change-' + (getVariationPercentage(indicador) >= 0 ? 'up' : 'down')">
+            {{getVariationPercentage(indicador) >= 0 ? '+' : ''}}{{getVariationPercentage(indicador).toFixed(2)}}%
+          </div>
+        </div>
+      </div>
+    </div>
+    
+    <div class="loading-indicators" *ngIf="!indicadoresEconomicos.dolares.length">
+      <p-progressBar mode="indeterminate"></p-progressBar>
+      <span>Cargando indicadores...</span>
+    </div>
+  </div>
+</div> 

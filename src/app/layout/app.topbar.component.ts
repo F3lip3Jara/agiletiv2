@@ -381,7 +381,7 @@ export class AppTopBarComponent {
     handleKeyboardEvent(event: KeyboardEvent) {
         // Ctrl/Cmd + K para abrir la búsqueda
         if ((event.ctrlKey || event.metaKey) && event.key === 'k') {
-            console.log(event.key);
+            //console.log(event.key);
             this.hideSearch();
 
             if (this.appLoading === false) {
@@ -509,7 +509,7 @@ export class AppTopBarComponent {
 
     avatarConfig(user: any){       
         if (user) {
-            console.log(user);
+       //     console.log(user);
             this.nombreUsr = user.empNom || '';
             this.img = user.img || '';
             this.empresaLetra = user.empresa ? user.empresa.substring(0,1) : '';

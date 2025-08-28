@@ -1,6 +1,7 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
+import { HttpClientModule } from '@angular/common/http';
 import { SidebarModule } from 'primeng/sidebar';
 import { RadioButtonModule } from 'primeng/radiobutton';
 import { ButtonModule } from 'primeng/button';
@@ -13,10 +14,13 @@ import { MessagesModule } from 'primeng/messages';
 import { CalendarModule } from 'primeng/calendar';
 import { SelectButtonModule } from 'primeng/selectbutton';
 import { ProgressBarModule } from 'primeng/progressbar';
+import { IndicatorsComponent } from './indicators.component';
+import { DashboardWidgetsComponent } from './dashboard-widgets.component';
 @NgModule({
     imports: [
         CommonModule,
         FormsModule,
+        HttpClientModule,
         SidebarModule,
         RadioButtonModule,
         ButtonModule,
@@ -27,10 +31,12 @@ import { ProgressBarModule } from 'primeng/progressbar';
         MessagesModule,
         CalendarModule,
         SelectButtonModule,
-        ProgressBarModule
+        ProgressBarModule,
     ],
     declarations: [
-        AppConfigComponent
+        AppConfigComponent,
+        IndicatorsComponent,
+        DashboardWidgetsComponent
     ],
     exports: [
         AppConfigComponent

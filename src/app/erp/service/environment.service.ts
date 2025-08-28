@@ -12,4 +12,5 @@ export class Environment {
     public disableStats= 'false';
     public keygoogle   = "https://maps.googleapis.com/maps/api/js?key=AIzaSyB265kXv00WBlRn2TXYgbndEnImq0Hg8Vk&v=beta&libraries=places,marker&solution_channel=GMP_QB_addressselection_v2_cABC";
     public keygoogleMap= 'AIzaSyB265kXv00WBlRn2TXYgbndEnImq0Hg8Vk';
+    public openWeatherApiKey = '2abf599748fd1589df62d4453dd538aa';
 } 

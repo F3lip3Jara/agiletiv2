@@ -27,6 +27,7 @@ export class UpSectorComponent {
   almacen: any;
   datos : any;
   sector : any;
+  valCod : boolean = false;
   constructor(private store: Store<AppState>,
               private router: Router,
               private fb: FormBuilder,
@@ -46,8 +47,14 @@ export class UpSectorComponent {
       this.datos = almacen;
       this.almacen = almacen.almacen;
       this.sector = almacen.sector;
-      this.up.patchValue(this.sector);
-    }); 
+      this.up.patchValue({
+        secDes: this.sector.name,
+        secCod: this.sector.code,
+        sectorId: this.sector.id
+      });
+    });
+    
+    
   }
 
   public guardar(){
@@ -79,5 +86,6 @@ export class UpSectorComponent {
    let almacen = btoa(JSON.stringify(this.datos));
     this.router.navigate(['/desk/parametros/centro/almacen/sector/' + almacen]);
   }
+  
 }
 

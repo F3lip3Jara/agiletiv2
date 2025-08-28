@@ -1,17 +1,10 @@
-<p-sidebar [(visible)]="visible" position="right" [transitionOptions]="'.3s cubic-bezier(0, 0, 0.2, 1)'" [style]="{'width': '500px', 'overflow-y': 'hidden'}" styleClass="modern-sidebar" >
+<p-sidebar [(visible)]="visible" position="right" [transitionOptions]="'.3s cubic-bezier(0, 0, 0.2, 1)'" [style]="{'width': '500px', 'overflow-y': 'hidden'}" styleClass="modern-sidebar">
     <div class="profile-sidebar h-full">
-        <!-- Información del perfil con animación -->
+        <!-- Información del perfil -->
         <div class="flex flex-row align-items-center p-3 animate-fade-in">     
            <div class="avatar-container hover-effect">
-            <p-avatar *ngIf="!img || img.length === 0"
-                      [label]="label"
-                      size="xlarge"
-                      shape="circle"
-                      [style]="{'width': '90px', 'height': '90px', 'transition': 'all 0.3s ease'}"
-                      styleClass="cursor-pointer shadow-4">
-            </p-avatar>
-            <p-avatar *ngIf="img && img.length > 0"
-                      [image]="img"
+            <p-avatar [label]="!img || img.length === 0 ? label : ''"
+                      [image]="img && img.length > 0 ? img : null"
                       size="xlarge"
                       shape="circle"
                       [style]="{'width': '90px', 'height': '90px', 'transition': 'all 0.3s ease'}"
@@ -21,12 +14,12 @@
                 <i class="pi pi-camera"></i>
             </div>
         </div>
-        <div class="user-status mt-2   gap-2">
+        <div class="user-status mt-2 gap-2">
             <span class="text-xl font-semibold">{{nombreUsr}}</span><br>
             <span class="text-sm font-semibold">{{nombreEmp}}</span><br>   
             <span class="text-sm font-semibold">{{empresa}}</span><br>   
-            <i class="pi pi-circle-fill text-green-500" style="font-size: 0.5rem"></i>
-            <span class="text-sm"> En línea</span>
+            <i class="pi pi-circle-fill text-green-500" style="font-size: 0.5rem ; margin-right: 0.5rem"></i>
+            <span class="text-sm">En línea</span>
         </div>      
         </div>
         <p-tabView styleClass="modern-tabs">
@@ -34,42 +27,17 @@
             <p-tabPanel header="Hoy">
                 <div class="indicators-section animate-fade-in">
                     <div class="grid">                    
+                        <!-- Widgets del Dashboard -->
                         <div class="col-12">
-                            <div class="surface-card p-3 border-round shadow-2">
-                                <h3 class="text-xl font-medium m-0 mb-3">Indicadores Económicos</h3>
-                                <p-progressBar mode="indeterminate" *ngIf="indicadoresEconomicos.dolares.length == 0"></p-progressBar>
-                                <div class="grid" *ngIf="indicadoresEconomicos.dolares.length > 0">
-                                    <div  class="col-12 md:col-6" *ngFor="let indicador of indicadoresEconomicos.dolares" >
-                                        <div class="flex align-items-center justify-content-between p-2 border-round surface-100 hover:surface-200 transition-colors transition-duration-150">
-                                            <div class="flex align-items-center">
-                                                <i [class]="indicador.icono" class="text-xl mr-2"></i>
-                                                <span class="font-medium">{{indicador.label}}</span>
-                                            </div>
-                                            <div class="flex align-items-center">
-                                                <span class="font-bold text-lg">{{indicador.valor}}</span>
-                                                <i [class]="'pi pi-arrow-' + indicador.tendencia" 
-                                                   [class.text-green-500]="indicador.tendencia === 'up'"
-                                                   [class.text-red-500]="indicador.tendencia === 'down'"
-                                                   class="ml-2 animate-bounce">
-                                                </i>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>                        
-                        <!-- Calendario Moderno -->
-                        <div class="col-12 mt-1">
-                            <div class="surface-card p-3 border-round shadow-2">
-                                <p-calendar 
-                                    [inline]="true" 
-                                    [showWeek]="true"
-                                    styleClass="modern-calendar"
-                                    [style]="{'width': '100%'}"
-                                    dateFormat="mm/dd/yy">
-                                </p-calendar>
-                            </div>
+                            <app-dashboard-widgets 
+                                [indicadoresEconomicos]="indicadoresEconomicos"
+                                [weatherData]="weatherData"
+                                [weatherError]="weatherError"
+                                [isRefreshing]="isRefreshing"
+                                (refreshIndicators)="refreshIndicators()">
+                            </app-dashboard-widgets>
                         </div>
+                      
                     </div>
                 </div>
             </p-tabPanel>
@@ -182,8 +150,7 @@
                                 </div>
 
                                 <!-- Menu Mode -->
-                               <div *ngIf="!isMobile"> 
-                                <div class="flex align-items-center justify-content-between p-3 border-round surface-100 hover:surface-200 transition-colors transition-duration-150">
+                                <div *ngIf="!isMobile" class="flex align-items-center justify-content-between p-3 border-round surface-100 hover:surface-200 transition-colors transition-duration-150">
                                     <div class="flex align-items-center">
                                         <i class="pi pi-list mr-2 text-xl"></i>
                                         <div class="flex flex-column">
@@ -203,8 +170,8 @@
                                     </div>
                                 </div>
                               
-                                 <!-- Menu Tipo -->
-                                 <div class="flex align-items-center justify-content-between p-3 border-round surface-100 hover:surface-200 transition-colors transition-duration-150">
+                                <!-- Menu Tipo -->
+                                <div class="flex align-items-center justify-content-between p-3 border-round surface-100 hover:surface-200 transition-colors transition-duration-150">
                                     <div class="flex align-items-center">
                                         <i class="pi pi-palette mr-2 text-xl"></i>
                                         <div class="flex flex-column">
@@ -263,8 +230,7 @@
                             </div>
                         </div>
                     </div>
-                </div>
-            </p-tabPanel>
+                </p-tabPanel>
         </p-tabView>
     </div>    
-</p-sidebar>
+</p-sidebar> 

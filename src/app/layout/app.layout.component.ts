@@ -236,7 +236,7 @@ export class AppLayoutComponent implements OnDestroy , OnInit  {
            }
         }
 
-        console.log('valor', valor);
+       // console.log('valor', valor);
        });
     }
 

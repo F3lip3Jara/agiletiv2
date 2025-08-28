@@ -1,0 +1,563 @@
+// Variables de colores adaptadas al tema de PrimeNG
+$dark-bg: var(--surface-ground);
+$widget-bg: var(--surface-card);
+$widget-border: var(--surface-border);
+$text-primary: var(--text-color);
+$text-secondary: var(--text-color-secondary);
+$accent-gold: var(--primary-color);
+$accent-blue: var(--primary-color);
+$accent-green: var(--green-500);
+$accent-red: var(--red-500);
+
+// Mixins para efectos
+@mixin glass-effect {
+  background: var(--surface-card);
+  backdrop-filter: blur(20px);
+  border: 1px solid var(--surface-border);
+  box-shadow: 
+    0 8px 32px rgba(0, 0, 0, 0.1),
+    inset 0 1px 0 rgba(255, 255, 255, 0.05);
+}
+
+@mixin widget-hover {
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  &:hover {
+    transform: translateY(-4px);
+    box-shadow: 
+      0 12px 40px rgba(0, 0, 0, 0.4),
+      inset 0 1px 0 rgba(255, 255, 255, 0.15);
+  }
+}
+
+// Contenedor principal
+.dashboard-widgets-container {
+  display: grid;
+  grid-template-areas: 
+    "clock weather"
+    "calendar calendar"
+    "indicators indicators";
+  gap: 0.5rem;
+  padding: 0.5rem;
+ // background: var(--surface-ground);
+  position: relative;
+  overflow: hidden;
+}
+
+// Widget base
+.widget {
+  @include glass-effect;
+  @include widget-hover;
+  border-radius: 12px;
+  padding: 1rem;
+  position: relative;
+  overflow: hidden;
+
+  &::before {
+    content: '';
+    position: absolute;
+    top: -50%;
+    right: -50%;
+    width: 200%;
+    height: 200%;
+    background: radial-gradient(circle, rgba(255,255,255,0.05) 0%, transparent 70%);
+    animation: float 8s ease-in-out infinite;
+    pointer-events: none;
+  }
+}
+
+// Widget de Reloj Digital
+.clock-widget {
+  grid-area: clock;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 150px;
+
+  .digital-clock {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    height: 100%;
+
+    .time-display {
+      font-size: 2.5rem;
+      font-weight: 300;
+      color: var(--text-color);
+    //  font-family: 'Courier New', monospace;
+      text-align: center;
+      background: var(--surface-card);
+      padding: 1rem 1.5rem;
+    //  border-radius: 12px;
+      min-width: 120px;
+     // border: 1px solid var(--surface-border);
+     // box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+      transition: all 0.3s ease;
+
+      &:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+      }
+    }
+  }
+}
+
+// Widget del Clima
+.weather-widget {
+  grid-area: weather;
+  min-height: 150px;
+
+  .weather-header {
+    margin-bottom: 1rem;
+
+    .location {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      color: var(--text-color-secondary);
+      font-size: 0.875rem;
+
+      i {
+        color: var(--primary-color);
+        font-size: 1rem;
+      }
+    }
+  }
+
+  .weather-main {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 1.5rem;
+
+    .temperature {
+      font-size: 2.5rem;
+      font-weight: 300;
+      color: var(--text-color);
+    }
+
+    .weather-icon {
+      i {
+        font-size: 2rem;
+        color: var(--primary-color);
+      }
+    }
+  }
+
+    .weather-details {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 0.5rem;
+
+    .detail-item {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      padding: 0.5rem;
+      background: var(--surface-hover);
+      border-radius: 6px;
+      border: 1px solid var(--surface-border);
+
+      i {
+        color: var(--primary-color);
+        font-size: 0.875rem;
+      }
+
+      span {
+        color: var(--text-color);
+        font-size: 0.75rem;
+        font-weight: 500;
+      }
+    }
+  }
+}
+
+// Widget de Calendario
+.calendar-widget {
+  grid-area: calendar;
+  min-height: 150px;
+
+  .calendar-container {
+    display: flex;
+    height: 100%;
+    gap: 1.5rem;
+
+    .calendar-date-display {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      background: var(--surface-card);
+      border-radius: 12px;
+      padding: 1.5rem;
+      border: 1px solid var(--surface-border);
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+      transition: all 0.3s ease;
+
+      &:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+      }
+
+      .month-name {
+        font-size: 1.5rem;
+        font-weight: 600;
+        color: var(--text-color);
+        text-transform: uppercase;
+        margin-bottom: 0.5rem;
+        letter-spacing: 1px;
+      }
+
+      .day-number {
+        font-size: 3rem;
+        font-weight: 700;
+        color: var(--primary-color);
+        line-height: 1;
+      }
+    }
+
+    .calendar-full {
+      flex: 2;
+      display: flex;
+      flex-direction: column;
+
+      .calendar-header {
+        margin-bottom: 1rem;
+
+        h3 {
+          color: var(--text-color);
+          font-size: 1.125rem;
+          font-weight: 600;
+          margin: 0;
+          text-transform: uppercase;
+          letter-spacing: 1px;
+        }
+      }
+
+      .calendar-grid {
+        .calendar-days {
+          display: grid;
+          grid-template-columns: repeat(7, 1fr);
+          gap: 0.5rem;
+          margin-bottom: 0.75rem;
+
+          span {
+            color: var(--text-color-secondary);
+            font-size: 0.75rem;
+            font-weight: 600;
+            text-align: center;
+            padding: 0.5rem 0;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+          }
+        }
+
+        .calendar-dates {
+          display: grid;
+          grid-template-columns: repeat(7, 1fr);
+          gap: 0.25rem;
+
+          span {
+            color: var(--text-color);
+            font-size: 0.875rem;
+            text-align: center;
+            padding: 0.5rem;
+            border-radius: 8px;
+            transition: all 0.2s ease;
+            cursor: pointer;
+            border: 1px solid transparent;
+
+            &:hover {
+              background: var(--surface-hover);
+              border-color: var(--surface-border);
+            }
+
+            &.current-day {
+              background: var(--primary-color);
+              color: var(--primary-color-text);
+              font-weight: 600;
+              border-color: var(--primary-color);
+            }
+
+            &.other-month {
+              color: var(--text-color-secondary);
+              opacity: 0.4;
+              cursor: default;
+            }
+          }
+        }
+      }
+    }
+  }
+}
+
+// Widget de Indicadores
+.indicators-widget {
+  grid-area: indicators;
+  min-height: 150px;
+
+  .indicators-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 1rem;
+
+    h3 {
+      color: var(--text-color);
+      font-size: 1.125rem;
+      font-weight: 600;
+      margin: 0;
+    }
+  }
+
+  .indicators-list {
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+  }
+
+  .indicator-item {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0.75rem;
+    border-bottom: 1px solid var(--surface-border);
+    transition: background-color 0.2s ease;
+
+    &:hover {
+      background: var(--surface-hover);
+    }
+
+    &:last-child {
+      border-bottom: none;
+    }
+
+    .indicator-info {
+      flex: 1;
+      min-width: 0;
+
+      .indicator-title {
+        font-size: 1rem;
+        font-weight: 600;
+        color: var(--text-color);
+        margin-bottom: 0.125rem;
+      }
+
+      .indicator-subtitle {
+        font-size: 0.75rem;
+        color: var(--text-color-secondary);
+        font-weight: 400;
+      }
+    }
+
+    .indicator-graph {
+      margin: 0 1rem;
+      width: 40px;
+      height: 20px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+
+      .trend-line {
+        width: 100%;
+        height: 2px;
+        border-radius: 1px;
+        transition: all 0.3s ease;
+
+        &.trend-up {
+          background: var(--green-500);
+          box-shadow: 0 0 4px rgba(34, 197, 94, 0.3);
+        }
+
+        &.trend-down {
+          background: var(--red-500);
+          box-shadow: 0 0 4px rgba(239, 68, 68, 0.3);
+        }
+      }
+    }
+
+    .indicator-values {
+      text-align: right;
+      min-width: 0;
+
+      .indicator-current {
+        font-size: 1.125rem;
+        font-weight: 700;
+        color: var(--text-color);
+        margin-bottom: 0.25rem;
+        font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      }
+
+      .indicator-change {
+        font-size: 0.875rem;
+        font-weight: 600;
+        padding: 0.25rem 0.5rem;
+        border-radius: 4px;
+        display: inline-block;
+        font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+
+        &.change-up {
+          background: var(--green-500);
+          color: white;
+        }
+
+        &.change-down {
+          background: var(--red-500);
+          color: white;
+        }
+      }
+    }
+  }
+
+  .loading-indicators {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.75rem;
+    color: var(--text-color-secondary);
+    font-size: 0.875rem;
+  }
+}
+
+// Animaciones
+@keyframes float {
+  0%, 100% { 
+    transform: translateY(0px) rotate(0deg); 
+    opacity: 0.5;
+  }
+  50% { 
+    transform: translateY(-10px) rotate(180deg); 
+    opacity: 0.8;
+  }
+}
+
+@keyframes progress {
+  0% { stroke-dashoffset: 327; }
+  50% { stroke-dashoffset: 164; }
+  100% { stroke-dashoffset: 327; }
+}
+
+// Responsive
+@media (max-width: 768px) {
+  .dashboard-widgets-container {
+    grid-template-areas: 
+      "clock"
+      "weather"
+      "calendar"
+      "indicators";
+    gap: 0.5rem;
+    padding: 0.5rem;
+  }
+
+  .widget {
+    padding: 0.75rem;
+  }
+
+  .clock-widget .clock-face {
+    width: 60px;
+    height: 60px;
+  }
+
+  .clock-widget .clock-text {
+    bottom: -25px;
+  }
+
+  .clock-widget .clock-text .day-text {
+    font-size: 0.625rem;
+  }
+
+  .clock-widget .clock-text .time-text {
+    font-size: 0.875rem;
+  }
+}
+
+// Adaptación específica para tema oscuro
+:host-context(.p-dark) {
+  .dashboard-widgets-container {
+    background: var(--surface-ground);
+  }
+
+  .widget {
+    background: var(--surface-card);
+    border-color: var(--surface-border);
+  }
+
+  .clock-widget .digital-clock .time-display {
+    background: var(--surface-card);
+    color: var(--text-color);
+    border-color: var(--surface-border);
+  }
+
+  .calendar-widget .calendar-date-display {
+    background: var(--surface-card);
+    border-color: var(--surface-border);
+    
+    .month-name {
+      color: var(--text-color);
+    }
+    
+    .day-number {
+      color: var(--primary-color);
+    }
+  }
+
+  .calendar-widget .calendar-full {
+    .calendar-header h3 {
+      color: var(--text-color);
+    }
+    
+    .calendar-days span {
+      color: var(--text-color-secondary);
+    }
+    
+    .calendar-dates span {
+      color: var(--text-color);
+      
+      &:hover {
+        background: var(--surface-hover);
+      }
+      
+      &.current-day {
+        background: var(--primary-color);
+        color: var(--primary-color-text);
+      }
+      
+      &.other-month {
+        color: var(--text-color-secondary);
+        opacity: 0.4;
+      }
+    }
+  }
+}
+
+// Adaptación específica para tema claro
+:host-context(.p-light) {
+  .dashboard-widgets-container {
+    background: var(--surface-ground);
+  }
+
+  .widget {
+    background: var(--surface-card);
+    border-color: var(--surface-border);
+  }
+
+  .clock-widget .digital-clock .time-display {
+    background: var(--surface-card);
+    color: var(--text-color);
+    border-color: var(--surface-border);
+  }
+
+  .calendar-widget .calendar-date-display {
+    background: var(--surface-card);
+    border-color: var(--surface-border);
+    
+    .month-name {
+      color: var(--text-color);
+    }
+    
+    .day-number {
+      color: var(--primary-color);
+    }
+  }
+} 
