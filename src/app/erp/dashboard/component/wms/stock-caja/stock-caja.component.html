@@ -47,6 +47,8 @@
                             <th>ID</th>  
                             <th>Centro</th>
                             <th>Almacén</th>
+                            <th>Sector</th>
+                            <th>Ubicación</th>
                             <th>Código</th>
                             <th>Descripción</th>
                             <th>Grupo</th>
@@ -64,11 +66,17 @@
                     </ng-template>
                     
                     <ng-template pTemplate="body" let-item>
-                        <tr [ngClass]="{'selected-row': selectedRow?.stockId === item.stockId}">
-                            <td>{{item.stockId}}</td>
+                        <tr [ngClass]="{'selected-row': selectedRow?.iblpnId === item.iblpnId}">
+                            <td>{{item.iblpnId}}</td>
                             <td>{{item.cenDes}}</td>                    
                             <td>
                                 <span class="font-medium">{{item.almDes}}</span>
+                            </td>
+                            <td>
+                                {{item.iblpnHdrCustShortText9}}
+                            </td>
+                            <td>
+                                {{item.iblpnHdrCustShortText10}}
                             </td>
                             <td>
                                 {{item.cod_pareo}}

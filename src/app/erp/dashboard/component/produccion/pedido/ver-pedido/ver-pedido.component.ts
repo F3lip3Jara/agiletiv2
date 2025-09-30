@@ -37,6 +37,7 @@ declare global {
 interface ProductoSeleccionado extends Producto {
   cantidad: number;
   subtotal: number;
+  cantidad_recibida: number;
   total: number;
 }
 
@@ -203,7 +204,9 @@ export class VerPedidoComponent implements OnInit, OnDestroy {
           data.productos.forEach((row: any) => {
             const producto = this.productos.find(p => p.cod_pareo === row.orpdPrdCod);
             if (producto) {
+            //  console.log(row);
               const cantidad = parseInt(row.orpdCant) || 1;
+              const cantidad_recibida = parseInt(row.orpdDtlCustShortText1) || 1;
               if (cantidad <= 0) {
                 this.messageService.add({
                   severity: 'warn',
@@ -216,6 +219,7 @@ export class VerPedidoComponent implements OnInit, OnDestroy {
               const nuevoProducto: ProductoSeleccionado = {
                 ...producto,
                 cantidad: cantidad,
+                cantidad_recibida: cantidad_recibida,
                 subtotal: producto.neto || 0,
                 total: (producto.neto || 0) * cantidad
               };

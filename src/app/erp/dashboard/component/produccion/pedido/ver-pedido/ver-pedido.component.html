@@ -195,6 +195,7 @@
                                 <th>Imagen</th>
                                 <th>Precio</th>                             
                                 <th>Cantidad</th>
+                                <th>Recibido</th>
                                 <th>Subtotal</th>
                                 <th>IVA</th>
                                 <th>Total</th>
@@ -210,6 +211,7 @@
                                 </td>
                                 <td>{{producto.neto | currency:'CLP':'symbol-narrow':'1.0-0'}}</td>
                                 <td>{{producto.cantidad}}</td>
+                                <td>{{producto.cantidad_recibida}}</td>
                                 <td>{{ calcularSubtotal(producto) | currency:'CLP':'symbol-narrow':'1.0-0'}}</td>
                                 <td>{{ calcularIVA(calcularSubtotal(producto)) | currency:'CLP':'symbol-narrow':'1.0-0'}}</td>
                                 <td>{{ calcularTotalProducto(producto) | currency:'CLP':'symbol-narrow':'1.0-0'}}</td>
