@@ -8,7 +8,8 @@ import { RestService } from '../../../dashboard/service/rest.service';
   selector: 'app-cambiodepass',
   templateUrl: './cambiodepass.component.html',
   styleUrls: ['./cambiodepass.component.scss'],
-  providers: []
+  providers: [],
+  standalone: false
 })
 export class CambiodepassComponent implements OnInit {
   

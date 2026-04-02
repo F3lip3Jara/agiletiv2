@@ -22,6 +22,7 @@ export class AppTopBarComponent {
     menuItems: MenuItem[] = [];
     hasNotifications: boolean = true;
     appLoading: boolean = false;
+    isMobile: boolean = false;
     // Propiedades para la búsqueda
     searchVisible: boolean = false;
     searchQuery: string = '';
@@ -107,6 +108,7 @@ export class AppTopBarComponent {
         this.setGreeting();
         this.initializeSearchOptions();
         this.initializeNotifications();
+       
     }
 
     ngOnInit() {
@@ -184,7 +186,8 @@ export class AppTopBarComponent {
         ];
         
         this.layoutService.configUpdate$.subscribe((valor: any) => {            
-            this.isDarkMode = valor.colorScheme == 'dark' ? true : false;     
+            this.isDarkMode = valor.colorScheme == 'dark' ? true : false;  
+            this.isMobile = this.layoutService.isMobile();
           /*  if( valor.toogleSidebar === true && valor.menuMode === 'overlay'){
                 this.renderer.removeStyle(this._el, 'margin-left');
                 console.log('aqui', 'margin-left', '0px');

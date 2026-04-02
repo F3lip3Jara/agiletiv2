@@ -6,13 +6,13 @@
     </div>
     <div class="layout-main-container " id="layout-main-container"
     [ngStyle]="!isDarkMode ? {'background-color': surface} : null" >
-        <app-breadcrumb></app-breadcrumb>
+        <!--<app-breadcrumb></app-breadcrumb>-->
         <div id="loading" *ngIf="isLoading$">
             <div class="loading-overlay loading-content" [style.height.px]="altura$ | async">
                 <div class="loader"></div>
             </div>
         </div>
-        <div class="layout-main">
+        <div class="layout-main mt-5">
             <router-outlet></router-outlet>
         </div>
         <app-footer></app-footer>

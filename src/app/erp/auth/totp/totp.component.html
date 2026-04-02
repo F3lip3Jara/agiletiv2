@@ -1,0 +1,209 @@
+<!-- Modal TOTP -->
+<p-dialog 
+    [(visible)]="showTotpModal" 
+    [modal]="true" 
+    [closable]="true"
+    [draggable]="false"
+    [resizable]="false"
+    [style]="{width: '500px'}"
+    [baseZIndex]="10000"
+    (onHide)="closeTotpModal()">
+    
+    <ng-template pTemplate="header">
+        <div class="totp-modal-header">
+            <i class="pi pi-shield" style="font-size: 1.5rem; margin-right: 0.5rem;"></i>
+            <div class="header-content">
+                <span>Autenticación con código de seguridad</span>
+                <div class="step-progress" *ngIf="!showUsernameInput">
+                    <div class="step-indicator">
+                        <span class="step-number">{{ currentStep }}</span>
+                        <span class="step-total">de {{ totalSteps }}</span>
+                    </div>
+                    <div class="progress-bar">
+                        <div class="progress-fill" [style.width.%]="(currentStep / totalSteps) * 100"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </ng-template>
+
+    <div class="totp-modal-content">
+        <!-- Input de usuario si no está disponible -->
+        <div class="username-input-section">
+            <div class="step-info">
+                <h3>{{ stepTitle }}</h3>
+                <p>{{ stepDescription }}</p>
+            </div>
+            <div class="form-field">
+                <div class="input-container">
+                    <i class="pi pi-user input-icon"></i>
+                    <input 
+                        #usernameInput
+                        pInputText 
+                        type="text" 
+                        [(ngModel)]="tempUsername"
+                        (input)="onUsernameChange()"
+                        placeholder="Usuario"
+                        class="modern-input"
+                        (keyup.enter)="initTotpFlow()">
+                </div>
+            </div>
+            <div class="username-actions" *ngIf="!totpLoading">
+                <button 
+                    pButton 
+                    type="button"
+                    label="Continuar"
+                    icon="pi pi-arrow-right"
+                    [disabled]="!tempUsername || tempUsername.trim() === ''"
+                    (click)="initTotpFlow()">
+                </button>
+            </div>
+        </div>
+
+    
+       
+
+        <!-- Loading State -->
+        <div *ngIf="totpLoading" class="totp-loading">
+            <p-progressSpinner [style]="{width: '50px', height: '50px'}"></p-progressSpinner>
+            <p>Configurando autenticación...</p>
+        </div>
+
+        <!-- TOTP Setup (Nuevo usuario) -->
+        <div *ngIf="!totpLoading && isTotpSetup" class="totp-setup">
+            <div class="step-info">
+                <h3>{{ stepTitle }}</h3>
+                <p>{{ stepDescription }}</p>
+            </div>
+
+            <!-- Paso 2: Mostrar QR -->
+            <div *ngIf="currentStep === 2" class="qr-step">
+                <div class="qr-container">
+                    <div class="qr-code-wrapper">
+                        <img [src]="qrCodeUrl" alt="Código QR TOTP" class="qr-code">
+                    </div>
+                </div>
+
+                <div class="manual-setup">
+                    <p class="manual-label">O ingresa manualmente esta clave:</p>
+                    <div class="secret-container">
+                        <input 
+                            pInputText 
+                            [value]="totpSecret" 
+                            readonly 
+                            class="secret-input">
+                        <button 
+                            pButton 
+                            type="button"
+                            icon="pi pi-copy"
+                            class="copy-btn"
+                            pTooltip="Copiar clave"
+                            (click)="copyToClipboard(totpSecret)">
+                        </button>
+                    </div>
+                </div>
+
+                <div class="backup-codes" *ngIf="backupCodes.length > 0">
+                    <h4>Códigos de Respaldo</h4>
+                    <p class="backup-warning">Guarda estos códigos en un lugar seguro:</p>
+                    <div class="codes-grid">
+                        <span *ngFor="let code of backupCodes" class="backup-code">{{ code }}</span>
+                    </div>
+                </div>
+
+                <div class="step-actions">
+                    <button 
+                        pButton 
+                        type="button"
+                        label="Siguiente"
+                        icon="pi pi-arrow-right"
+                        iconPos="right"
+                        (click)="nextStep()">
+                    </button>
+                </div>
+            </div>
+
+            <!-- Paso 3: Verificación -->
+            <div *ngIf="currentStep === 3" class="verification-step">
+                <div class="verification-input">
+                    <app-otp-input 
+                        #otpInput
+                        [(ngModel)]="totpCode"
+                        [length]="6"
+                        [onlyNumbers]="true"
+                        size="medium"
+                        (valueChange)="onTotpCodeChange($event)"
+                        (complete)="onTotpCodeComplete($event)">
+                    </app-otp-input>
+                </div>
+                
+                <div class="step-actions">
+                    <button 
+                        pButton 
+                        type="button"
+                        label="Anterior"
+                        icon="pi pi-arrow-left"
+                        class="p-button-text"
+                        (click)="previousStep()">
+                    </button>
+                    <button 
+                        pButton 
+                        type="button"
+                        label="Verificar"
+                        icon="pi pi-check"
+                        [disabled]="!totpCode || totpCode.length !== 6"
+                        (click)="verifyTotpCode()">
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- TOTP Verification (Usuario existente) -->
+        <div *ngIf="!totpLoading && isTotpVerification && !showUsernameInput" class="totp-verification">
+            <div class="step-info">
+                <h3>{{ stepTitle }}</h3>
+                <p>{{ stepDescription }}</p>
+            </div>
+
+            <div class="verification-input">
+                <app-otp-input 
+                    #otpInput
+                    [(ngModel)]="totpCode"
+                    [length]="6"
+                    [onlyNumbers]="true"
+                    size="large"
+                    (valueChange)="onTotpCodeChange($event)"
+                    (complete)="onTotpCodeComplete($event)">
+                </app-otp-input>
+            </div>
+
+            <div class="verification-help">
+                <i class="pi pi-info-circle"></i>
+                <span>Usa Microsoft Authenticator, Google Authenticator o cualquier aplicación compatible</span>
+            </div>
+        </div>
+    </div>
+
+    <ng-template pTemplate="footer">
+        <div class="totp-modal-footer">
+            <button 
+                pButton 
+                type="button"
+                label="Cancelar"
+                icon="pi pi-times"
+                class="p-button-text"
+                (click)="onCancel()">
+            </button>
+            <button 
+                *ngIf="isTotpVerification"
+                pButton 
+                type="button"
+                label="Verificar"
+                icon="pi pi-check"
+                [loading]="totpLoading"
+                [disabled]="!totpCode || totpCode.length !== 6"
+                (click)="verifyTotpCode()">
+            </button>
+        </div>
+    </ng-template>
+</p-dialog>

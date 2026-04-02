@@ -26,7 +26,7 @@
 .login-container {
     min-height: 100vh;
     width: 100%;
-    background-color: var(--background);
+    background-color: #ffffff !important;
     display: flex;
     align-items: center;
     justify-content: center;
@@ -207,11 +207,11 @@
         width: 100%;
         padding: 1rem 1rem 1rem 3rem;
         border: 1px solid var(--border-color);
-        background: #fff;
+        background: #ffffff !important;
         border-radius: var(--border-radius);
         font-size: 1rem;
         font-weight: 400;
-        color: var(--text-primary);
+        color: var(--text-primary) !important;
         transition: var(--transition);
         outline: none;
         box-shadow: var(--shadow-sm);
@@ -219,6 +219,8 @@
         &:focus {
             border-color: var(--primary-color);
             box-shadow: 0 0 0 3px rgba(247, 151, 30, 0.2);
+            background: #ffffff !important;
+            color: var(--text-primary) !important;
         }
 
         &::placeholder {
@@ -385,6 +387,403 @@
     .modern-input:focus ~ .input-icon,
     .login-password .p-password-input:focus ~ .input-icon {
         color: var(--primary-color);
+    }
+}
+
+// TOTP Styles
+.totp-section {
+    margin-top: 1.5rem;
+    
+    .divider {
+        text-align: center;
+        margin: 1.5rem 0;
+        color: var(--text-secondary);
+        font-weight: 500;
+        display: flex;
+        align-items: center;
+        gap: 1rem;
+        
+        &::before, &::after {
+            content: '';
+            flex-grow: 1;
+            height: 1px;
+            background: var(--border-color);
+        }
+    }
+}
+
+:host ::ng-deep {
+    .totp-btn {
+        width: 100%;
+        padding: 0.875rem 1.5rem;
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        border: none;
+        border-radius: var(--border-radius);
+        color: white;
+        font-size: 0.95rem;
+        font-weight: 600;
+        cursor: pointer;
+        transition: var(--transition);
+        box-shadow: var(--shadow-md);
+        position: relative;
+        overflow: hidden;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 0.5rem;
+
+        &:hover:not(:disabled) {
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-lg);
+            background: linear-gradient(135deg, #5a6fd8 0%, #6a4190 100%) !important;
+            color: #fff !important;
+        }
+
+        &:active:not(:disabled) {
+            transform: translateY(0);
+        }
+
+        &:disabled {
+            background: #e9ecef !important;
+            color: #6c757d !important;
+            cursor: not-allowed;
+            transform: none;
+            box-shadow: none;
+        }
+
+        .p-button-icon {
+            font-size: 1rem;
+        }
+    }
+}
+
+// TOTP Modal Styles
+:host ::ng-deep {
+    .p-dialog {
+        .p-dialog-header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border-radius: 12px 12px 0 0;
+            padding: 1.5rem 2rem;
+            border: none;
+            
+            .p-dialog-title {
+                font-weight: 600;
+                font-size: 1.25rem;
+            }
+            
+            .p-dialog-header-icon {
+                color: white;
+                font-size: 1.5rem;
+                
+                &:hover {
+                    background: rgba(255, 255, 255, 0.1);
+                }
+            }
+        }
+        
+        .p-dialog-content {
+            padding: 0;
+            border-radius: 0 0 12px 12px;
+        }
+    }
+}
+
+.totp-modal-header {
+    display: flex;
+    align-items: center;
+    color: white;
+    font-weight: 600;
+    font-size: 1.25rem;
+}
+
+.totp-modal-content {
+    padding: 2rem;
+}
+
+.totp-loading {
+    text-align: center;
+    padding: 3rem 1rem;
+    
+    p {
+        margin-top: 1rem;
+        color: var(--text-secondary);
+        font-size: 1rem;
+    }
+}
+
+.totp-setup {
+    .setup-header {
+        text-align: center;
+        margin-bottom: 2rem;
+        
+        h3 {
+            color: var(--text-primary);
+            font-size: 1.5rem;
+            font-weight: 600;
+            margin: 0 0 0.5rem 0;
+        }
+        
+        p {
+            color: var(--text-secondary);
+            margin: 0;
+            font-size: 1rem;
+        }
+    }
+    
+    .qr-container {
+        display: flex;
+        justify-content: center;
+        margin-bottom: 2rem;
+        
+        .qr-code-wrapper {
+            background: white;
+            padding: 1.5rem;
+            border-radius: var(--border-radius);
+            box-shadow: var(--shadow-md);
+            border: 1px solid var(--border-color);
+            
+            .qr-code {
+                width: 200px;
+                height: 200px;
+                display: block;
+            }
+        }
+    }
+    
+    .manual-setup {
+        margin-bottom: 2rem;
+        
+        .manual-label {
+            color: var(--text-secondary);
+            font-size: 0.9rem;
+            margin-bottom: 0.75rem;
+            text-align: center;
+        }
+        
+        .secret-container {
+            display: flex;
+            gap: 0.5rem;
+            align-items: center;
+            
+            .secret-input {
+                flex: 1;
+                font-family: 'Courier New', monospace;
+                font-size: 0.9rem;
+                text-align: center;
+                letter-spacing: 0.1em;
+            }
+            
+            .copy-btn {
+                padding: 0.75rem;
+                background: var(--primary-color);
+                border: none;
+                border-radius: var(--border-radius);
+                color: white;
+                cursor: pointer;
+                transition: var(--transition);
+                
+                &:hover {
+                    background: var(--primary-hover);
+                }
+            }
+        }
+    }
+    
+    .backup-codes {
+        background: #f8f9fa;
+        border: 1px solid var(--border-color);
+        border-radius: var(--border-radius);
+        padding: 1.5rem;
+        margin-bottom: 2rem;
+        
+        h4 {
+            color: var(--text-primary);
+            font-size: 1.1rem;
+            font-weight: 600;
+            margin: 0 0 0.5rem 0;
+        }
+        
+        .backup-warning {
+            color: var(--text-secondary);
+            font-size: 0.9rem;
+            margin: 0 0 1rem 0;
+        }
+        
+        .codes-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 0.5rem;
+            
+            .backup-code {
+                background: white;
+                border: 1px solid var(--border-color);
+                border-radius: 6px;
+                padding: 0.5rem;
+                text-align: center;
+                font-family: 'Courier New', monospace;
+                font-size: 0.85rem;
+                font-weight: 600;
+                color: var(--text-primary);
+            }
+        }
+    }
+    
+    .verification-step {
+        border-top: 1px solid var(--border-color);
+        padding-top: 1.5rem;
+        
+        h4 {
+            color: var(--text-primary);
+            font-size: 1.1rem;
+            font-weight: 600;
+            margin: 0 0 0.5rem 0;
+        }
+        
+        p {
+            color: var(--text-secondary);
+            font-size: 0.9rem;
+            margin: 0 0 1rem 0;
+        }
+    }
+}
+
+.totp-verification {
+    text-align: center;
+    
+    .verification-header {
+        margin-bottom: 2rem;
+        
+        h3 {
+            color: var(--text-primary);
+            font-size: 1.5rem;
+            font-weight: 600;
+            margin: 0 0 0.5rem 0;
+        }
+        
+        p {
+            color: var(--text-secondary);
+            margin: 0;
+            font-size: 1rem;
+        }
+    }
+    
+    .verification-input {
+        margin-bottom: 1.5rem;
+    }
+    
+    .verification-help {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 0.5rem;
+        color: var(--text-secondary);
+        font-size: 0.9rem;
+        
+        i {
+            color: var(--primary-color);
+        }
+    }
+}
+
+// Input OTP Styles
+:host ::ng-deep {
+    .totp-input,
+    .totp-input-large {
+        .p-inputotp {
+            display: flex;
+            gap: 0.75rem;
+            justify-content: center;
+            
+            .p-inputotp-input {
+                width: 3rem;
+                height: 3rem;
+                text-align: center;
+                font-size: 1.25rem;
+                font-weight: 600;
+                border: 2px solid var(--border-color);
+                border-radius: var(--border-radius);
+                background: white;
+                color: var(--text-primary);
+                transition: var(--transition);
+                
+                &:focus {
+                    border-color: var(--primary-color);
+                    box-shadow: 0 0 0 3px rgba(247, 151, 30, 0.2);
+                    outline: none;
+                }
+                
+                &:not(:placeholder-shown) {
+                    border-color: var(--primary-color);
+                    background: rgba(247, 151, 30, 0.05);
+                }
+            }
+        }
+    }
+    
+    .totp-input-large {
+        .p-inputotp {
+            gap: 1rem;
+            
+            .p-inputotp-input {
+                width: 3.5rem;
+                height: 3.5rem;
+                font-size: 1.5rem;
+            }
+        }
+    }
+}
+
+.totp-modal-footer {
+    display: flex;
+    justify-content: flex-end;
+    gap: 1rem;
+    padding: 1.5rem 2rem;
+    background: #f8f9fa;
+    border-radius: 0 0 12px 12px;
+    border-top: 1px solid var(--border-color);
+}
+
+// Responsive TOTP
+@media (max-width: 480px) {
+    .totp-modal-content {
+        padding: 1.5rem 1rem;
+    }
+    
+    .totp-setup {
+        .qr-container .qr-code-wrapper .qr-code {
+            width: 150px;
+            height: 150px;
+        }
+        
+        .backup-codes .codes-grid {
+            grid-template-columns: 1fr;
+        }
+    }
+    
+    :host ::ng-deep {
+        .totp-input,
+        .totp-input-large {
+            .p-inputotp {
+                gap: 0.5rem;
+                
+                .p-inputotp-input {
+                    width: 2.5rem;
+                    height: 2.5rem;
+                    font-size: 1.1rem;
+                }
+            }
+        }
+        
+        .totp-input-large .p-inputotp {
+            gap: 0.75rem;
+            
+            .p-inputotp-input {
+                width: 3rem;
+                height: 3rem;
+                font-size: 1.25rem;
+            }
+        }
     }
 }
 

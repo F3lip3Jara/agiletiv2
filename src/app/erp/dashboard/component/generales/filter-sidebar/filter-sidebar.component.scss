@@ -122,26 +122,30 @@
 
             .p-accordion {
                 .p-accordion-tab {
-                    margin-bottom: 0.25rem;
+                    margin-bottom: 0.5rem;
                     border: none;
                     border-radius: 8px;
                     overflow: hidden;
-                    box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+                    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+                    background: var(--surface-card);
+                    transition: all 0.2s ease;
 
                     .p-accordion-header {
                         .p-accordion-header-link {
-                            padding: 1rem;
+                            padding: 1rem 1.25rem;
                             background: var(--surface-card);
                             color: var(--text-color);
                             border: none;
                             border-radius: 0;
                             font-weight: 600;
+                            font-size: 0.95rem;
                             transition: all 0.2s ease;
                             cursor: pointer;
                             display: flex;
                             align-items: center;
                             justify-content: space-between;
                             width: 100%;
+                            position: relative;
 
                             &:focus {
                                 box-shadow: 0 0 0 2px var(--primary-100);
@@ -151,19 +155,21 @@
 
                             &:hover {
                                 background: var(--surface-hover);
+                                transform: translateY(-1px);
                             }
 
                             .p-accordion-toggle-icon {
                                 color: var(--primary-color);
                                 margin-left: 0.5rem;
                                 transition: transform 0.2s ease;
+                                font-size: 0.9rem;
                             }
                         }
 
                         &.p-highlight .p-accordion-header-link {
-                            background: var(--surface-card);
-                            color: var(--text-color);
-                            border-bottom: 1px solid var(--surface-border);
+                            background: var(--primary-50);
+                            color: var(--primary-color);
+                            border-bottom: 1px solid var(--primary-200);
 
                             .p-accordion-toggle-icon {
                                 transform: rotate(180deg);
@@ -172,15 +178,22 @@
                     }
 
                     .p-accordion-content {
-                        padding: 1rem;
+                        padding: 1.25rem;
                         background: var(--surface-card);
                         border: none;
                         border-top: 1px solid var(--surface-border);
                         animation: slideDown 0.3s ease-out;
+                        max-height: none;
+                        overflow: visible;
                     }
 
                     &:not(:last-child) {
-                        margin-bottom: 0.25rem;
+                        margin-bottom: 0.5rem;
+                    }
+
+                    // Mejoras para el modo oscuro
+                    &:hover {
+                        box-shadow: 0 4px 8px rgba(0,0,0,0.15);
                     }
                 }
             }
@@ -390,6 +403,476 @@
             }
         }
 
+        // Estilos para ordenamiento de columnas
+        .sorting-column {
+            transition: all 0.2s ease;
+            cursor: pointer;
+            border-radius: 8px;
+            padding: 0.75rem;
+            border: 1px solid var(--surface-border);
+            
+            &:hover {
+                background: var(--blue-50);
+                border-color: var(--primary-color);
+                transform: translateY(-1px);
+                box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+            }
+
+            .sort-icon {
+                transition: all 0.2s ease;
+                
+                &.text-primary {
+                    color: var(--primary-color);
+                    font-weight: 600;
+                }
+            }
+        }
+
+        .active-sorting {
+           // background: var(--blue-50);
+       //     border: 1px solid var(--primary-color);
+            
+            
+            .sort-item {
+                display: flex;
+                align-items: center;
+                justify-content: space-between;
+                padding: 0.5rem;
+             //   background: var(--blue-50);
+                border-radius: 6px;
+                margin-bottom: 0.5rem;
+                border: 1px solid var(--primary-color);
+                
+                .sort-change-area {
+                    flex: 1;
+                    cursor: pointer;
+                    transition: all 0.2s ease;
+                    border-radius: 6px;
+                    padding: 0.5rem;
+                    
+                    &:hover {
+                        background: var(--primary-50);
+                        transform: scale(1.02);
+                    }
+                    
+                    .sort-info {
+                        display: flex;
+                        align-items: center;
+                        justify-content: space-between;
+                        gap: 0.5rem;
+                        
+                        .sort-direction-display {
+                            display: flex;
+                            align-items: center;
+                            
+                            .sort-direction-icon {
+                                color: var(--primary-color);
+                                font-size: 0.875rem;
+                                font-weight: 600;
+                            }
+                        }
+                    }
+                }
+                
+                .sort-remove-area {
+                    display: flex;
+                    align-items: center;
+                    justify-content: center;
+                    padding: 0.25rem;
+                    
+                    .remove-sort-btn {
+                        opacity: 0.7;
+                        transition: all 0.2s ease;
+                        
+                        &:hover {
+                            opacity: 1;
+                            transform: scale(1.1);
+                        }
+                    }
+                }
+                
+                .remove-sort-btn {
+                    color: var(--red-500);
+                    
+                    &:hover {
+                        background: var(--red-50);
+                        border-radius: 50%;
+                    }
+                }
+            }
+        }
+
+        // Estilos para reglas de filtrado avanzadas
+        .filter-rule {
+         //   background: var(--blue-50);
+            border: 1px solid var(--blue-200);
+            border-radius: 8px;
+            padding: 1rem;
+            margin-bottom: 1rem;
+            transition: all 0.2s ease;
+            
+            &:hover {
+                box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+                border-color: var(--primary-color);
+            }
+
+            .rule-header {
+                display: flex;
+                justify-content: space-between;
+                align-items: center;
+                margin-bottom: 0.75rem;
+                
+                .rule-title {
+                    font-weight: 600;
+                    color: var(--text-color);
+                    font-size: 0.9rem;
+                }
+                
+                .rule-actions {
+                    display: flex;
+                    gap: 0.5rem;
+                }
+            }
+
+            .rule-fields-top {
+                display: grid;
+                grid-template-columns: 1fr 1fr auto;
+                gap: 0.75rem;
+                align-items: end;
+                margin-bottom: 1rem;
+                
+                @media (max-width: 768px) {
+                    grid-template-columns: 1fr;
+                    gap: 0.5rem;
+                }
+
+                .field-group {
+                    display: flex;
+                    flex-direction: column;
+                    gap: 0.25rem;
+                    
+                    label {
+                        font-size: 0.8rem;
+                        font-weight: 600;
+                        color: #e2e8f0 !important;
+                        margin-bottom: 0;
+                        text-transform: uppercase;
+                        letter-spacing: 0.5px;
+                    }
+                }
+            }
+
+            .rule-fields-bottom {
+                .field-group {
+                    display: flex;
+                    flex-direction: column;
+                    gap: 0.25rem;
+                    
+                    label {
+                        font-size: 0.8rem;
+                        font-weight: 600;
+                        color: #e2e8f0 !important;
+                        margin-bottom: 0;
+                        text-transform: uppercase;
+                        letter-spacing: 0.5px;
+                    }
+                }
+            }
+
+            .match-type-option {
+                margin-top: 0.75rem;
+                padding-top: 0.75rem;
+                border-top: 1px solid var(--surface-border);
+                
+                .p-checkbox {
+                    margin-right: 0.5rem;
+                }
+                
+                label {
+                    display: flex;
+                    align-items: center;
+                    gap: 0.5rem;
+                    cursor: pointer;
+                    font-size: 0.875rem;
+                    color: var(--text-color-secondary);
+                    
+                    &:hover {
+                        color: var(--text-color);
+                    }
+                }
+            }
+        }
+
+        .empty-state {
+            text-align: center;
+            padding: 2rem 1rem;
+            color: var(--text-color-secondary);
+            
+            .pi {
+                font-size: 3rem;
+                margin-bottom: 1rem;
+                opacity: 0.5;
+            }
+            
+            p {
+                margin: 0.5rem 0;
+                line-height: 1.5;
+            }
+        }
+
+        // Estilos para dropdowns en reglas
+        .p-dropdown {
+            width: 100%;
+            
+            .p-dropdown-label {
+                font-size: 0.875rem;
+                padding: 0.5rem 0.75rem;
+            }
+            
+            .p-dropdown-trigger {
+                width: 2rem;
+                
+                .pi {
+                    font-size: 0.875rem;
+                }
+            }
+        }
+
+        // Estilos para inputs de reglas
+        .rule-input {
+            width: 100%;
+            
+            &.field-input {
+                font-size: 0.875rem;
+                padding: 0.5rem 0.75rem;
+                border-radius: 6px;
+                border: 2px solid #4a5568 !important;
+                background: #2d3748 !important;
+                color: #e2e8f0 !important;
+                transition: all 0.2s ease;
+                cursor: not-allowed;
+                opacity: 1;
+                font-weight: 500;
+                
+                &:hover {
+                    border-color: #718096 !important;
+                    background: #4a5568 !important;
+                }
+                
+                &:focus {
+                    box-shadow: none;
+                    border-color: #4a5568 !important;
+                }
+            }
+            
+            &[type="number"] {
+                text-align: right;
+            }
+        }
+
+        // Estilos específicos para dropdowns
+        .dropdown-input {
+            .p-dropdown {
+                background: #2d3748 !important;
+                border: 2px solid #4a5568 !important;
+                color: #e2e8f0 !important;
+                border-radius: 6px;
+                
+                .p-dropdown-label {
+                    background: #2d3748 !important;
+                    color: #e2e8f0 !important;
+                    font-size: 0.875rem;
+                    padding: 0.5rem 0.75rem;
+                    font-weight: 500;
+                }
+                
+                .p-dropdown-trigger {
+                    background: #2d3748 !important;
+                    color: #e2e8f0 !important;
+                    border-left: 2px solid #4a5568 !important;
+                    width: 2.5rem;
+                }
+                
+                &:hover {
+                    border-color: #718096 !important;
+                    background: #4a5568 !important;
+                }
+                
+                &:focus,
+                &.p-focus {
+                    border-color: #4299e1 !important;
+                    box-shadow: 0 0 0 3px rgba(66, 153, 225, 0.3) !important;
+                }
+            }
+        }
+
+        // Estilos para chips
+        .chips-input {
+            .p-chips {
+                .p-chips-multiple-container {
+                    background: #2d3748 !important;
+                    border: 2px solid #4a5568 !important;
+                    color: #e2e8f0 !important;
+                    border-radius: 6px;
+                    min-height: 2.5rem;
+                    padding: 0.25rem;
+                    
+                    .p-chips-token {
+                        background: #4299e1 !important;
+                        color: #ffffff !important;
+                        border-radius: 12px;
+                        margin: 0.25rem;
+                        padding: 0.25rem 0.5rem;
+                        font-size: 0.875rem;
+                        font-weight: 500;
+                        border: 1px solid #3182ce !important;
+                        
+                        .p-chips-token-icon {
+                            color: #ffffff !important;
+                            font-weight: bold;
+                        }
+                    }
+                    
+                    .p-chips-input-token {
+                        input {
+                            background: transparent !important;
+                            color: #e2e8f0 !important;
+                            font-size: 0.875rem;
+                            font-weight: 500;
+                            padding: 0.25rem;
+                            
+                            &::placeholder {
+                                color: #a0aec0 !important;
+                                font-weight: 400;
+                            }
+                        }
+                    }
+                    
+                    &:hover {
+                        border-color: #718096 !important;
+                        background: #4a5568 !important;
+                    }
+                    
+                    &:focus-within {
+                        border-color: #4299e1 !important;
+                        box-shadow: 0 0 0 3px rgba(66, 153, 225, 0.3) !important;
+                    }
+                }
+            }
+        }
+
+        // Estilos para calendario
+        .calendar-input {
+            .p-calendar {
+                .p-inputtext {
+                    background: #2d3748 !important;
+                    border: 2px solid #4a5568 !important;
+                    color: #e2e8f0 !important;
+                    border-radius: 6px;
+                    font-size: 0.875rem;
+                    padding: 0.5rem 0.75rem;
+                    font-weight: 500;
+                    
+                    &::placeholder {
+                        color: #a0aec0 !important;
+                        font-weight: 400;
+                    }
+                }
+                
+                .p-button {
+                    background: #2d3748 !important;
+                    border: 2px solid #4a5568 !important;
+                    color: #e2e8f0 !important;
+                    border-left: none !important;
+                    border-radius: 0 6px 6px 0;
+                    width: 2.5rem;
+                    
+                    &:hover {
+                        background: #4a5568 !important;
+                    }
+                }
+                
+                &:hover .p-inputtext {
+                    border-color: #718096 !important;
+                    background: #4a5568 !important;
+                }
+                
+                &:focus-within .p-inputtext {
+                    border-color: #4299e1 !important;
+                    box-shadow: 0 0 0 3px rgba(66, 153, 225, 0.3) !important;
+                }
+            }
+        }
+
+        // Estilos para boolean switch
+        .boolean-input-container {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            padding: 0.5rem;
+            background: #2d3748 !important;
+            border: 2px solid #4a5568 !important;
+            border-radius: 6px;
+            min-height: 2.5rem;
+            
+            .boolean-label {
+                font-size: 0.875rem;
+                color: #e2e8f0 !important;
+                font-weight: 600;
+            }
+            
+            .p-inputswitch {
+                .p-inputswitch-slider {
+                    background: #4a5568 !important;
+                    border: 1px solid #718096 !important;
+                    
+                    &:before {
+                        background: #e2e8f0 !important;
+                        box-shadow: 0 2px 4px rgba(0,0,0,0.3) !important;
+                    }
+                }
+                
+                &.p-inputswitch-checked .p-inputswitch-slider {
+                    background: #4299e1 !important;
+                    border-color: #3182ce !important;
+                }
+            }
+        }
+
+        // Estilos para switches boolean
+        .p-inputswitch {
+            .p-inputswitch-slider {
+                background: var(--surface-border);
+                
+                &:before {
+                    background: var(--surface-card);
+                }
+            }
+            
+            &.p-inputswitch-checked .p-inputswitch-slider {
+                background: var(--primary-color);
+            }
+        }
+
+        // Mejoras para el contador de filtros activos
+        .active-filters-counter {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            margin-left: auto;
+            
+            .p-badge {
+                background: var(--primary-color);
+                color: var(--primary-color-text);
+                font-weight: 600;
+                font-size: 0.75rem;
+                padding: 0.25rem 0.5rem;
+                border-radius: 12px;
+                min-width: 1.5rem;
+                text-align: center;
+            }
+        }
+
         // Ajustes para el tema oscuro
         :host-context([data-theme="dark"]) {
             .p-sidebar {
@@ -400,10 +883,286 @@
                 background: var(--surface-card);
             }
 
-            .p-chips .p-chips-multiple-container,
-            .p-calendar .p-inputtext,
-            .p-inputgroup-addon {
+            .filter-rule {
                 background: var(--surface-card);
+                border-color: var(--surface-border);
+                
+                &:hover {
+                    background: var(--surface-hover);
+                    border-color: var(--primary-color);
+                }
+            }
+
+            .sorting-column:hover {
+                background: var(--surface-hover);
+            }
+
+            .active-sorting {
+                background: var(--surface-hover);
+                
+                .sort-item {
+                    .sort-change-area {
+                        &:hover {
+                            background: var(--primary-600);
+                            color: var(--surface-card);
+                        }
+                        
+                        .sort-info {
+                            .sort-direction-display {
+                                .sort-direction-icon {
+                                    color: var(--primary-300);
+                                }
+                            }
+                        }
+                    }
+                    
+                    .sort-remove-area {
+                        .remove-sort-btn {
+                            color: var(--red-400);
+                            
+                            &:hover {
+                                color: var(--red-300);
+                                background: var(--red-900);
+                            }
+                        }
+                    }
+                }
+            }
+
+            // Mejoras específicas para modo oscuro del acordeón
+            .p-accordion {
+                .p-accordion-tab {
+                    background: var(--surface-card) !important;
+                    box-shadow: 0 2px 4px rgba(0,0,0,0.3) !important;
+                    
+                    .p-accordion-header {
+                        .p-accordion-header-link {
+                            background: var(--surface-card) !important;
+                            color: var(--text-color) !important;
+                            
+                            &:hover {
+                                background: var(--surface-hover) !important;
+                                color: var(--text-color) !important;
+                            }
+                        }
+                        
+                        &.p-highlight .p-accordion-header-link {
+                            background: var(--primary-600) !important;
+                            color: var(--primary-color-text) !important;
+                            border-bottom-color: var(--primary-500) !important;
+                        }
+                    }
+                    
+                    .p-accordion-content {
+                        background: var(--surface-card) !important;
+                        border-top-color: var(--surface-border) !important;
+                    }
+                    
+                    &:hover {
+                        box-shadow: 0 4px 8px rgba(0,0,0,0.4) !important;
+                    }
+                }
+            }
+
+            // Mejoras específicas para modo oscuro
+            .field-input {
+                background: var(--surface-card) !important;
+                border-color: var(--surface-border) !important;
+                color: var(--text-color-secondary) !important;
+                
+                &:hover {
+                    background: var(--surface-hover) !important;
+                }
+            }
+
+            .dropdown-input .p-dropdown {
+                background: var(--surface-card) !important;
+                border-color: var(--surface-border) !important;
+                color: var(--text-color) !important;
+                
+                .p-dropdown-label {
+                    background: var(--surface-card) !important;
+                    color: var(--text-color) !important;
+                }
+                
+                .p-dropdown-trigger {
+                    background: var(--surface-card) !important;
+                    color: var(--text-color) !important;
+                    border-left-color: var(--surface-border) !important;
+                }
+            }
+
+            .chips-input .p-chips .p-chips-multiple-container {
+                background: var(--surface-card) !important;
+                border-color: var(--surface-border) !important;
+                color: var(--text-color) !important;
+                
+                .p-chips-input-token input {
+                    color: var(--text-color) !important;
+                    
+                    &::placeholder {
+                        color: var(--text-color-secondary) !important;
+                    }
+                }
+            }
+
+            .calendar-input .p-calendar .p-inputtext {
+                background: var(--surface-card) !important;
+                border-color: var(--surface-border) !important;
+                color: var(--text-color) !important;
+                
+                &::placeholder {
+                    color: var(--text-color-secondary) !important;
+                }
+            }
+
+            .boolean-input-container {
+                background: var(--surface-card) !important;
+                border-color: var(--surface-border) !important;
+                
+                .boolean-label {
+                    color: var(--text-color) !important;
+                }
+            }
+
+            // Mejorar contraste de labels
+            .field-group label {
+                color: #e2e8f0 !important;
+                font-weight: 600;
+                text-transform: uppercase;
+                letter-spacing: 0.5px;
+            }
+
+            // Mejorar contraste de indicadores
+            .filter-active-indicator {
+                border-color: #48bb78 !important;
+                background: #2f855a !important;
+                
+                .pi {
+                    color: #ffffff !important;
+                }
+            }
+
+            .filter-inactive-indicator {
+                border-color: #4a5568 !important;
+                background: #2d3748 !important;
+                
+                .pi {
+                    color: #718096 !important;
+                    opacity: 0.7;
+                }
+            }
+        }
+
+        // Animaciones suaves
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(10px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .filter-rule,
+        .sorting-column,
+        .active-sorting .sort-item {
+            animation: fadeIn 0.3s ease-out;
+        }
+
+        // Indicadores de filtro activo
+        .filter-active-indicator,
+        .filter-inactive-indicator {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            height: 100%;
+            //min-height: 2.5rem;
+            border-radius: 6px;
+            border: 2px solid #4a5568;
+            background: #2d3748;
+            padding: 0.25rem;
+            
+            .pi {
+                font-size: 1.0rem;
+                font-weight: bold;
+            }
+        }
+
+        .filter-active-indicator {
+            border-color: #48bb78 !important;
+            background: #2f855a !important;
+            
+            .pi {
+                color: #ffffff !important;
+                animation: pulse 2s infinite;
+            }
+        }
+
+        .filter-inactive-indicator {
+            border-color: #4a5568 !important;
+            background: #2d3748 !important;
+            
+            .pi {
+                color: #718096 !important;
+                opacity: 0.7;
+            }
+        }
+
+        @keyframes pulse {
+            0% {
+                opacity: 1;
+            }
+            50% {
+                opacity: 0.7;
+            }
+            100% {
+                opacity: 1;
+            }
+        }
+
+        // Mejoras para campos de solo lectura
+        .rule-input[readonly] {
+            cursor: not-allowed;
+            opacity: 0.8;
+            
+            &:focus {
+                box-shadow: none;
+                border-color: var(--surface-border);
+            }
+        }
+
+        // Responsive design
+        @media (max-width: 768px) {
+            .rule-fields-top {
+                grid-template-columns: 1fr;
+                gap: 0.5rem;
+            }
+            
+            .sorting-column {
+                padding: 0.5rem;
+            }
+            
+            .filter-active-indicator,
+            .filter-inactive-indicator {
+                min-height: 2rem;
+                
+                .pi {
+                    font-size: 1rem;
+                }
+            }
+
+            .boolean-input-container {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 0.5rem;
+                padding: 0.75rem;
+                
+                .boolean-label {
+                    font-size: 0.8rem;
+                }
             }
         }
     }

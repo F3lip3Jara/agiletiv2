@@ -1,6 +1,7 @@
-import { Component } from '@angular/core';
+import { Component, ViewChild } from '@angular/core';
 import { LayoutService } from 'src/app/layout/service/app.layout.service';
 import { UsersService } from '../../service/users.service';
+import { TotpComponent } from '../totp/totp.component';
 import {Usuario} from '../model/usuario.model';
 import { Route, Router } from '@angular/router';
 import { MessageService } from 'primeng/api';
@@ -55,6 +56,8 @@ import { trigger, state, style, transition, animate, keyframes } from '@angular/
     ]
 })
 export class LoginComponent {
+    @ViewChild('totpComponent') totpComponent!: TotpComponent;
+    
     valCheck: string[] = ['remember'];
     enabled = false;
     password!: string;
@@ -63,6 +66,7 @@ export class LoginComponent {
     loginSuccess = false;
     shakeAnimation = false;
     showFieldError = false;
+    validateTotp = false;
 
     constructor(
         public layoutService: LayoutService,
@@ -72,12 +76,17 @@ export class LoginComponent {
     ) {}
 
     login(userx: string) {
+
+        console.log('validateTotp' + this.validateTotp);
+        if(this.validateTotp === false){
+
         this.showFieldError = false;
         
-        if (!this.password || userx.length === 0) {
+         if (!this.password || userx.length === 0 && !this.validateTotp) {
             this.showError('Por favor completa todos los campos');
             this.showFieldError = true;
             this.triggerShake();
+            console.log('Por favor completa todos los campos' + this.validateTotp);
             return;
         }
 
@@ -130,6 +139,7 @@ export class LoginComponent {
                 this.isLoading = false;
             }
         );
+      }
     }
 
     showSuccess(message: string) {
@@ -161,5 +171,16 @@ export class LoginComponent {
         if (event.key === 'Enter') {
             this.login(this.username);
         }
+    }
+
+    // TOTP Event Handlers
+    onTotpSuccess() {
+        this.showSuccess('¡Autenticación TOTP exitosa!');
+        // Proceder con login normal después de TOTP exitoso
+        this.login(this.username);
+    }
+
+    onTotpCancel() {
+        // No hacer nada, solo cerrar el modal
     }
 }

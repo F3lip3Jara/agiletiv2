@@ -4,14 +4,14 @@
             <p-toast></p-toast>            
             <!-- Header con título y búsqueda -->
             <div class="admin-header">
-                <h2 class="header-title">Administración Sectores y Ubicaciones</h2>
+                <h2 class="header-title">Administración Sectores, Ubicaciones y Racks</h2>
                 <div class="header-actions">
                     <span class="p-input-icon-left">
                         <i class="pi pi-search"></i>
                         <input #searchInput pInputText type="text" (input)="onGlobalFilter(dt, $event)" placeholder="Buscar... (Ctrl+Q)" class="p-inputtext-sm"/>
                     </span>
                     <button pButton pRipple label="Nuevo Sector" icon="pi pi-plus" class="p-button-primary p-button-sm" (click)="openNew()"></button>
-                    <button pButton pRipple label="Importar Ubicaciones" icon="pi pi-upload" class="p-button-success p-button-sm" (click)="showImportDialog()"></button>
+                    <button pButton pRipple label="Importar Ubicaciones y Racks" icon="pi pi-upload" class="p-button-success p-button-sm" (click)="showImportDialog()"></button>
                     <button pButton pRipple label="Actualizar" icon="pi pi-refresh" class="p-button-info p-button-sm" (click)="refresh()"></button>
                     <button pButton pRipple label="Exportar" icon="pi pi-download" class="p-button-outlined p-button-sm" (click)="exportCSV()"></button>
                 </div>
@@ -55,6 +55,7 @@
                                 <p-treeTableToggler [rowNode]="rowNode"></p-treeTableToggler>
                                 <span class="font-medium">{{rowData.code}}</span>
                                 <span *ngIf="rowData.type === 'ubicacion'" class="text-sm text-gray-500 ml-2">(Ubicación)</span>
+                                <span *ngIf="rowData.type === 'rack'" class="text-sm text-blue-500 ml-2">(Rack)</span>
                             </td>
                          
                             <td>
@@ -94,6 +95,22 @@
                                             pTooltip="Eliminar Ubicación">
                                         </button>
                                     </div>
+
+                                    <!-- Botones de acción para racks -->
+                                    <div *ngIf="rowData.type === 'rack'">
+                                        <button pButton pRipple 
+                                            icon="pi pi-pencil" 
+                                            class="p-button-rounded p-button-text p-button-primary p-button-sm"
+                                            (click)="editRack(rowData)"
+                                            pTooltip="Editar Rack">
+                                        </button>
+                                        <button pButton pRipple 
+                                            icon="pi pi-trash" 
+                                            class="p-button-rounded p-button-text p-button-danger p-button-sm"
+                                            (click)="delRack(rowData)"
+                                            pTooltip="Eliminar Rack">
+                                        </button>
+                                    </div>
                                 </div>
                             </td>
                         </tr>
@@ -123,8 +140,8 @@
     </div>
 </div>
 
-<!-- Diálogo de Importación de Ubicaciones -->
-<p-dialog header="Importar Ubicaciones por Excel" [(visible)]="importDialogVisible" [style]="{width: '60vw'}" [modal]="true">
+<!-- Diálogo de Importación de Ubicaciones y Racks -->
+<p-dialog header="Importar Ubicaciones y Racks por Excel" [(visible)]="importDialogVisible" [style]="{width: '60vw'}" [modal]="true">
     <div class="p-fluid">
         <div class="format-download-section">
            
@@ -166,17 +183,18 @@
         </div>
         
         <div class="p-mt-3">
-            <p-message severity="info" text="Instrucciones de importación de ubicaciones:"></p-message>
+            <p-message severity="info" text="Instrucciones de importación de ubicaciones y racks:"></p-message>
             <div class="p-ml-4">
                 <p><strong>Formato requerido del Excel:</strong></p>
                 <ul>
-                    <li><strong>Sector:</strong> Nombre del sector (obligatorio)</li>
+                    <li><strong>Sector:</strong> Código del sector (obligatorio)</li>
                     <li><strong>Ubicación:</strong> Código de la ubicación (obligatorio)</li>
+                    <li><strong>Rack:</strong> Código del rack (obligatorio)</li>
                     <li><strong>Activo:</strong> 1 para activo, 0 para inactivo (obligatorio)</li>
-                    <li><strong>cm3:</strong> Volumen en centímetros cúbicos (opcional)</li>
-                    <li><strong>Alto:</strong> Altura en centímetros (opcional)</li>
-                    <li><strong>Ancho:</strong> Ancho en centímetros (opcional)</li>
-                    <li><strong>Largo:</strong> Largo en centímetros (opcional)</li>
+                    <li><strong>cm3:</strong> Volumen en centímetros cúbicos (obligatorio)</li>
+                    <li><strong>Alto:</strong> Altura en centímetros (obligatorio)</li>
+                    <li><strong>Ancho:</strong> Ancho en centímetros (obligatorio)</li>
+                    <li><strong>Largo:</strong> Largo en centímetros (obligatorio)</li>
                 </ul>
                 
                 <p class="p-mt-2"><strong>Ejemplo de datos:</strong></p>
@@ -186,6 +204,7 @@
                             <tr>
                                 <th>Sector</th>
                                 <th>Ubicación</th>
+                                <th>Rack</th>
                                 <th>Activo</th>
                                 <th>cm3</th>
                                 <th>Alto</th>
@@ -196,7 +215,8 @@
                         <tbody>
                             <tr>
                                 <td>SEC01</td>
-                                <td>U001</td>
+                                <td>UBI-A</td>
+                                <td>R001</td>
                                 <td>1</td>
                                 <td>1000</td>
                                 <td>10</td>
@@ -204,17 +224,29 @@
                                 <td>10</td>
                             </tr>
                             <tr>
-                                <td>SEC02</td>
-                                <td>U002</td>
+                                <td>SEC01</td>
+                                <td>UBI-A</td>
+                                <td>R002</td>
                                 <td>1</td>
                                 <td>2000</td>
                                 <td>20</td>
                                 <td>10</td>
                                 <td>10</td>
                             </tr>
+                            <tr>
+                                <td>SEC02</td>
+                                <td>UBI-B</td>
+                                <td>R001</td>
+                                <td>1</td>
+                                <td>1500</td>
+                                <td>15</td>
+                                <td>10</td>
+                                <td>10</td>
+                            </tr>
                         </tbody>
                     </table>
                 </div>
+                <p class="p-mt-2"><strong>Nota:</strong> El sistema creará automáticamente la jerarquía de 3 niveles: Sector → Ubicación → Rack</p>
             </div>
         </div>
     </div>
@@ -261,5 +293,45 @@
     <ng-template pTemplate="footer">
         <button pButton pRipple label="Cancelar" icon="pi pi-times" class="p-button-text" (click)="ubicacionDialogVisible = false"></button>
         <button pButton pRipple label="Guardar" icon="pi pi-check" class="p-button-primary" (click)="saveUbicacion()"></button>
+    </ng-template>
+</p-dialog>
+
+<!-- Diálogo de Rack -->
+<p-dialog header="Gestionar Rack" [(visible)]="rackDialogVisible" [style]="{width: '40vw'}" [modal]="true">
+    <div class="p-fluid">
+        <div class="p-field">
+            <label for="rackCode">Código de Rack</label>
+            <input id="rackCode" type="text" pInputText [(ngModel)]="rack.code" required />
+        </div>
+        
+        <div class="p-field">
+            <label for="rackActive">Estado</label>
+            <p-dropdown id="rackActive" [options]="activeOptions" [(ngModel)]="rack.active" optionLabel="label" optionValue="value" placeholder="Seleccionar estado"></p-dropdown>
+        </div>
+        
+        <div class="p-field">
+            <label for="rackVolume">Volumen (cm³)</label>
+            <input id="rackVolume" type="number" pInputText [(ngModel)]="rack.volume" />
+        </div>
+        
+        <div class="p-grid">
+            <div class="p-col-4">
+                <label for="rackHeight">Alto (cm)</label>
+                <input id="rackHeight" type="number" pInputText [(ngModel)]="rack.height" />
+            </div>
+            <div class="p-col-4">
+                <label for="rackWidth">Ancho (cm)</label>
+                <input id="rackWidth" type="number" pInputText [(ngModel)]="rack.width" />
+            </div>
+            <div class="p-col-4">
+                <label for="rackLength">Largo (cm)</label>
+                <input id="rackLength" type="number" pInputText [(ngModel)]="rack.length" />
+            </div>
+        </div>
+    </div>
+    
+    <ng-template pTemplate="footer">
+        <button pButton pRipple label="Cancelar" icon="pi pi-times" class="p-button-text" (click)="rackDialogVisible = false"></button>
+        <button pButton pRipple label="Guardar" icon="pi pi-check" class="p-button-primary" (click)="saveRack()"></button>
     </ng-template>
 </p-dialog> 

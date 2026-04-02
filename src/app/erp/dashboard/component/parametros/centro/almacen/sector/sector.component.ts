@@ -52,6 +52,18 @@ export class SectorComponent implements OnInit, OnDestroy {
     width: null,
     length: null
   };
+  
+  // Propiedades para gestión de racks
+  rackDialogVisible: boolean = false;
+  rack: any = {
+    code: '',
+    active: 1,
+    volume: null,
+    height: null,
+    width: null,
+    length: null
+  };
+  
   activeOptions = [
     { label: 'Activo', value: 1 },
     { label: 'Inactivo', value: 0 }
@@ -175,23 +187,46 @@ export class SectorComponent implements OnInit, OnDestroy {
       
       return {
         ...sectorNode,
-        children: ubicaciones.map((ubicacion: any) => ({
-          data: {
-            id: ubicacion.ubicacionId || ubicacion.id,
-            name: ubicacion.ubiDes || ubicacion.nombre,
-            code: ubicacion.ubiCod || ubicacion.codigo,
-            type: 'ubicacion',
-            active: ubicacion.ubiAct || ubicacion.activo || 1,
-            volume: ubicacion.ubiVol || ubicacion.volumen,
-            height: ubicacion.ubiAlto || ubicacion.alto,
-            width: ubicacion.ubiAncho || ubicacion.ancho,
-            length: ubicacion.ubiLargo || ubicacion.largo
+        children: ubicaciones.map((ubicacion: any) => {
+          // Crear nodo de ubicación con sus racks como hijos
+          const ubicacionNode: TreeNode = {
+            data: {
+              id: ubicacion.ubicacionId || ubicacion.id,
+              name: ubicacion.ubiDes || ubicacion.nombre,
+              code: ubicacion.ubiCod || ubicacion.codigo,
+              type: 'ubicacion',
+              active: ubicacion.ubiAct || ubicacion.activo || 1,
+              volume: ubicacion.ubiVol || ubicacion.volumen,
+              height: ubicacion.ubiAlto || ubicacion.alto,
+              width: ubicacion.ubiAncho || ubicacion.ancho,
+              length: ubicacion.ubiLargo || ubicacion.largo
+            },
+            children: []
+          };
+          
+          // Si la ubicación tiene racks, agregarlos como hijos
+          if (ubicacion.racks && Array.isArray(ubicacion.racks)) {
+            ubicacionNode.children = ubicacion.racks.map((rack: any) => ({
+              data: {
+                id: rack.rackId || rack.id,
+                name: rack.rackDes || rack.nombre,
+                code: rack.rackCod || rack.codigo,
+                type: 'rack',
+                active: rack.rackAct || rack.activo || 1,
+                volume: rack.rackVol || rack.volumen,
+                height: rack.rackAlto || rack.alto,
+                width: rack.rackAncho || rack.ancho,
+                length: rack.rackLargo || rack.largo
+              }
+            }));
           }
-        }))
+          
+          return ubicacionNode;
+        })
       };
     });
     
-   // console.log('TreeData actualizado con ubicaciones:', this.treeData);
+   // console.log('TreeData actualizado con ubicaciones y racks:', this.treeData);
   }
 
   // Método para obtener ubicaciones de un sector específico (si es necesario)
@@ -213,28 +248,47 @@ export class SectorComponent implements OnInit, OnDestroy {
   downloadFormat() {
    // console.log('TreeData para formato:', this.treeData);
     
-    // Crear un array plano de ubicaciones con sus sectores
+    // Crear un array plano de ubicaciones y racks con sus sectores
     const formatData: any[] = [];
     
     this.treeData.forEach(sector => {
       // Si el sector tiene ubicaciones, agregarlas al formato
       if (sector.children && sector.children.length > 0) {
         sector.children.forEach((ubicacion: any) => {
-          formatData.push({
-            'Sector': sector.data.code || '',
-            'Ubicación': ubicacion.data.code || '',
-            'Activo': ubicacion.data.active || 1,
-            'cm3': ubicacion.data.volume || 0,
-            'Alto': ubicacion.data.height || 0,
-            'Ancho': ubicacion.data.width || 0,
-            'Largo': ubicacion.data.length || 0
-          });
+          // Si la ubicación tiene racks, agregarlos al formato
+          if (ubicacion.children && ubicacion.children.length > 0) {
+            ubicacion.children.forEach((rack: any) => {
+              formatData.push({
+                'Sector': sector.data.code || '',
+                'Ubicación': ubicacion.data.code || '',
+                'Rack': rack.data.code || '',
+                'Activo': rack.data.active || 1,
+                'cm3': rack.data.volume || 0,
+                'Alto': rack.data.height || 0,
+                'Ancho': rack.data.width || 0,
+                'Largo': rack.data.length || 0
+              });
+            });
+          } else {
+            // Si la ubicación no tiene racks, agregar una fila de ejemplo
+            formatData.push({
+              'Sector': sector.data.code || '',
+              'Ubicación': ubicacion.data.code || '',
+              'Rack': '-',
+              'Activo': ubicacion.data.active || 1,
+              'cm3': ubicacion.data.volume || 0,
+              'Alto': ubicacion.data.height || 0,
+              'Ancho': ubicacion.data.width || 0,
+              'Largo': ubicacion.data.length || 0
+            });
+          }
         });
       } else {
         // Si el sector no tiene ubicaciones, agregar una fila de ejemplo
         formatData.push({
           'Sector': sector.data.code || '',
           'Ubicación': '-',
+          'Rack': '-',
           'Activo': '-',
           'cm3': '-',
           'Alto': '-',
@@ -245,7 +299,7 @@ export class SectorComponent implements OnInit, OnDestroy {
     });
     
    // console.log('Datos de formato generados:', formatData);
-    this.excelService.exportAsExcelFile(formatData, 'formato_importacion_ubicaciones');
+    this.excelService.exportAsExcelFile(formatData, 'formato_importacion_ubicaciones_racks');
   }
 
   onUpload(event: any) {
@@ -286,7 +340,7 @@ export class SectorComponent implements OnInit, OnDestroy {
         const headers = jsonData[0] as string[];
         
         // Validar encabezados requeridos
-        const requiredHeaders = ['Sector', 'Ubicación', 'Activo', 'cm3', 'Alto', 'Ancho', 'Largo'];
+        const requiredHeaders = ['Sector', 'Ubicación', 'Rack', 'Activo', 'cm3', 'Alto', 'Ancho', 'Largo'];
         const missingHeaders = requiredHeaders.filter(header => !headers.includes(header));
         
         if (missingHeaders.length > 0) {
@@ -311,6 +365,7 @@ export class SectorComponent implements OnInit, OnDestroy {
           const rowData = {
             sector: row[headers.indexOf('Sector')],
             ubicacion: row[headers.indexOf('Ubicación')],
+            rack: row[headers.indexOf('Rack')],
             activo: row[headers.indexOf('Activo')],
             volumen: row[headers.indexOf('cm3')],
             alto: row[headers.indexOf('Alto')],
@@ -366,6 +421,11 @@ export class SectorComponent implements OnInit, OnDestroy {
     // Validar Ubicación
     if (!rowData.ubicacion || typeof rowData.ubicacion !== 'string' || rowData.ubicacion.trim() === '') {
       errors.push(`Fila ${rowNumber}: El campo 'Ubicación' es requerido y debe ser texto`);
+    }
+    
+    // Validar Rack
+    if (!rowData.rack || typeof rowData.rack !== 'string' || rowData.rack.trim() === '') {
+      errors.push(`Fila ${rowNumber}: El campo 'Rack' es requerido y debe ser texto`);
     }
     
     // Validar Activo
@@ -477,6 +537,56 @@ export class SectorComponent implements OnInit, OnDestroy {
       severity: 'warn',
       summary: 'Ubicación eliminada',
       detail: `La ubicación ${ubicacion.name} se ha eliminado correctamente`
+    });
+    // Recargar datos
+    this.refresh();
+  }
+
+  // Métodos para gestión de racks
+  openNewRack(ubicacion: any) {
+    console.log('Abriendo modal de nuevo rack para ubicación:', ubicacion);
+    this.rack = {
+      code: '',
+      active: 1,
+      volume: null,
+      height: null,
+      width: null,
+      length: null
+    };
+    this.rackDialogVisible = true;
+  //  console.log('Modal de rack visible:', this.rackDialogVisible);
+  }
+
+  editRack(rack: any) {
+   // console.log('Editando rack:', rack);
+    this.messageService.add({
+      severity: 'info',
+      summary: 'Editando rack',
+      detail: `Editando rack: ${rack.name}`
+    });
+    this.rack = { ...rack };
+    this.rackDialogVisible = true;
+  }
+
+  saveRack() {
+    // Aquí implementarías la lógica para guardar el rack
+    this.messageService.add({
+      severity: 'success',
+      summary: 'Rack guardado',
+      detail: 'El rack se ha guardado correctamente'
+    });
+    this.rackDialogVisible = false;
+    // Recargar datos
+    this.refresh();
+  }
+
+  delRack(rack: any) {
+   // console.log('Eliminando rack:', rack);
+    // Aquí implementarías la lógica para eliminar el rack
+    this.messageService.add({
+      severity: 'warn',
+      summary: 'Rack eliminado',
+      detail: `El rack ${rack.name} se ha eliminado correctamente`
     });
     // Recargar datos
     this.refresh();

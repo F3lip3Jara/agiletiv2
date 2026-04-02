@@ -76,11 +76,13 @@ export class UsuariosComponent {
         }
       }
     ];
+
+    this.colums = [];
   }
   
 
   ngOnInit(): void {
-    
+    this.colums = [];
    this.store.dispatch(getUsuariosRequest());
    this.store.dispatch(incrementarRequest({request: 1}));
     this.actions$.pipe(

@@ -9,6 +9,9 @@ import { PasswordModule } from 'primeng/password';
 import { InputTextModule } from 'primeng/inputtext';
 import { CambiodepassComponent } from './cambiodepass/cambiodepass.component';
 import { ToastModule } from 'primeng/toast';
+import { DialogModule } from 'primeng/dialog';
+import { TotpComponent } from '../totp/totp.component';
+import { OtpInputComponent } from '../totp/otp-input/otp-input.component';
 
 @NgModule({
     imports: [
@@ -20,8 +23,9 @@ import { ToastModule } from 'primeng/toast';
         FormsModule,
         PasswordModule,
         ReactiveFormsModule,
-        ToastModule
+        ToastModule,
+        DialogModule
     ],
-    declarations: [LoginComponent , CambiodepassComponent]
+    declarations: [LoginComponent , CambiodepassComponent, TotpComponent , OtpInputComponent]
 })
 export class LoginModule { }

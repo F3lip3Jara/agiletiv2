@@ -75,6 +75,22 @@
                         iconPos="right">
                     </button>
                 </div>
+
+                <!-- Botón TOTP -->
+                <div class="totp-section" [@fadeInUp]>
+                    <div class="divider">
+                        <span>o</span>
+                    </div>
+                    <button 
+                        pButton 
+                        type="button"
+                        class="totp-btn"
+                        (click)="totpComponent.openTotpModal() && validateTotp = true"
+                        label="Autenticación de TOPT"
+                        icon="pi pi-shield"
+                        iconPos="left">
+                    </button>
+                </div>
             </form>
 
             <!-- Footer -->
@@ -92,3 +108,11 @@
 
 <!-- Toast para mensajes -->
 <p-toast position="bottom-right"></p-toast>
+
+<!-- Componente TOTP -->
+<app-totp 
+    #totpComponent
+    [username]="username"
+    (totpSuccess)="onTotpSuccess()"
+    (totpCancel)="onTotpCancel()">
+</app-totp>

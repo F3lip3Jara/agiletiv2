@@ -1,0 +1,486 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
+
+// Variables CSS
+:root {
+    --primary-color: #f7971e;
+    --primary-hover: #f57f0a;
+    --background: #f8f9fa;
+    --surface: #ffffff;
+    --text-primary: #343a40;
+    --text-secondary: #6c757d;
+    --border-color: #dee2e6;
+    --error-color: #ef4444;
+    --success-color: #10b981;
+    --shadow-sm: 0 1px 2px 0 rgb(0 0 0 / 0.05);
+    --shadow-md: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
+    --shadow-lg: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1);
+    --border-radius: 12px;
+    --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+// TOTP Modal Styles
+:host ::ng-deep {
+    .p-dialog {
+        background: #ffffff !important;
+        border: 1px solid #e9ecef;
+        box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+        
+        .p-dialog-header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border-radius: 12px 12px 0 0;
+            padding: 1.5rem 2rem;
+            border: none;
+            
+            .p-dialog-title {
+                font-weight: 600;
+                font-size: 1.25rem;
+            }
+            
+            .p-dialog-header-icon {
+                color: white;
+                font-size: 1.5rem;
+                
+                &:hover {
+                    background: rgba(255, 255, 255, 0.1);
+                }
+            }
+        }
+        
+        .p-dialog-content {
+            padding: 0;
+            border-radius: 0 0 12px 12px;
+            background: #ffffff !important;
+        }
+        
+        .p-dialog-mask {
+            background: rgba(0, 0, 0, 0.4);
+        }
+    }
+}
+
+.totp-modal-header {
+    display: flex;
+    align-items: center;
+    color: white;
+    font-weight: 600;
+    font-size: 1.25rem;
+    
+    .header-content {
+        flex: 1;
+        
+        .step-progress {
+            margin-top: 0.5rem;
+            
+            .step-indicator {
+                display: flex;
+                align-items: center;
+                gap: 0.25rem;
+                font-size: 0.9rem;
+                margin-bottom: 0.5rem;
+                
+                .step-number {
+                    background: rgba(255, 255, 255, 0.2);
+                    padding: 0.25rem 0.5rem;
+                    border-radius: 4px;
+                    font-weight: 700;
+                }
+                
+                .step-total {
+                    opacity: 0.8;
+                }
+            }
+            
+            .progress-bar {
+                width: 100%;
+                height: 4px;
+                background: rgba(255, 255, 255, 0.2);
+                border-radius: 2px;
+                overflow: hidden;
+                
+                .progress-fill {
+                    height: 100%;
+                    background: white;
+                    border-radius: 2px;
+                    transition: width 0.3s ease;
+                }
+            }
+        }
+    }
+}
+
+.totp-modal-content {
+    padding: 2rem;
+    background: #ffffff !important;
+    color: var(--text-primary);
+}
+
+// Username Input Section
+.username-input-section {
+    text-align: center;
+    
+    .form-field {
+        margin-bottom: 1.5rem;
+    }
+    
+    .input-container {
+        position: relative;
+        display: flex;
+        align-items: center;
+    }
+    
+    .input-icon {
+        position: absolute;
+        left: 1rem;
+        color: var(--text-secondary);
+        font-size: 1.1rem;
+        z-index: 2;
+        transition: var(--transition);
+    }
+    
+    .modern-input {
+        width: 100%;
+        padding: 1rem 1rem 1rem 3rem;
+        border: 1px solid var(--border-color);
+        background: #ffffff !important;
+        border-radius: var(--border-radius);
+        font-size: 1rem;
+        font-weight: 400;
+        color: var(--text-primary) !important;
+        transition: var(--transition);
+        outline: none;
+        box-shadow: var(--shadow-sm);
+
+        &:focus {
+            border-color: var(--primary-color);
+            box-shadow: 0 0 0 3px rgba(247, 151, 30, 0.2);
+            background: #ffffff !important;
+            color: var(--text-primary) !important;
+        }
+
+        &::placeholder {
+            color: var(--text-secondary);
+            font-weight: 400;
+        }
+    }
+    
+    .username-actions {
+        display: flex;
+        justify-content: center;
+    }
+}
+
+.totp-loading {
+    text-align: center;
+    padding: 3rem 1rem;
+    
+    p {
+        margin-top: 1rem;
+        color: var(--text-secondary);
+        font-size: 1rem;
+    }
+}
+
+.totp-setup {
+    .setup-header {
+        text-align: center;
+        margin-bottom: 2rem;
+        
+        h3 {
+            color: var(--text-primary);
+            font-size: 1.5rem;
+            font-weight: 600;
+            margin: 0 0 0.5rem 0;
+        }
+        
+        p {
+            color: var(--text-secondary);
+            margin: 0;
+            font-size: 1rem;
+        }
+    }
+    
+    .qr-container {
+        display: flex;
+        justify-content: center;
+        margin-bottom: 2rem;
+        
+        .qr-code-wrapper {
+            background: white;
+            padding: 1.5rem;
+            border-radius: var(--border-radius);
+            box-shadow: var(--shadow-md);
+            border: 1px solid var(--border-color);
+            
+            .qr-code {
+                width: 200px;
+                height: 200px;
+                display: block;
+            }
+        }
+    }
+    
+    .manual-setup {
+        margin-bottom: 2rem;
+        
+        .manual-label {
+            color: var(--text-secondary);
+            font-size: 0.9rem;
+            margin-bottom: 0.75rem;
+            text-align: center;
+        }
+        
+        .secret-container {
+            display: flex;
+            gap: 0.5rem;
+            align-items: center;
+            
+            .secret-input {
+                flex: 1;
+                font-family: 'Courier New', monospace;
+                font-size: 0.9rem;
+                text-align: center;
+                letter-spacing: 0.1em;
+            }
+            
+            .copy-btn {
+                padding: 0.75rem;
+                background: var(--primary-color);
+                border: none;
+                border-radius: var(--border-radius);
+                color: white;
+                cursor: pointer;
+                transition: var(--transition);
+                
+                &:hover {
+                    background: var(--primary-hover);
+                }
+            }
+        }
+    }
+    
+    .backup-codes {
+        background: #f8f9fa;
+        border: 1px solid var(--border-color);
+        border-radius: var(--border-radius);
+        padding: 1.5rem;
+        margin-bottom: 2rem;
+        
+        h4 {
+            color: var(--text-primary);
+            font-size: 1.1rem;
+            font-weight: 600;
+            margin: 0 0 0.5rem 0;
+        }
+        
+        .backup-warning {
+            color: var(--text-secondary);
+            font-size: 0.9rem;
+            margin: 0 0 1rem 0;
+        }
+        
+        .codes-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 0.5rem;
+            
+            .backup-code {
+                background: white;
+                border: 1px solid var(--border-color);
+                border-radius: 6px;
+                padding: 0.5rem;
+                text-align: center;
+                font-family: 'Courier New', monospace;
+                font-size: 0.85rem;
+                font-weight: 600;
+                color: var(--text-primary);
+            }
+        }
+    }
+    
+    .verification-step {
+        border-top: 1px solid var(--border-color);
+        padding-top: 1.5rem;
+        
+        h4 {
+            color: var(--text-primary);
+            font-size: 1.1rem;
+            font-weight: 600;
+            margin: 0 0 0.5rem 0;
+        }
+        
+        p {
+            color: var(--text-secondary);
+            font-size: 0.9rem;
+            margin: 0 0 1rem 0;
+        }
+    }
+}
+
+.totp-verification {
+    text-align: center;
+    
+    .verification-header {
+        margin-bottom: 2rem;
+        
+        h3 {
+            color: var(--text-primary);
+            font-size: 1.5rem;
+            font-weight: 600;
+            margin: 0 0 0.5rem 0;
+        }
+        
+        p {
+            color: var(--text-secondary);
+            margin: 0;
+            font-size: 1rem;
+        }
+    }
+    
+    .verification-input {
+        margin-bottom: 1.5rem;
+    }
+    
+    .verification-help {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 0.5rem;
+        color: var(--text-secondary);
+        font-size: 0.9rem;
+        margin-bottom: 1rem;
+        
+        i {
+            color: var(--primary-color);
+        }
+    }
+}
+
+// Demo hint styling
+.demo-hint {
+    background: #e3f2fd;
+    border: 1px solid #2196f3;
+    border-radius: var(--border-radius);
+    padding: 1rem;
+    margin-top: 1rem;
+    color: #1976d2;
+    font-size: 0.9rem;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    
+    i {
+        color: #2196f3;
+        font-size: 1rem;
+    }
+    
+    code {
+        background: #bbdefb;
+        padding: 0.25rem 0.5rem;
+        border-radius: 4px;
+        font-family: 'Courier New', monospace;
+        font-weight: 600;
+        color: #0d47a1;
+    }
+}
+
+// Input OTP Styles
+:host ::ng-deep {
+    .totp-input,
+    .totp-input-large {
+        .p-inputotp {
+            display: flex;
+            gap: 0.75rem;
+            justify-content: center;
+            
+            .p-inputotp-input {
+                width: 3rem;
+                height: 3rem;
+                text-align: center;
+                font-size: 1.25rem;
+                font-weight: 600;
+                border: 2px solid var(--border-color);
+                border-radius: var(--border-radius);
+                background: white;
+                color: var(--text-primary);
+                transition: var(--transition);
+                
+                &:focus {
+                    border-color: var(--primary-color);
+                    box-shadow: 0 0 0 3px rgba(247, 151, 30, 0.2);
+                    outline: none;
+                }
+                
+                &:not(:placeholder-shown) {
+                    border-color: var(--primary-color);
+                    background: rgba(247, 151, 30, 0.05);
+                }
+            }
+        }
+    }
+    
+    .totp-input-large {
+        .p-inputotp {
+            gap: 1rem;
+            
+            .p-inputotp-input {
+                width: 3.5rem;
+                height: 3.5rem;
+                font-size: 1.5rem;
+            }
+        }
+    }
+}
+
+.totp-modal-footer {
+    display: flex;
+    justify-content: flex-end;
+    gap: 1rem;
+    padding: 1.5rem 2rem;
+    background: #ffffff !important;
+    border-radius: 0 0 12px 12px;
+    border-top: 1px solid var(--border-color);
+}
+
+// Responsive TOTP
+@media (max-width: 480px) {
+    .totp-modal-content {
+        padding: 1.5rem 1rem;
+    }
+    
+    .totp-setup {
+        .qr-container .qr-code-wrapper .qr-code {
+            width: 150px;
+            height: 150px;
+        }
+        
+        .backup-codes .codes-grid {
+            grid-template-columns: 1fr;
+        }
+    }
+    
+    :host ::ng-deep {
+        .totp-input,
+        .totp-input-large {
+            .p-inputotp {
+                gap: 0.5rem;
+                
+                .p-inputotp-input {
+                    width: 2.5rem;
+                    height: 2.5rem;
+                    font-size: 1.1rem;
+                }
+            }
+        }
+        
+        .totp-input-large .p-inputotp {
+            gap: 0.75rem;
+            
+            .p-inputotp-input {
+                width: 3rem;
+                height: 3rem;
+                font-size: 1.25rem;
+            }
+        }
+    }
+}
