@@ -21,3 +21,4 @@ jobs:
                   firebaseServiceAccount: ${{ secrets.FIREBASE_SERVICE_ACCOUNT_OMS_ECOMMERCE }}
                   channelId: live
                   projectId: oms-ecommerce
+                  node-version: 24
