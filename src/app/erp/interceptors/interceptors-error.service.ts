@@ -1,139 +1,155 @@
-import { HttpEvent, HttpEventType, HttpHandler, HttpInterceptor, HttpRequest, HttpResponse } from '@angular/common/http';
+import {
+    HttpEvent,
+    HttpEventType,
+    HttpHandler,
+    HttpInterceptor,
+    HttpRequest,
+    HttpResponse,
+} from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
-import {throwError,catchError, tap} from 'rxjs';
+import { throwError, catchError, tap } from 'rxjs';
 import { Router } from '@angular/router';
 import { Store } from '@ngrx/store';
-import { decrementarRequest, setAltura } from '../dashboard/component/state/actions/estado.actions';
+import {
+    decrementarRequest,
+    setAltura,
+} from '../dashboard/component/state/actions/estado.actions';
 import { RestService } from '../dashboard/service/rest.service';
-export interface MensajesSystem{
-    url    :string ,
-    mensaje:string,
-    type   :string
-} 
+export interface MensajesSystem {
+    url: string;
+    mensaje: string;
+    type: string;
+}
 
 @Injectable({
-  providedIn: 'root'
+    providedIn: 'root',
 })
-export class InterceptorsErrorService implements HttpInterceptor  {
+export class InterceptorsErrorService implements HttpInterceptor {
+    //private servidor: string = 'https://app.back.agileti.cl/';
+    //private servidor: string = 'http://127.0.0.1:8000/';
+    //private servidor: string = 'https://app.back.qa.agileti.cl/';
+    private servidor: string =
+        'https://back-agileticl-751122538600.us-west1.run.app/';
+    private excludedUrl: any[] = [
+        'https://api.openweathermap.org/',
+        'https://api.openweathermap.org/data/2.5/weather',
+    ];
+    private excludedLoad: any[] = [
+        'regPai',
+        'colorInfo',
+        'https://maps.googleapis.com/maps/api/mapsjs/gen_204?csp_test=true',
+        'indicadores',
+    ];
 
+    constructor(
+        private router: Router,
+        private store: Store,
+    ) {}
 
-//private servidor: string = 'https://app.back.agileti.cl/';
-private servidor: string = 'http://127.0.0.1:8000/';
-//private servidor: string = 'https://app.back.qa.agileti.cl/';
-private excludedUrl  : any [] = [
-  'https://api.openweathermap.org/',
-  'https://api.openweathermap.org/data/2.5/weather'
-]; 
-private excludedLoad : any [] = [
-  'regPai',
-  'colorInfo',
-  'https://maps.googleapis.com/maps/api/mapsjs/gen_204?csp_test=true',
-  'indicadores'
-]; 
+    intercept(
+        req: HttpRequest<any>,
+        next: HttpHandler,
+    ): Observable<HttpEvent<any>> {
+        let count = 0;
+        let shouldExclude = false;
 
-constructor(   private router : Router, private store: Store ) {
-   
- }
-
-
-  intercept(req: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
-   let count = 0;   
-   let shouldExclude = false;
-
-   // Verificar si la URL debe ser excluida
-   this.excludedUrl.forEach((element : any) => { 
-    if (req.url.includes(element)) {
-       shouldExclude = true;
-    }
-   });
-
-   this.excludedLoad.forEach((element : any) => { 
-    if (req.url === element) {
-       count ++;
-    }
-   });
-
-   // Si la URL debe ser excluida, no agregar el servidor
-   const finalUrl = shouldExclude ? req.url : this.servidor + req.url;
-   const cloneReq = req.clone({ url: finalUrl });
-   
-   return next.handle(cloneReq).pipe(
-      tap(event => {
-        this.handleHttpEvent(event , count);
-        let altura = document.getElementsByTagName('body')[0].offsetHeight + 70;
-        this.store.dispatch(setAltura({ altura: altura }));
-      }),
-      catchError(error => this.handleError(error))
-    );
-   
-  }
-  
-  private handleHttpEvent(event: HttpEvent<any> , count: number): void {
-    if (event.type === HttpEventType.DownloadProgress || event.type === HttpEventType.Response) {
-    }
-    if (event instanceof HttpResponse) {
-      this.handleHttpResponse(event , count);
-    }
-  }
-  
-  private handleHttpResponse(response: HttpResponse<any> , count: number): void {
-  // console.log(count);
-    if(count > 0){
-   //   console.log('response', response);
-    this.store.dispatch(decrementarRequest());
-    }
-    switch (response.status) {
-      case 200: 
-      this.store.dispatch(decrementarRequest());     
-        break;
-      case 203:
-        this.router.navigate(['auth/access']);
-        break;
-      case 204:
-       console.log('Registro posiblemente no encontrado');
-        break;
-    }
-  }
-  
-  private handleSuccessResponse(body: any): void {
-    try {
-      if (Array.isArray(body)) {
-        body.forEach(element => {
-          if (element.mensaje.length > 0) {      
-            
-          }
+        // Verificar si la URL debe ser excluida
+        this.excludedUrl.forEach((element: any) => {
+            if (req.url.includes(element)) {
+                shouldExclude = true;
+            }
         });
-      }
-    } catch (e) {
-      // Manejar cualquier error durante el procesamiento del cuerpo de la respuesta
+
+        this.excludedLoad.forEach((element: any) => {
+            if (req.url === element) {
+                count++;
+            }
+        });
+
+        // Si la URL debe ser excluida, no agregar el servidor
+        const finalUrl = shouldExclude ? req.url : this.servidor + req.url;
+        const cloneReq = req.clone({ url: finalUrl });
+
+        return next.handle(cloneReq).pipe(
+            tap((event) => {
+                this.handleHttpEvent(event, count);
+                let altura =
+                    document.getElementsByTagName('body')[0].offsetHeight + 70;
+                this.store.dispatch(setAltura({ altura: altura }));
+            }),
+            catchError((error) => this.handleError(error)),
+        );
     }
-  }
-  
-  private handleError(error: any): Observable<never> {
-    let errorMessage = '';
-  
-    if (error instanceof ErrorEvent) {
-      errorMessage = `Error en el cliente (interceptor): ${error.error.message}`;
-    } else {
-      switch (error.status) {
-        case 406:
-          this.router.navigate(['auth/error']);
-          //this.servicio.setAlert('No se encuentra información', 'danger');
-          break;
-        case 403:
-          this.router.navigate(['auth/access']);
-          break;
-        case 404:
-          this.router.navigate(['auth/notfound']);
-          break;
-        default:
-          errorMessage = `Error en el servidor (interceptor): ${error.message || 'Error desconocido'}`;
-      }
+
+    private handleHttpEvent(event: HttpEvent<any>, count: number): void {
+        if (
+            event.type === HttpEventType.DownloadProgress ||
+            event.type === HttpEventType.Response
+        ) {
+        }
+        if (event instanceof HttpResponse) {
+            this.handleHttpResponse(event, count);
+        }
     }
-  
-    return throwError(errorMessage);
-  }
-  
-  
+
+    private handleHttpResponse(
+        response: HttpResponse<any>,
+        count: number,
+    ): void {
+        // console.log(count);
+        if (count > 0) {
+            //   console.log('response', response);
+            this.store.dispatch(decrementarRequest());
+        }
+        switch (response.status) {
+            case 200:
+                this.store.dispatch(decrementarRequest());
+                break;
+            case 203:
+                this.router.navigate(['auth/access']);
+                break;
+            case 204:
+                console.log('Registro posiblemente no encontrado');
+                break;
+        }
+    }
+
+    private handleSuccessResponse(body: any): void {
+        try {
+            if (Array.isArray(body)) {
+                body.forEach((element) => {
+                    if (element.mensaje.length > 0) {
+                    }
+                });
+            }
+        } catch (e) {
+            // Manejar cualquier error durante el procesamiento del cuerpo de la respuesta
+        }
+    }
+
+    private handleError(error: any): Observable<never> {
+        let errorMessage = '';
+
+        if (error instanceof ErrorEvent) {
+            errorMessage = `Error en el cliente (interceptor): ${error.error.message}`;
+        } else {
+            switch (error.status) {
+                case 406:
+                    this.router.navigate(['auth/error']);
+                    //this.servicio.setAlert('No se encuentra información', 'danger');
+                    break;
+                case 403:
+                    this.router.navigate(['auth/access']);
+                    break;
+                case 404:
+                    this.router.navigate(['auth/notfound']);
+                    break;
+                default:
+                    errorMessage = `Error en el servidor (interceptor): ${error.message || 'Error desconocido'}`;
+            }
+        }
+
+        return throwError(errorMessage);
+    }
 }

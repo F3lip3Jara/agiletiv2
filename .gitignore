@@ -39,3 +39,10 @@ testem.log
 Thumbs.db
 
 D:\res_erp_agi\agileti\agileti\src\app\erp\service\environment.service.ts
+
+
+# Firebase logs
+.firebaserc
+firebase.json
+firebase-debug.log
+firebase-debug.log*
