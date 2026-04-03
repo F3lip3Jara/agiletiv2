@@ -10,10 +10,6 @@ jobs:
     build_and_deploy:
         runs-on: ubuntu-latest
         steps:
-            # 1. Compilar el proyecto Angular
-            - name: Build de Angular
-              run: npm run build
-            # 2. Subir los archivos a Firebase Hosting
             - uses: actions/checkout@v4
             - run: Y
             - uses: FirebaseExtended/action-hosting-deploy@v0
