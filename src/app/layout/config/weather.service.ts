@@ -43,13 +43,21 @@ export class WeatherService {
         return from(
             new Promise<GeolocationPosition>((resolve, reject) => {
                 if (!navigator.geolocation) {
-                    reject(new Error('Geolocalización no soportada'));
+                    reject(new Error('Geolocalización no soportada por el navegador'));
                     return;
                 }
 
+                // Dejamos registro de que el aplicativo solicitó la ubicación al menos una vez
+                localStorage.setItem('LocationPermissionRequested', 'true');
+
                 navigator.geolocation.getCurrentPosition(
                     (position) => resolve(position),
-                    (error) => reject(error),
+                    (error) => {
+                        if (error.code === error.PERMISSION_DENIED) {
+                            console.warn('El usuario denegó el acceso a la ubicación en el navegador.');
+                        }
+                        reject(error);
+                    },
                     {
                         enableHighAccuracy: true,
                         timeout: 10000,
