@@ -24,7 +24,7 @@ jobs:
             - name: Instalar y Compilar
               run: |
                   npm install --legacy-peer-deps
-                  npm run build --configuration production
+                  npm run build
 
             - name: Desplegar a Firebase
               uses: FirebaseExtended/action-hosting-deploy@v0
