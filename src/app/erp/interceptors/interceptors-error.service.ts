@@ -11,6 +11,7 @@ import { Observable } from 'rxjs';
 import { throwError, catchError, tap } from 'rxjs';
 import { Router } from '@angular/router';
 import { Store } from '@ngrx/store';
+import { environment } from '../../../environments/environment';
 import {
     decrementarRequest,
     setAltura,
@@ -26,10 +27,7 @@ export interface MensajesSystem {
     providedIn: 'root',
 })
 export class InterceptorsErrorService implements HttpInterceptor {
-    //private servidor: string = 'https://app.back.agileti.cl/';
-    private servidor: string = 'http://127.0.0.1:8000/';
-    //private servidor: string = 'https://app.back.qa.agileti.cl/';
-    //  private servidor: string ='https://back-agileticl-751122538600.us-west1.run.app/';
+    private servidor: string = environment.servidor;
     private excludedUrl: any[] = [
         'https://api.openweathermap.org/',
         'https://api.openweathermap.org/data/2.5/weather',
