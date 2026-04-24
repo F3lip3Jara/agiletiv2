@@ -14,10 +14,8 @@
             <!-- Header con logo y título -->
             <div class="login-header" [@fadeInDown]>
                 <div class="logo-container">
-                    <img src="https://agileti.cl/wp-content/uploads/2023/12/cropped-logonew-e1702902489994-284x95.png" 
-                         alt="Agileti" 
-                         class="login-logo"
-                         [@logoFloat]>
+                    <img src="https://agileti.cl/wp-content/uploads/2023/12/cropped-logonew-e1702902489994-284x95.png"
+                        alt="Agileti" class="login-logo" [@logoFloat]>
                 </div>
                 <h1 class="welcome-title">Bienvenido</h1>
                 <p class="welcome-subtitle">Ingresa tus credenciales para continuar</p>
@@ -29,17 +27,9 @@
                 <div class="form-field" [@slideInLeft]>
                     <div class="input-container">
                         <i class="pi pi-user input-icon"></i>
-                        <input 
-                            pInputText 
-                            type="text" 
-                            id="username"
-                            name="username"
-                            [(ngModel)]="username"
-                            placeholder="Usuario"
-                            class="modern-input"
-                            [class.error]="showFieldError"
-                            (keyup.enter)="login(username)"
-                            autocomplete="username">
+                        <input pInputText type="text" id="username" name="username" [(ngModel)]="username"
+                            placeholder="Usuario" class="modern-input" [class.error]="showFieldError"
+                            (keyup.enter)="login(username)" autocomplete="username">
                     </div>
                 </div>
 
@@ -47,14 +37,8 @@
                 <div class="form-field" [@slideInRight]>
                     <div class="input-container">
                         <i class="pi pi-lock input-icon"></i>
-                        <p-password 
-                            [(ngModel)]="password" 
-                            name="password"
-                            [toggleMask]="true"
-                            placeholder="Contraseña"
-                            [feedback]="false"
-                            styleClass="login-password"
-                            [class.error]="showFieldError"
+                        <p-password [(ngModel)]="password" name="password" [toggleMask]="true" placeholder="Contraseña"
+                            [feedback]="false" styleClass="login-password" [class.error]="showFieldError"
                             (keyup.enter)="login(username)">
                         </p-password>
                     </div>
@@ -62,21 +46,13 @@
 
                 <!-- Botón de login -->
                 <div class="form-actions" [@fadeInUp]>
-                    <button 
-                        pButton 
-                        type="submit"
-                        id="login-button"
-                        class="login-btn"
-                        [loading]="enabled"
-                        [disabled]="enabled"
-                        [class.shake]="shakeAnimation"
-                        label="Ingresar"
-                        icon="pi pi-sign-in"
+                    <button pButton type="submit" id="login-button" class="login-btn" [loading]="enabled"
+                        [disabled]="enabled" [class.shake]="shakeAnimation" label="Ingresar" icon="pi pi-sign-in"
                         iconPos="right">
                     </button>
                 </div>
 
-                <!-- Botón TOTP -->
+                <!-- Botón TOTP 
                 <div class="totp-section" [@fadeInUp]>
                     <div class="divider">
                         <span>o</span>
@@ -91,12 +67,14 @@
                         iconPos="left">
                     </button>
                 </div>
+
+                -->
             </form>
 
             <!-- Footer -->
             <div class="login-footer" [@fadeInUp]>
                 <p class="help-text">
-                    ¿Necesitas ayuda? 
+                    ¿Necesitas ayuda?
                     <a href="https://agileti.cl/contacto/" target="_blank" class="help-link">
                         Contáctanos
                     </a>
@@ -110,9 +88,5 @@
 <p-toast position="bottom-right"></p-toast>
 
 <!-- Componente TOTP -->
-<app-totp 
-    #totpComponent
-    [username]="username"
-    (totpSuccess)="onTotpSuccess()"
-    (totpCancel)="onTotpCancel()">
+<app-totp #totpComponent [username]="username" (totpSuccess)="onTotpSuccess()" (totpCancel)="onTotpCancel()">
 </app-totp>
