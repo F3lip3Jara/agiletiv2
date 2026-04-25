@@ -1,7 +1,15 @@
 import { LOCALE_ID, NgModule } from '@angular/core';
-import { HashLocationStrategy, LocationStrategy, PathLocationStrategy, registerLocaleData } from '@angular/common';
+import {
+    HashLocationStrategy,
+    LocationStrategy,
+    PathLocationStrategy,
+    registerLocaleData,
+} from '@angular/common';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { AppComponent } from './app.component';
+import localeEs from '@angular/common/locales/es';
+
+registerLocaleData(localeEs, 'es');
 import { AppRoutingModule } from './app-routing.module';
 import { AppLayoutModule } from './layout/app.layout.module';
 import { NotfoundComponent } from './erp/auth/notfound/notfound.component';
@@ -14,7 +22,7 @@ import { ProductoEffects } from './erp/dashboard/component/parametros/state/effe
 import { UserEffects } from './erp/dashboard/component/seguridad/state/effects/usuarios.effects';
 import { RolesEffects } from './erp/dashboard/component/seguridad/state/effects/roles.effects';
 import { StoreModule } from '@ngrx/store';
-import {StoreDevtoolsModule} from '@ngrx/store-devtools';
+import { StoreDevtoolsModule } from '@ngrx/store-devtools';
 import { MessageService } from 'primeng/api';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { ROOT_APP_REDUCER } from './erp/dashboard/component/app.state';
@@ -53,69 +61,74 @@ import { SeguridadEffects } from './erp/dashboard/component/seguridad/state/effe
 import { ParametrosEffects } from './erp/dashboard/component/parametros/state/effects/parametros.effects';
 import { LogEffects } from './erp/dashboard/component/seguridad/state/effects/log.effects';
 import { UbicacionesEffects } from './erp/dashboard/component/parametros/state/effects/ubicaciones.effects';
+import { GymSlotEffects } from './erp/dashboard/component/gym/state/effects/gymSlot.effects';
+import { GymReservationEffects } from './erp/dashboard/component/gym/state/effects/gymReservation.effects';
 @NgModule({
-    declarations: [AppComponent, NotfoundComponent ],
-    imports: [  
-                BrowserAnimationsModule,
-                AppRoutingModule, 
-                AppLayoutModule ,   
-                ConfiguracionuserModule,
-                StoreModule.forRoot(ROOT_APP_REDUCER),
-                EffectsModule.forRoot([ProductoEffects,
-                    UserEffects , 
-                    RolesEffects , 
-                    OpcionesEffects , 
-                    AccionesEffects,
-                    IndicadorEffects,
-                    MensajeEffects,
-                    EmpresaEffects,
-                    ModuloEffects,
-                    SubModuloEffects,
-                    MonedaEffects,
-                    CiudadEffects,
-                    RegionEffects,
-                    CentroEffects,
-                    GrupoEffects,
-                    SubgrupoEffects,
-                    ColorEffects,
-                    PaisEffects,
-                    ComunaEffects,
-                    UnidadEffects,
-                    ClaseEffects,
-                    TipospagosEffects,
-                    ProveedorEffects,
-                    TallaEffects,
-                    AlmacenEffects,
-                    PedidonacEffects,
-                    OrdenesEffects,
-                    SectorEffects,
-                    ConfigFieldEffects,
-                    StockEffects,
-                    StockCajaEffects,
-                    SeguridadEffects,
-                    ParametrosEffects,
-                    LogEffects,
-                    UbicacionesEffects
-                ]),
-                StoreDevtoolsModule.instrument(),
-                FontAwesomeModule,
-                ImageCropperModule
-    ] ,
+    declarations: [AppComponent, NotfoundComponent],
+    imports: [
+        BrowserAnimationsModule,
+        AppRoutingModule,
+        AppLayoutModule,
+        ConfiguracionuserModule,
+        StoreModule.forRoot(ROOT_APP_REDUCER),
+        EffectsModule.forRoot([
+            ProductoEffects,
+            UserEffects,
+            RolesEffects,
+            OpcionesEffects,
+            AccionesEffects,
+            IndicadorEffects,
+            MensajeEffects,
+            EmpresaEffects,
+            ModuloEffects,
+            SubModuloEffects,
+            MonedaEffects,
+            CiudadEffects,
+            RegionEffects,
+            CentroEffects,
+            GrupoEffects,
+            SubgrupoEffects,
+            ColorEffects,
+            PaisEffects,
+            ComunaEffects,
+            UnidadEffects,
+            ClaseEffects,
+            TipospagosEffects,
+            ProveedorEffects,
+            TallaEffects,
+            AlmacenEffects,
+            PedidonacEffects,
+            OrdenesEffects,
+            SectorEffects,
+            ConfigFieldEffects,
+            StockEffects,
+            StockCajaEffects,
+            SeguridadEffects,
+            ParametrosEffects,
+            LogEffects,
+            UbicacionesEffects,
+            GymSlotEffects,
+            GymReservationEffects,
+        ]),
+        StoreDevtoolsModule.instrument(),
+        FontAwesomeModule,
+        ImageCropperModule,
+    ],
     providers: [
-        { provide: LocationStrategy,  useClass: HashLocationStrategy},
-        IconService, NodeService,
+        { provide: LocationStrategy, useClass: HashLocationStrategy },
+        IconService,
+        NodeService,
         { provide: LOCALE_ID, useValue: 'es' },
-        { provide: HTTP_INTERCEPTORS,
-          useClass: InterceptorsErrorService,
-          multi: true
-         },
-         MessageService,
-         {
+        {
+            provide: HTTP_INTERCEPTORS,
+            useClass: InterceptorsErrorService,
+            multi: true,
+        },
+        MessageService,
+        {
             provide: UserIdleConfig,
-            useValue: { idle:900, timeout:60, ping: 120 }
-         }
-        
-      
+            useValue: { idle: 900, timeout: 60, ping: 120 },
+        },
     ],
     bootstrap: [AppComponent],
 })

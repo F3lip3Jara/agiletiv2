@@ -1,0 +1,39 @@
+<div class="grid">
+    <div class="col-12">
+        <div class="card">
+            <h5>Reservar Gimnasio</h5>
+            <p>Selecciona un bloque disponible en el calendario para reservar tu hora.</p>
+            
+            <p-toast></p-toast>
+            
+            <div class="calendar-container mt-4">
+                <full-calendar [options]="calendarOptions"></full-calendar>
+            </div>
+        </div>
+    </div>
+</div>
+
+<p-dialog header="Confirmar Reserva" [(visible)]="showDialog" [modal]="true" [style]="{width: '450px'}" [baseZIndex]="10000" [draggable]="false" [resizable]="false">
+    <div *ngIf="selectedSlot" class="flex flex-column gap-3">
+        <p>Estás a punto de reservar una hora. Por favor confirma los detalles:</p>
+        
+        <div class="flex align-items-center gap-2">
+            <i class="pi pi-calendar text-xl text-primary"></i>
+            <span class="font-bold text-lg">{{ selectedSlot.date | date:'longDate' }}</span>
+        </div>
+        
+        <div class="flex align-items-center gap-2">
+            <i class="pi pi-clock text-xl text-primary"></i>
+            <span class="font-bold text-lg">{{ selectedSlot.start_time }} - {{ selectedSlot.end_time }}</span>
+        </div>
+
+        <p-tag severity="success" value="Cupos disponibles: {{ selectedSlot.available_quota }} / {{ selectedSlot.max_quota }}"></p-tag>
+
+        <p class="text-sm text-gray-500 mt-3">Recuerda que no puedes reservar más de un bloque en distintas sedes el mismo día.</p>
+    </div>
+    
+    <ng-template pTemplate="footer">
+        <p-button icon="pi pi-times" (click)="showDialog = false" label="Cancelar" styleClass="p-button-text p-button-secondary"></p-button>
+        <p-button icon="pi pi-check" (click)="confirmReservation()" label="Confirmar Reserva" styleClass="p-button-primary" [loading]="loading"></p-button>
+    </ng-template>
+</p-dialog>

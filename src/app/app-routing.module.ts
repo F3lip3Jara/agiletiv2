@@ -14,6 +14,7 @@ import { NotfoundComponent } from './erp/auth/notfound/notfound.component';
                     { path: 'configuracion', loadChildren: () => import('./layout/configuracionuser/configuracionuser.module').then(m => m.ConfiguracionuserModule)},
                     { path: 'produccion', loadChildren: () => import('./erp/dashboard/component/produccion/produccion.module').then(m => m.ProduccionModule)},
                     { path: 'wms', loadChildren: () => import('./erp/dashboard/component/wms/wms.module').then(m => m.WmsModule)},
+                    { path: 'gym', loadChildren: () => import('./erp/dashboard/component/gym/gym.module').then(m => m.GymModule)},
                 ]
             },
             {

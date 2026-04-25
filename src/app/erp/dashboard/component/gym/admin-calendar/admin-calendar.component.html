@@ -1,0 +1,38 @@
+<div class="grid">
+    <div class="col-12">
+        <div class="card">
+            <h5>Panel de Administración - Gym</h5>
+            <p>Monitorea los bloques disponibles y la asistencia de alumnos.</p>
+            
+            <p-table [value]="slots" [loading]="loading" [paginator]="true" [rows]="10" responsiveLayout="scroll" styleClass="p-datatable-gridlines p-datatable-sm mt-4">
+                <ng-template pTemplate="header">
+                    <tr>
+                        <th>Fecha</th>
+                        <th>Inicio</th>
+                        <th>Fin</th>
+                        <th>Cupo Disponible</th>
+                        <th>Acciones</th>
+                    </tr>
+                </ng-template>
+                <ng-template pTemplate="body" let-slot>
+                    <tr>
+                        <td>{{ slot.date | date:'shortDate' }}</td>
+                        <td>{{ slot.start_time }}</td>
+                        <td>{{ slot.end_time }}</td>
+                        <td>
+                            <p-tag [severity]="slot.available_quota > 0 ? 'success' : 'danger'" [value]="slot.available_quota + ' / ' + slot.max_quota"></p-tag>
+                        </td>
+                        <td>
+                            <p-button icon="pi pi-users" label="Ver Alumnos" styleClass="p-button-sm p-button-outlined"></p-button>
+                        </td>
+                    </tr>
+                </ng-template>
+                <ng-template pTemplate="emptymessage">
+                    <tr>
+                        <td colspan="5">No se encontraron bloques.</td>
+                    </tr>
+                </ng-template>
+            </p-table>
+        </div>
+    </div>
+</div>
