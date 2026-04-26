@@ -20,7 +20,7 @@ export class AdminCalendarComponent implements OnInit {
     constructor(private store: Store<AppState>) {}
 
     ngOnInit(): void {
-        this.store.dispatch(getGymSlotRequest());
+        this.store.dispatch(getGymSlotRequest({}));
         this.store.dispatch(getGymReservationRequest());
 
         this.store.select(selectGymSlot).subscribe((data) => {

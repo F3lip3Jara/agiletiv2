@@ -1,0 +1,91 @@
+<p-toast></p-toast>
+<div class="grid">
+    <div class="col-12">
+        <div class="card">
+            <h5>Gestión Deportiva - Alumnos</h5>
+            
+            <div class="flex justify-content-between flex-wrap mt-4 mb-4 gap-3">
+                <div class="p-input-icon-left w-full md:w-auto">
+                    <i class="pi pi-search"></i>
+                    <input pInputText type="text" [(ngModel)]="searchQuery" (keyup.enter)="searchStudents()" placeholder="Buscar alumno..." class="w-full" />
+                </div>
+                <button pButton pRipple label="Buscar" icon="pi pi-search" class="p-button-primary" (click)="searchStudents()"></button>
+            </div>
+
+            <p-table [value]="students" [loading]="loading" [rowHover]="true" styleClass="p-datatable-gridlines" responsiveLayout="scroll">
+                <ng-template pTemplate="header">
+                    <tr>
+                        <th>Nombre</th>
+                        <th>Email</th>
+                        <th>Nivel / Sexo</th>
+                        <th>Medidas</th>
+                        <th>Contraindicaciones</th>
+                        <th style="width: 120px; text-align: center;">Acciones</th>
+                    </tr>
+                </ng-template>
+                <ng-template pTemplate="body" let-student>
+                    <tr>
+                        <td>
+                            <div class="flex align-items-center">
+                                <img *ngIf="student.empleado?.emploAvatar" [src]="'assets/img/avatar/' + student.empleado.emploAvatar" alt="Avatar" width="32" class="mr-2 border-circle"/>
+                                <span class="font-bold">{{ student.empleado?.emploNom || student.name }} {{ student.empleado?.emploApe || '' }}</span>
+                            </div>
+                        </td>
+                        <td>{{ student.email }}</td>
+                        <td>
+                            <p-tag [value]="student.gym_profile?.activity_level | uppercase" [severity]="student.gym_profile?.activity_level === 'alta' ? 'success' : (student.gym_profile?.activity_level === 'media' ? 'warning' : 'info')"></p-tag>
+                            <span class="ml-2 font-bold">{{ student.gym_profile?.gender || 'N/A' }}</span>
+                        </td>
+                        <td>
+                            <span *ngIf="student.gym_profile?.weight || student.gym_profile?.height">
+                                {{ student.gym_profile?.weight ? student.gym_profile.weight + ' kg' : '' }}
+                                {{ student.gym_profile?.height ? ' / ' + student.gym_profile.height + ' cm' : '' }}
+                            </span>
+                            <span *ngIf="!student.gym_profile?.weight && !student.gym_profile?.height" class="text-500">Sin datos</span>
+                        </td>
+                        <td>
+                            <div class="text-sm line-height-2" style="max-width: 200px; white-space: normal; word-wrap: break-word;">
+                                {{ student.gym_profile?.medical_conditions || 'Ninguna' }}
+                            </div>
+                        </td>
+                        <td class="text-center">
+                            <button pButton pRipple icon="pi pi-file-edit" class="p-button-rounded p-button-info" pTooltip="Editar Rutina" tooltipPosition="left" (click)="openRoutineEditor(student)"></button>
+                        </td>
+                    </tr>
+                </ng-template>
+                <ng-template pTemplate="emptymessage">
+                    <tr>
+                        <td colspan="6" class="text-center p-4">No se encontraron alumnos.</td>
+                    </tr>
+                </ng-template>
+            </p-table>
+        </div>
+    </div>
+</div>
+
+<p-dialog [(visible)]="showRoutineDialog" [style]="{width: '600px'}" header="Editor de Rutina" [modal]="true" class="p-fluid">
+    <ng-template pTemplate="content">
+        <div class="field mt-3">
+            <label class="font-bold">Alumno:</label>
+            <p>{{ selectedStudent?.empleado?.emploNom || selectedStudent?.name }} {{ selectedStudent?.empleado?.emploApe || '' }}</p>
+        </div>
+        <div class="field" *ngIf="selectedStudent?.gym_profile?.medical_conditions">
+            <div class="p-message p-message-error mb-3" style="border-radius: 6px;">
+                <div class="p-message-wrapper p-3">
+                    <span class="p-message-icon pi pi-exclamation-triangle mr-2 text-red-500"></span>
+                    <div class="p-message-text text-red-700">
+                        <strong>Contraindicaciones:</strong> {{ selectedStudent.gym_profile.medical_conditions }}
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="field">
+            <label for="routine" class="font-bold">Escribe la rutina detallada:</label>
+            <textarea id="routine" pInputTextarea [(ngModel)]="routineText" rows="10" placeholder="Ej: Lunes: Pecho y Triceps..."></textarea>
+        </div>
+    </ng-template>
+    <ng-template pTemplate="footer">
+        <button pButton pRipple label="Cancelar" icon="pi pi-times" class="p-button-text" (click)="showRoutineDialog = false"></button>
+        <button pButton pRipple label="Guardar Rutina" icon="pi pi-check" class="p-button-primary" (click)="saveRoutine()" [loading]="savingRoutine"></button>
+    </ng-template>
+</p-dialog>

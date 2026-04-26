@@ -14,7 +14,7 @@ export class GymSlotEffects {
 
     getGymSlot = createEffect(() => this.actions.pipe(
         ofType(GymSlotActions.getGymSlotRequest),
-        switchMap(() => this.gymSlotService.getGymSlot()
+        switchMap((action) => this.gymSlotService.getGymSlot(action.branch_id)
             .pipe(
                 map(gymSlot => GymSlotActions.getGymSlotSuccess({ gymSlot })),
                 catchError(error => of(GymSlotActions.gymSlotError({ error: error.message })))

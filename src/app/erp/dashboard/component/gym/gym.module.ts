@@ -30,13 +30,24 @@ import { GymEffects } from './state/effects/gym.effects';
 import { _gymBranchReducer } from './state/reducers/gymBranch.reducer';
 import { GymBranchEffects } from './state/effects/gymBranch.effects';
 
+// PrimeNG Inputs
+import { InputTextModule } from 'primeng/inputtext';
+import { InputNumberModule } from 'primeng/inputnumber';
+import { InputTextareaModule } from 'primeng/inputtextarea';
+
 import { GymManagementComponent } from './gym-management/gym-management.component';
+import { StudentProfileComponent } from './student-profile/student-profile.component';
+import { TeacherStudentsComponent } from './teacher-students/teacher-students.component';
+import { AdminConfigComponent } from './admin-config/admin-config.component';
 
 @NgModule({
     declarations: [
         StudentCalendarComponent,
         AdminCalendarComponent,
         GymManagementComponent,
+        StudentProfileComponent,
+        TeacherStudentsComponent,
+        AdminConfigComponent
     ],
     imports: [
         CommonModule,
@@ -51,6 +62,14 @@ import { GymManagementComponent } from './gym-management/gym-management.componen
         DropdownModule,
         TagModule,
         ToolbarModule,
+        InputTextModule,
+        InputNumberModule,
+        InputTextareaModule,
+        StoreModule.forFeature('gymSlot', _gymSlotReducer),
+        StoreModule.forFeature('gymReservation', _gymReservationReducer),
+        StoreModule.forFeature('gym', _gymReducer),
+        StoreModule.forFeature('gymBranch', _gymBranchReducer),
+        EffectsModule.forFeature([GymSlotEffects, GymReservationEffects, GymEffects, GymBranchEffects])
     ],
 })
 export class GymModule {}

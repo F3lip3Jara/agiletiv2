@@ -2,7 +2,8 @@ import { createAction, props } from '@ngrx/store';
 import { GymSlot } from '../interface/gymSlot.interface';
 
 export const getGymSlotRequest = createAction(
-    '[GymSlot] Get GymSlot Request'
+    '[GymSlot] Get GymSlot Request',
+    props<{ branch_id?: number }>()
 );
 
 export const getGymSlotSuccess = createAction(

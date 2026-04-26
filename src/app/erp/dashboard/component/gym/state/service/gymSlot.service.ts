@@ -20,11 +20,13 @@ export class GymSlotServices {
               private store   : Store<AppState>
   ) {  }
 
-  getGymSlot(): Observable<any> {
+  getGymSlot(branch_id?: number): Observable<any> {
     this.token = this.userSer.getToken();
-    
-    // Asumiendo que rest.get() hace GET a /api/gym/slots
-    return this.rest.get('gym/slots', this.token, this.parametros).pipe(
+    let params = this.parametros;
+    if (branch_id) {
+        params = [...this.parametros, { key: 'branch_id', value: branch_id }];
+    }
+    return this.rest.get('gym/slots', this.token, params).pipe(
       map((data: any) => data) 
     );
   }

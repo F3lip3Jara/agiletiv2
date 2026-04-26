@@ -12,6 +12,9 @@ import { GymReservationServices } from '../state/service/gymReservation.service'
 import { MessageService } from 'primeng/api';
 import { AppState } from '../../app.state';
 
+import { getGymBranchRequest } from '../state/actions/gymBranch.actions';
+import { selectGymBranch } from '../state/selectors/gymBranch.selectors';
+
 @Component({
     selector: 'app-student-calendar',
     standalone: false,
@@ -41,6 +44,9 @@ export class StudentCalendarComponent implements OnInit {
     showDialog: boolean = false;
     selectedSlot: any = null;
     loading: boolean = false;
+    
+    branches: any[] = [];
+    selectedBranchId: number | null = null;
 
     constructor(
         private store: Store<AppState>,
@@ -49,15 +55,21 @@ export class StudentCalendarComponent implements OnInit {
     ) {}
 
     ngOnInit(): void {
-        // Cargar bloques de tiempo
-        this.store.dispatch(getGymSlotRequest());
-        this.store.dispatch(getGymReservationRequest()); // Cargar también reservas del usuario
+        // Cargar sedes primero
+        this.store.dispatch(getGymBranchRequest());
+        this.store.select(selectGymBranch).subscribe((data: any[]) => {
+            if (data && data.length > 0) {
+                // TODO: Idealmente, filtrar aquí por las restricciones del alumno
+                this.branches = data;
+            }
+        });
 
-        // Suscribirse a los bloques del gimnasio para armar el calendario
+        this.store.dispatch(getGymReservationRequest()); // Cargar reservas del usuario
+
+        // Suscribirse a los bloques del gimnasio
         this.store.select(selectGymSlot).subscribe((slots: any[]) => {
-            if (slots && slots.length > 0) {
+            if (slots) {
                 const events = slots.map((slot) => {
-                    // Si available_quota es mayor a 0, el color es verde, si no, es gris/rojo
                     const isAvailable = slot.available_quota > 0;
                     return {
                         id: slot.id,
@@ -81,6 +93,12 @@ export class StudentCalendarComponent implements OnInit {
                 };
             }
         });
+    }
+    
+    onBranchSelect() {
+        if (this.selectedBranchId) {
+            this.store.dispatch(getGymSlotRequest({ branch_id: this.selectedBranchId }));
+        }
     }
 
     handleEventClick(clickInfo: any) {
@@ -116,7 +134,9 @@ export class StudentCalendarComponent implements OnInit {
                     this.showDialog = false;
                     this.loading = false;
                     // Refrescar datos
-                    this.store.dispatch(getGymSlotRequest());
+                    if (this.selectedBranchId) {
+                        this.store.dispatch(getGymSlotRequest({ branch_id: this.selectedBranchId }));
+                    }
                     this.store.dispatch(getGymReservationRequest());
                 },
                 error: (err) => {

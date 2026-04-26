@@ -1,0 +1,67 @@
+<p-toast></p-toast>
+<div class="grid">
+    <div class="col-12">
+        <div class="card">
+            <h5>Mi Perfil Deportivo</h5>
+            <p>Completa tus datos físicos para que los profesores puedan asignarte una rutina adecuada.</p>
+
+            <div *ngIf="loading" class="flex justify-content-center p-5">
+                <i class="pi pi-spin pi-spinner" style="font-size: 2rem"></i>
+            </div>
+
+            <div *ngIf="!loading" class="grid p-fluid mt-3">
+                <div class="col-12 md:col-6">
+                    <div class="field">
+                        <label>Nombre</label>
+                        <input type="text" pInputText [value]="userData.name" disabled />
+                    </div>
+                </div>
+                <div class="col-12 md:col-6">
+                    <div class="field">
+                        <label>Sexo</label>
+                        <p-dropdown [options]="[{label:'Masculino', value:'M'},{label:'Femenino', value:'F'},{label:'Otro', value:'O'}]" 
+                                    [(ngModel)]="profileData.gender" 
+                                    placeholder="Selecciona tu sexo"></p-dropdown>
+                    </div>
+                </div>
+                <div class="col-12 md:col-6">
+                    <div class="field">
+                        <label>Peso (kg)</label>
+                        <p-inputNumber [(ngModel)]="profileData.weight" mode="decimal" [minFractionDigits]="1" [maxFractionDigits]="2"></p-inputNumber>
+                    </div>
+                </div>
+                <div class="col-12 md:col-6">
+                    <div class="field">
+                        <label>Altura (cm)</label>
+                        <p-inputNumber [(ngModel)]="profileData.height" mode="decimal" [minFractionDigits]="0" [maxFractionDigits]="0"></p-inputNumber>
+                    </div>
+                </div>
+                <div class="col-12 md:col-6">
+                    <div class="field">
+                        <label>Nivel de Actividad</label>
+                        <p-dropdown [options]="[{label:'Baja', value:'baja'},{label:'Media', value:'media'},{label:'Alta', value:'alta'}]" 
+                                    [(ngModel)]="profileData.activity_level"></p-dropdown>
+                    </div>
+                </div>
+                
+                <div class="col-12">
+                    <div class="field">
+                        <label>Contraindicaciones Médicas (opcional)</label>
+                        <textarea pInputTextarea [(ngModel)]="profileData.medical_conditions" rows="3" placeholder="Ej: Lesión en rodilla, asma, etc."></textarea>
+                    </div>
+                </div>
+
+                <div class="col-12 mt-4" *ngIf="profileData.routine">
+                    <div class="card bg-primary-reverse border-round p-4" style="background-color: #f8f9fa; border: 1px solid #dee2e6;">
+                        <h5 class="text-primary m-0 mb-3"><i class="pi pi-list mr-2"></i>Mi Rutina Asignada</h5>
+                        <div [innerHTML]="profileData.routine" style="white-space: pre-line;"></div>
+                    </div>
+                </div>
+
+                <div class="col-12 flex justify-content-end mt-3">
+                    <button pButton pRipple label="Guardar Perfil" icon="pi pi-check" class="p-button-success" (click)="saveProfile()" [loading]="saving"></button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

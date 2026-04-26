@@ -2,12 +2,24 @@
     <div class="col-12">
         <div class="card">
             <h5>Reservar Gimnasio</h5>
-            <p>Selecciona un bloque disponible en el calendario para reservar tu hora.</p>
+            <p>Selecciona la sede a la que deseas asistir para ver la disponibilidad.</p>
             
+            <div class="flex flex-column md:flex-row align-items-start md:align-items-center gap-3 mb-4">
+                <div class="w-full md:w-20rem">
+                    <label class="block mb-2 font-bold">Sede:</label>
+                    <p-dropdown [options]="branches" [(ngModel)]="selectedBranchId" optionLabel="name" optionValue="id" placeholder="Seleccionar Sede" (onChange)="onBranchSelect()" styleClass="w-full"></p-dropdown>
+                </div>
+            </div>
+
             <p-toast></p-toast>
             
-            <div class="calendar-container mt-4">
+            <div *ngIf="selectedBranchId" class="calendar-container mt-4 fadein animation-duration-300">
                 <full-calendar [options]="calendarOptions"></full-calendar>
+            </div>
+            
+            <div *ngIf="!selectedBranchId" class="text-center p-5 border-round bg-primary-reverse border-1 border-primary-100">
+                <i class="pi pi-building text-6xl text-primary-300 mb-3"></i>
+                <h5 class="text-primary-700 m-0">Por favor, selecciona una sede para continuar</h5>
             </div>
         </div>
     </div>

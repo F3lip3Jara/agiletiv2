@@ -23,7 +23,7 @@ export class GymBranchServices {
    getGymBranch(): Observable<any> {
     this.token = this.userSer.getToken();
     
-       return this.rest.get('trabGymBranch', this.token, this.parametros).pipe(
+       return this.rest.get('gym/branches', this.token, this.parametros).pipe(
         map(
           (data: any) => data
           
