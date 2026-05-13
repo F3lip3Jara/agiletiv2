@@ -17,6 +17,8 @@ import { ToastModule } from 'primeng/toast';
 import { DropdownModule } from 'primeng/dropdown';
 import { TagModule } from 'primeng/tag';
 import { ToolbarModule } from 'primeng/toolbar';
+import { SplitButtonModule } from 'primeng/splitbutton';
+import { SearchDialogComponent } from '../generales/search-dialog/search-dialog.component';
 
 // NgRx
 import { StoreModule } from '@ngrx/store';
@@ -62,6 +64,8 @@ import { AdminConfigComponent } from './admin-config/admin-config.component';
         DropdownModule,
         TagModule,
         ToolbarModule,
+        SplitButtonModule,
+        SearchDialogComponent,
         InputTextModule,
         InputNumberModule,
         InputTextareaModule,

@@ -8,7 +8,11 @@
                     ins.controls['empRut'].value,
                     ins.controls['empGiro'].value,
                     ins.controls['empFono'].value,
-                    ins.controls['empTokenOMS'].value
+                    ins.controls['empTokenOMS'].value,
+                    ins.controls['empTiempoIdle'].value,
+                    ins.controls['empTiempoTimeout'].value,
+                    ins.controls['empTiempoExpiracionToken'].value,
+                    ins.controls['empZonaHoraria'].value
                   )">
                    <h3 class="text-xl font-bold mb-4"><i class="pi pi-phone mr-2"></i>Información de Contacto</h3>
                 <div class="grid formgrid">
@@ -89,9 +93,39 @@
                     
                     <div class="col-12 md:col-6 mb-2 lg:mb-0 p-3">
                         <h3 class="text-xl font-bold mb-4"><i class="pi pi pi-cog mr-2"></i>Configuración</h3>
-                        <span class="p-float-label">
+                        <span class="p-float-label mb-4">
                             <input id="empTokenOMS" type="text" pInputText formControlName="empTokenOMS">
                             <label for="empTokenOMS">OMS Token</label>
+                        </span>
+                        <h4 class="text-lg font-semibold mb-3 mt-4">Seguridad y Sesión</h4>
+                        <span class="p-float-label mb-4">
+                            <input id="empTiempoIdle" type="number" pInputText formControlName="empTiempoIdle"
+                                   [ngClass]="(ins.controls['empTiempoIdle'].hasError('required')) ? 'was-validated' :'is-valid'">
+                            <label for="empTiempoIdle">Tiempo de Inactividad (segundos)</label>
+                        </span>
+                        <div *ngIf="ins.controls['empTiempoIdle'].hasError('min')">
+                            <small class="p-error">Debe ser mayor a 60 seg!</small>
+                        </div>
+                        <span class="p-float-label mb-4">
+                            <input id="empTiempoTimeout" type="number" pInputText formControlName="empTiempoTimeout"
+                                   [ngClass]="(ins.controls['empTiempoTimeout'].hasError('required')) ? 'was-validated' :'is-valid'">
+                            <label for="empTiempoTimeout">Tiempo de Timeout tras inactividad (segundos)</label>
+                        </span>
+                        <div *ngIf="ins.controls['empTiempoTimeout'].hasError('min')">
+                            <small class="p-error">Debe ser mayor a 10 seg!</small>
+                        </div>
+                        <span class="p-float-label mb-4">
+                            <input id="empTiempoExpiracionToken" type="number" pInputText formControlName="empTiempoExpiracionToken"
+                                   [ngClass]="(ins.controls['empTiempoExpiracionToken'].hasError('required')) ? 'was-validated' :'is-valid'">
+                            <label for="empTiempoExpiracionToken">Expiración del Token (minutos)</label>
+                        </span>
+                        <div *ngIf="ins.controls['empTiempoExpiracionToken'].hasError('min')">
+                            <small class="p-error">Debe ser mayor a 60 min!</small>
+                        </div>
+                        <span class="p-float-label mb-4">
+                            <input id="empZonaHoraria" type="text" pInputText formControlName="empZonaHoraria"
+                                   [ngClass]="(ins.controls['empZonaHoraria'].hasError('required')) ? 'was-validated' :'is-valid'">
+                            <label for="empZonaHoraria">Zona Horaria (ej. America/Santiago)</label>
                         </span>
                     </div>
 

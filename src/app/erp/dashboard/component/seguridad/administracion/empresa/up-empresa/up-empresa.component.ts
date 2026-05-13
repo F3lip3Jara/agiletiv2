@@ -67,6 +67,13 @@ export class UpEmpresaComponent {
             empGiro: ['', Validators.required],
             empFono: ['', Validators.required],
             empTokenOMS: [''],
+            empTiempoIdle: [900, [Validators.required, Validators.min(60)]],
+            empTiempoTimeout: [60, [Validators.required, Validators.min(10)]],
+            empTiempoExpiracionToken: [
+                1440,
+                [Validators.required, Validators.min(60)],
+            ],
+            empZonaHoraria: ['America/Santiago', Validators.required],
         });
 
         this.route.params.subscribe((params) => {
@@ -78,6 +85,10 @@ export class UpEmpresaComponent {
                 empGiro: this.empresa.empGiro,
                 empFono: this.empresa.empFono,
                 empTokenOMS: this.empresa.empTokenOMS,
+                empTiempoIdle: this.empresa.empTiempoIdle,
+                empTiempoTimeout: this.empresa.empTiempoTimeout,
+                empTiempoExpiracionToken: this.empresa.empTiempoExpiracionToken,
+                empZonaHoraria: this.empresa.empZonaHoraria,
             });
 
             this.label = this.empresa.empDes.substring(0, 1);
@@ -173,6 +184,10 @@ export class UpEmpresaComponent {
         empGiro: any,
         empFono: any,
         empTokenOMS: any,
+        empTiempoIdle: any,
+        empTiempoTimeout: any,
+        empTiempoExpiracionToken: any,
+        empZonaHoraria: any,
     ) {
         if (this.up.valid) {
             let empresa = {
@@ -184,6 +199,10 @@ export class UpEmpresaComponent {
                 empFono: empFono,
                 empImg: this.avatar,
                 empTokenOMS: empTokenOMS,
+                empTiempoIdle: empTiempoIdle,
+                empTiempoTimeout: empTiempoTimeout,
+                empTiempoExpiracionToken: empTiempoExpiracionToken,
+                empZonaHoraria: empZonaHoraria,
             };
             this.val = true;
             this.store.dispatch(incrementarRequest({ request: 1 }));
@@ -218,10 +237,7 @@ export class UpEmpresaComponent {
         }
 
         const script = document.createElement('script');
-
-        console.log(this.environment.keygoogleMap);
-        console.log(this.environment.openWeatherApiKey);
-        script.src = this.environment.keygoogleMap;
+        script.src = this.environment.keygoogle;
         script.async = true;
         script.defer = true;
         script.onload = () => {

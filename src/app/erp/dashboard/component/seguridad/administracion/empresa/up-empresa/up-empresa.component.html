@@ -1,15 +1,18 @@
 <div class="col-12 p-fluid">
     <p-fieldset legend="Actualización de Empresa">
         <div class="col-12">
-            <form [formGroup]="up"
-                  (ngSubmit)="guardar(
+            <form [formGroup]="up" (ngSubmit)="guardar(
                     up.controls['empDes'].value,
                     up.controls['empDir'].value,
                     up.controls['empGiro'].value,
                     up.controls['empFono'].value,
-                    up.controls['empTokenOMS'].value
+                    up.controls['empTokenOMS'].value,
+                    up.controls['empTiempoIdle'].value,
+                    up.controls['empTiempoTimeout'].value,
+                    up.controls['empTiempoExpiracionToken'].value,
+                    up.controls['empZonaHoraria'].value
                   )">
-                  <h3 class="text-xl font-bold mb-4"><i class="pi pi-user mr-2"></i>Información Básica</h3>
+                <h3 class="text-xl font-bold mb-4"><i class="pi pi-user mr-2"></i>Información Básica</h3>
                 <div class="grid formgrid">
                     <div class="col-12 mb-2 lg:col-6 lg:mb-0  p-3">
                         <span class="p-float-label">
@@ -20,8 +23,8 @@
 
                     <div class="col-12 mb-2 lg:col-6 lg:mb-0  p-3">
                         <span class="p-float-label">
-                            <input id="float-input" type="text" pInputText formControlName="empDes" 
-                            [ngClass]="(up.controls['empDes'].hasError('required')  ) ? 'was-validated' :'is-valid'">
+                            <input id="float-input" type="text" pInputText formControlName="empDes"
+                                [ngClass]="(up.controls['empDes'].hasError('required')  ) ? 'was-validated' :'is-valid'">
                             <label for="empDes">Nombre</label>
                         </span>
                         <div *ngIf="up.controls['empDes'].hasError('required')">
@@ -31,8 +34,8 @@
 
                     <div class="col-12 mb-2 lg:col-6 lg:mb-0  p-3">
                         <span class="p-float-label">
-                            <input id="float-input" type="text" pInputText formControlName="empFono" 
-                            [ngClass]="(up.controls['empFono'].hasError('required')  ) ? 'was-validated' :'is-valid'"> 
+                            <input id="float-input" type="text" pInputText formControlName="empFono"
+                                [ngClass]="(up.controls['empFono'].hasError('required')  ) ? 'was-validated' :'is-valid'">
                             <label for="empFono">Teléfono</label>
                         </span>
                         <div *ngIf="up.controls['empFono'].hasError('required')">
@@ -43,7 +46,7 @@
                     <div class="col-12 md:col-6 mb-2 lg:mb-0 p-3">
                         <span class="p-float-label">
                             <input id="empGiro" type="text" pInputText formControlName="empGiro"
-                                   [ngClass]="(up.controls['empGiro'].hasError('required')  ) ? 'was-validated' :'is-valid'">
+                                [ngClass]="(up.controls['empGiro'].hasError('required')  ) ? 'was-validated' :'is-valid'">
                             <label for="empGiro">Giro Comercial</label>
                         </span>
                         <div *ngIf="up.controls['empGiro'].hasError('required')">
@@ -54,7 +57,7 @@
                     <h3 class="text-xl font-bold mb-4"><i class="pi pi-map-marker mr-2"></i>Ubicación</h3>
                     <div class="col-12 mt-4">
                         <div class="p-2 border-round">
-                              <div class="grid">
+                            <div class="grid">
                                 <div class="col-12">
                                     <div class="field mb-5">
                                         <span class="p-float-label">
@@ -76,36 +79,71 @@
                     </div>
                     <div class="col-12 md:col-6 mb-2 lg:mb-0 p-3">
                         <h3 class="text-xl font-bold mb-4"><i class="pi pi pi-cog mr-2"></i>Configuración</h3>
-                        <span class="p-float-label">
+                        <span class="p-float-label mb-4">
                             <input id="empTokenOMS" type="text" pInputText formControlName="empTokenOMS">
                             <label for="empTokenOMS">OMS Token</label>
+                        </span>
+                        <h4 class="text-lg font-semibold mb-3 mt-4">Seguridad y Sesión</h4>
+                        <span class="p-float-label mb-4">
+                            <input id="empTiempoIdle" type="number" pInputText formControlName="empTiempoIdle"
+                                [ngClass]="(up.controls['empTiempoIdle'].hasError('required')) ? 'was-validated' :'is-valid'">
+                            <label for="empTiempoIdle">Tiempo de Inactividad (segundos)</label>
+                        </span>
+                        <div *ngIf="up.controls['empTiempoIdle'].hasError('min')">
+                            <small class="p-error">Debe ser mayor a 60 seg!</small>
+                        </div>
+                        <span class="p-float-label mb-4">
+                            <input id="empTiempoTimeout" type="number" pInputText formControlName="empTiempoTimeout"
+                                [ngClass]="(up.controls['empTiempoTimeout'].hasError('required')) ? 'was-validated' :'is-valid'">
+                            <label for="empTiempoTimeout">Tiempo de Timeout tras inactividad (segundos)</label>
+                        </span>
+                        <div *ngIf="up.controls['empTiempoTimeout'].hasError('min')">
+                            <small class="p-error">Debe ser mayor a 10 seg!</small>
+                        </div>
+                        <span class="p-float-label mb-4">
+                            <input id="empTiempoExpiracionToken" type="number" pInputText
+                                formControlName="empTiempoExpiracionToken"
+                                [ngClass]="(up.controls['empTiempoExpiracionToken'].hasError('required')) ? 'was-validated' :'is-valid'">
+                            <label for="empTiempoExpiracionToken">Expiración del Token (minutos)</label>
+                        </span>
+                        <div *ngIf="up.controls['empTiempoExpiracionToken'].hasError('min')">
+                            <small class="p-error">Debe ser mayor a 60 min!</small>
+                        </div>
+                        <span class="p-float-label mb-4">
+                            <input id="empZonaHoraria" type="text" pInputText formControlName="empZonaHoraria"
+                                [ngClass]="(up.controls['empZonaHoraria'].hasError('required')) ? 'was-validated' :'is-valid'">
+                            <label for="empZonaHoraria">Zona Horaria (ej. America/Santiago)</label>
                         </span>
                     </div>
 
                     <div class="col-12  mb-2 lg:mb-0 p-3">
-                        <p-fieldset legend="Logo">                   
+                        <p-fieldset legend="Logo">
                             <div class="mb-5 flex flex-column align-items-center">
                                 <div class="avatar-container mb-3">
-                                    <p-avatar *ngIf="!avatar" [label]="label" styleClass="mr-2" size="xlarge" shape="circle"></p-avatar>
-                                    <p-avatar *ngIf="avatar" [image]="avatar" styleClass="mr-2" size="xlarge" shape="circle"></p-avatar>
+                                    <p-avatar *ngIf="!avatar" [label]="label" styleClass="mr-2" size="xlarge"
+                                        shape="circle"></p-avatar>
+                                    <p-avatar *ngIf="avatar" [image]="avatar" styleClass="mr-2" size="xlarge"
+                                        shape="circle"></p-avatar>
                                 </div>
                                 <div class="flex gap-2">
-                                    <input type="file" class="hidden" (change)="fileChangeEvent($event)" accept="image/*" #inputAvatar>
-                                    <p-button type="button" icon="pi pi-camera" (onClick)="inputAvatar.click()" severity="secondary" [text]="true"></p-button>
-                                    <p-button type="button" icon="pi pi-trash" (onClick)="clearAvatar()" severity="danger" [text]="true"></p-button>
+                                    <input type="file" class="hidden" (change)="fileChangeEvent($event)"
+                                        accept="image/*" #inputAvatar>
+                                    <p-button type="button" icon="pi pi-camera" (onClick)="inputAvatar.click()"
+                                        severity="secondary" [text]="true"></p-button>
+                                    <p-button type="button" icon="pi pi-trash" (onClick)="clearAvatar()"
+                                        severity="danger" [text]="true"></p-button>
                                 </div>
                             </div>
-                        </p-fieldset>   
+                        </p-fieldset>
                     </div>
                 </div>
 
                 <div class="flex flex-wrap gap-2 align-items-center justify-content-between mt-4">
                     <div class="flex gap-2">
-                        <p-button type="submit" label="Guardar" icon="pi pi-check" 
-                                 [loading]="val" *ngIf="up.valid">
+                        <p-button type="submit" label="Guardar" icon="pi pi-check" [loading]="val" *ngIf="up.valid">
                         </p-button>
-                        <p-button type="button" label="Volver" icon="pi pi-arrow-down" 
-                                 routerLink="/desk/seguridad/administracion/empresa" severity="secondary">
+                        <p-button type="button" label="Volver" icon="pi pi-arrow-down"
+                            routerLink="/desk/seguridad/administracion/empresa" severity="secondary">
                         </p-button>
                     </div>
                 </div>
@@ -113,16 +151,12 @@
         </div>
     </p-fieldset>
 
-    
+
     <!-- Popup para recortar la imagen -->
-    <p-dialog header="Recortar Imagen" [(visible)]="display" [modal]="true" [responsive]="true" [style]="{ width: '50vw' }">
-        <image-cropper
-            [imageChangedEvent]="imageChangedEvent"
-            [maintainAspectRatio]="true"
-            [aspectRatio]="1 / 1"
-            (imageCropped)="imageCropped($event)"
-            (imageLoaded)="imageLoaded()"
-            (cropperReady)="cropperReady()"
+    <p-dialog header="Recortar Imagen" [(visible)]="display" [modal]="true" [responsive]="true"
+        [style]="{ width: '50vw' }">
+        <image-cropper [imageChangedEvent]="imageChangedEvent" [maintainAspectRatio]="true" [aspectRatio]="1 / 1"
+            (imageCropped)="imageCropped($event)" (imageLoaded)="imageLoaded()" (cropperReady)="cropperReady()"
             (loadImageFailed)="loadImageFailed()">
         </image-cropper>
         <p-footer>
@@ -130,4 +164,4 @@
             <p-button label="Cancelar" (click)="cancelCrop()" icon="pi pi-times" class="p-button-secondary"></p-button>
         </p-footer>
     </p-dialog>
-</div> 
+</div>

@@ -63,6 +63,7 @@ import { LogEffects } from './erp/dashboard/component/seguridad/state/effects/lo
 import { UbicacionesEffects } from './erp/dashboard/component/parametros/state/effects/ubicaciones.effects';
 import { GymSlotEffects } from './erp/dashboard/component/gym/state/effects/gymSlot.effects';
 import { GymReservationEffects } from './erp/dashboard/component/gym/state/effects/gymReservation.effects';
+
 @NgModule({
     declarations: [AppComponent, NotfoundComponent],
     imports: [
@@ -127,9 +128,26 @@ import { GymReservationEffects } from './erp/dashboard/component/gym/state/effec
         MessageService,
         {
             provide: UserIdleConfig,
-            useValue: { idle: 900, timeout: 60, ping: 120 },
+            useFactory: idleConfigFactory,
         },
     ],
     bootstrap: [AppComponent],
 })
 export class AppModule {}
+
+export function idleConfigFactory(): UserIdleConfig {
+    let config = { idle: 10, timeout: 60, ping: 120 };
+    try {
+        let userStr = localStorage.getItem('user');
+        if (userStr) {
+            let user = JSON.parse(atob(userStr));
+            if (user.empTiempoIdle && user.empTiempoTimeout) {
+                config.idle = user.empTiempoIdle;
+                config.timeout = user.empTiempoTimeout;
+            }
+        }
+    } catch (e) {
+        console.error('Error parsing UserIdleConfig from localStorage', e);
+    }
+    return config;
+}

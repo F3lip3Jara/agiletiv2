@@ -6,7 +6,10 @@ export interface Empresa {
     empGiro: string,
     empFono: string,
     empTokenOMS: string,
-    
+    empTiempoIdle?: number,
+    empTiempoTimeout?: number,
+    empTiempoExpiracionToken?: number,
+    empZonaHoraria?: string,
 }
 
 export const EMPRESA_KEYS = [
@@ -16,5 +19,9 @@ export const EMPRESA_KEYS = [
     "empRut",
     "empGiro",
     "empFono",
-    "empTokenOMS"
+    "empTokenOMS",
+    "empTiempoIdle",
+    "empTiempoTimeout",
+    "empTiempoExpiracionToken",
+    "empZonaHoraria"
 ];

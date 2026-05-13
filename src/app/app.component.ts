@@ -1,5 +1,6 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, HostListener } from '@angular/core';
 import { PrimeNGConfig } from 'primeng/api';
+import { environment } from '../environments/environment';
 
 @Component({
     selector: 'app-root',
@@ -8,6 +9,30 @@ import { PrimeNGConfig } from 'primeng/api';
 export class AppComponent implements OnInit {
 
     constructor(private primengConfig: PrimeNGConfig  ) { }
+
+    @HostListener('document:contextmenu', ['$event'])
+    onRightClick(event: MouseEvent) {
+        if (environment.production) {
+            event.preventDefault();
+        }
+    }
+
+    @HostListener('document:keydown', ['$event'])
+    onKeyDown(event: KeyboardEvent) {
+        if (environment.production) {
+            // Block F12
+            if (event.key === 'F12') {
+                event.preventDefault();
+            }
+            // Block Ctrl+Shift+I, Ctrl+Shift+J, Ctrl+U
+            if (event.ctrlKey && event.shiftKey && (event.key === 'I' || event.key === 'i' || event.key === 'J' || event.key === 'j')) {
+                event.preventDefault();
+            }
+            if (event.ctrlKey && (event.key === 'U' || event.key === 'u')) {
+                event.preventDefault();
+            }
+        }
+    }
 
     ngOnInit() {
         this.primengConfig.ripple = true;

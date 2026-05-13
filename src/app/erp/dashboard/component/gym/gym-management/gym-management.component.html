@@ -1,85 +1,96 @@
 <div class="grid">
-    <div class="col-12">
-        <p-toast></p-toast>
+    <div class="col-12 admin-card">
         <div class="card">
-            <h5>Administración de Gimnasios y Sedes</h5>
+            <p-toast></p-toast>
             
-            <p-toolbar styleClass="mb-4">
-                <ng-template pTemplate="left">
-                    <button pButton pRipple label="Nuevo Gimnasio" icon="pi pi-plus" class="p-button-success mr-2" (click)="openNewGym()"></button>
-                    <button pButton pRipple label="Nueva Sede" icon="pi pi-plus" class="p-button-info" (click)="openNewBranch()"></button>
-                </ng-template>
-            </p-toolbar>
+            <!-- Header con título y búsqueda -->
+            <div class="admin-header">
+                <h2 class="header-title">Administración de Gimnasios y Sedes</h2>
+                <div class="header-actions">
+                    <span class="p-input-icon-left">
+                        <i class="pi pi-search"></i>
+                        <input #searchInput pInputText type="text" (input)="onGlobalFilter(dt, $event)" placeholder="Buscar... (Ctrl+Q)" class="p-inputtext-sm"/>
+                    </span>
+                    <button pButton pRipple label="Nuevo Gimnasio" icon="pi pi-plus" class="p-button-success p-button-sm mr-2" (click)="openNewGym()"></button>
+                    <button pButton pRipple label="Nueva Sede" icon="pi pi-plus" class="p-button-primary p-button-sm" (click)="openNewBranch()"></button>
+                    <button pButton pRipple label="Exportar" icon="pi pi-upload" class="p-button-outlined p-button-sm" (click)="exportCSV()"></button>
+                </div>
+            </div>
 
-            <!-- Sedes -->
-            <h6>Sedes (Branches) Registradas</h6>
-            <p-table [value]="branches" [loading]="loading" responsiveLayout="scroll" styleClass="p-datatable-sm p-datatable-gridlines">
-                <ng-template pTemplate="header">
-                    <tr>
-                        <th>Gimnasio</th>
-                        <th>Nombre Sede</th>
-                        <th>Dirección</th>
-                        <th>Estado</th>
-                        <th>Acciones</th>
-                    </tr>
-                </ng-template>
-                <ng-template pTemplate="body" let-b>
-                    <tr>
-                        <td>{{ b.gym?.name }}</td>
-                        <td>{{ b.name }}</td>
-                        <td>{{ b.address }}</td>
-                        <td>
-                            <p-tag [severity]="b.status ? 'success' : 'danger'" [value]="b.status ? 'Activo' : 'Inactivo'"></p-tag>
-                        </td>
-                        <td>
-                            <button pButton icon="pi pi-pencil" class="p-button-rounded p-button-text p-button-sm mr-2" (click)="editBranch(b)"></button>
-                        </td>
-                    </tr>
-                </ng-template>
-                <ng-template pTemplate="emptymessage">
-                    <tr><td colspan="5">No hay sedes registradas.</td></tr>
-                </ng-template>
-            </p-table>
+            <!-- Tabla modernizada -->
+            <div class="admin-table">
+                <p-table #dt [value]="branches" 
+                        [columns]="cols" 
+                        styleClass="p-datatable-sm"
+                        [tableStyle]="{'min-width': '50rem'}"
+                        [paginator]="true" 
+                        [rows]="10" 
+                        [showCurrentPageReport]="true"
+                        [globalFilterFields]="globalFilterFields"
+                        [rowsPerPageOptions]="rowsPerPageOptions"
+                        currentPageReportTemplate="Mostrando {first} a {last} de {totalRecords} registros"
+                        [scrollable]="true"
+                        [loading]="loading"
+                        responsiveLayout="scroll">
+                    
+                    <ng-template pTemplate="header">
+                        <tr>
+                            <th>ID</th>                      
+                            <th>Gimnasio</th>
+                            <th>Sede</th>
+                            <th>Dirección</th>
+                            <th>Estado</th>
+                            <th class="text-center">Acciones</th>
+                        </tr>
+                    </ng-template>
+                    
+                    <ng-template pTemplate="body" let-b>
+                        <tr [ngClass]="{'selected-row': selectedRow?.id === b.id}">
+                            <td>{{b.id}}</td>                    
+                            <td>
+                                <span class="font-medium">{{b.gym?.name}}</span>
+                            </td>
+                            <td>
+                                <span class="font-medium">{{b.name}}</span>
+                            </td>
+                            <td>
+                                <span class="text-color-secondary">{{b.address}}</span>
+                            </td>
+                            <td>
+                                <p-tag [severity]="b.status ? 'success' : 'danger'" [value]="b.status ? 'Activo' : 'Inactivo'"></p-tag>
+                            </td>                       
+                            <td>
+                                <div class="actions-column" (click)="onActionClick(b)">
+                                    <p-splitButton 
+                                        icon="pi pi-chevron-down" 
+                                        [model]="actionItems"
+                                        styleClass="p-button-text p-button-secondary"
+                                        appendTo="body">
+                                    </p-splitButton>
+                                </div>
+                            </td>
+                        </tr>
+                    </ng-template>
+                    
+                    <ng-template pTemplate="emptymessage">
+                        <tr>
+                            <td colspan="6">
+                                <div class="empty-message">
+                                    <i class="pi pi-folder-open"></i>
+                                    <span>No se encontraron sedes registradas.</span>
+                                </div>
+                            </td>
+                        </tr>
+                    </ng-template>
+                </p-table>
+            </div>
+
+            <!-- Componente de búsqueda -->
+            <app-search-dialog 
+                [(visible)]="showSearchDialog"
+                [data]="branches"
+                (searchValueChange)="onSearchValueChange($event)">
+            </app-search-dialog>
         </div>
     </div>
 </div>
-
-<!-- Modal Gym -->
-<p-dialog [(visible)]="showGymDialog" [style]="{width: '450px'}" header="Detalle Gimnasio" [modal]="true">
-    <div class="p-fluid">
-        <div class="field">
-            <label>Nombre de la Empresa / Marca</label>
-            <input pInputText type="text" [(ngModel)]="gymObj.name" />
-        </div>
-    </div>
-    <ng-template pTemplate="footer">
-        <button pButton label="Cancelar" icon="pi pi-times" class="p-button-text" (click)="showGymDialog = false"></button>
-        <button pButton label="Guardar" icon="pi pi-check" class="p-button-primary" (click)="saveGym()"></button>
-    </ng-template>
-</p-dialog>
-
-<!-- Modal Branch -->
-<p-dialog [(visible)]="showBranchDialog" [style]="{width: '450px'}" header="Detalle Sede" [modal]="true">
-    <div class="p-fluid">
-        <div class="field">
-            <label>Gimnasio</label>
-            <p-dropdown [options]="gyms" [(ngModel)]="branchObj.gym_id" optionLabel="name" optionValue="id" placeholder="Seleccione un Gimnasio" appendTo="body"></p-dropdown>
-        </div>
-        <div class="field">
-            <label>Nombre Sede</label>
-            <input pInputText type="text" [(ngModel)]="branchObj.name" />
-        </div>
-        <div class="field">
-            <label>Dirección</label>
-            <input pInputText type="text" [(ngModel)]="branchObj.address" />
-        </div>
-        <div class="field">
-            <label>Teléfono</label>
-            <input pInputText type="text" [(ngModel)]="branchObj.phone" />
-        </div>
-    </div>
-    <ng-template pTemplate="footer">
-        <button pButton label="Cancelar" icon="pi pi-times" class="p-button-text" (click)="showBranchDialog = false"></button>
-        <button pButton label="Guardar" icon="pi pi-check" class="p-button-primary" (click)="saveBranch()"></button>
-    </ng-template>
-</p-dialog>

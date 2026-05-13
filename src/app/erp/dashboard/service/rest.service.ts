@@ -14,7 +14,10 @@ export class RestService {
 
     public get(url: string, tok: string, parms: any) {
         let token = this.UsersService.getToken();
-        let headers: HttpHeaders = new HttpHeaders({ 'access-token': token });
+        let headers: HttpHeaders = new HttpHeaders({ 
+            'access-token': token,
+            'Authorization': `Bearer ${token}`
+        });
         let parmx: HttpParams = new HttpParams();
         parms.forEach(function (val: any) {
             parmx = parmx.set(val.key, val.value);
@@ -23,6 +26,7 @@ export class RestService {
             headers: headers,
             params: parmx,
             reportProgress: true,
+            withCredentials: true
         });
     }
 
@@ -31,8 +35,8 @@ export class RestService {
         let token = this.UsersService.getToken();
         let headers: HttpHeaders = new HttpHeaders({
             'access-token': token,
+            'Authorization': `Bearer ${token}`,
             'Content-Type': 'application/json',
-            'X-CSRF-TOKEN': crf,
             'Cache-Control': 'no-cache, no-store, must-revalidate',
             Pragma: 'no-cache',
             Expires: '0',
@@ -40,6 +44,7 @@ export class RestService {
         return this.http.post(url, data, {
             headers: headers,
             reportProgress: true,
+            withCredentials: true
         });
     }
 }

@@ -6,6 +6,7 @@ import { Usuario } from '../model/usuario.model';
 import { Route, Router } from '@angular/router';
 import { MessageService } from 'primeng/api';
 import { Environment } from '../../service/environment.service';
+import { UserIdleService } from 'angular-user-idle';
 import {
     trigger,
     state,
@@ -100,6 +101,7 @@ export class LoginComponent {
         private router: Router,
         private messageService: MessageService,
         private environment: Environment,
+        private userIdle: UserIdleService,
     ) {}
 
     login(userx: string) {
@@ -138,6 +140,8 @@ export class LoginComponent {
                                 id,
                                 empNom,
                                 empApe,
+                                empTiempoIdle,
+                                empTiempoTimeout,
                             } = data;
                             this.userService.setToken(token);
                             this.userService.setTokenCrf(crf);
@@ -150,31 +154,55 @@ export class LoginComponent {
                                 '',
                                 empNom,
                                 empApe,
+                                data.keygoogleMap,
+                                data.openWeatherApiKey,
+                                empTiempoIdle,
+                                empTiempoTimeout,
                             );
                             this.loginSuccess = true;
-                            this.showSuccess(`¡Bienvenido ${name}!`);
 
-                            //Actualizo las key de api
-                            this.environment.keygoogleMap = data.keygoogleMap;
-                            this.environment.keygoogle = data.keygoogleMap;
-                            this.environment.openWeatherApiKey =
-                                data.openWeatherApiKey;
+                            const continueLogin = () => {
+                                //Actualizo las key de api
+                                this.environment.keygoogleMap =
+                                    data.keygoogleMap;
+                                this.environment.keygoogle = data.keygoogleMap;
+                                this.environment.openWeatherApiKey =
+                                    data.openWeatherApiKey;
 
-                            console.log(this.environment.openWeatherApiKey);
-                            console.log(this.environment.keygoogle);
-                            console.log(data.openWeatherApiKey);
-                            // Simular delay para mostrar la animación de éxito
-                            setTimeout(() => {
-                                this.router.navigate(['/desk']);
-                                this.enabled = false;
-                                this.isLoading = false;
-
-                                if (reinicio === 'S') {
-                                    this.router.navigate([
-                                        '/auth/login/cambiopass',
-                                    ]);
+                                // Configurar inactividad dinámicamente según la Empresa
+                                if (empTiempoIdle && empTiempoTimeout) {
+                                    this.userIdle.setConfigValues({
+                                        idle: empTiempoIdle,
+                                        timeout: empTiempoTimeout,
+                                        ping: 120,
+                                    });
                                 }
-                            }, 1500);
+
+                                // Simular delay para mostrar la animación de éxito
+                                setTimeout(() => {
+                                    this.router.navigate(['/desk']);
+                                    this.enabled = false;
+                                    this.isLoading = false;
+
+                                    if (reinicio === 'S') {
+                                        this.router.navigate([
+                                            '/auth/reinicio',
+                                        ]);
+                                    }
+                                }, 1500);
+                            };
+
+                            // Obtener cookie CSRF de Sanctum para peticiones posteriores
+                            this.userService.getCsrfCookie().subscribe({
+                                next: () => {
+                                    this.showSuccess(`¡Bienvenido ${name}!`);
+                                    continueLogin();
+                                },
+                                error: () => {
+                                    this.showSuccess(`¡Bienvenido ${name}!`);
+                                    continueLogin();
+                                },
+                            });
                         } else {
                             this.showError(
                                 'Credenciales incorrectas. Por favor verifica tu usuario y contraseña.',

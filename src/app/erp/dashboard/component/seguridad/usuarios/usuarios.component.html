@@ -55,6 +55,7 @@
                             <th>Estado</th>
                             <th>Reinicio</th>
                             <th>Creado</th>
+                            <th>Expira Token</th>
                             <th class="text-center">Acciones</th>
                         </tr>
                     </ng-template>
@@ -80,6 +81,10 @@
                             <td>{{item.reinicio}}</td>
                             <td>
                                 <span>{{item.created_at}}</span>
+                            </td>
+                            <td>
+                                <span *ngIf="item.token_expires_at">{{item.token_expires_at | date:'dd/MM/yyyy HH:mm'}}</span>
+                                <span *ngIf="!item.token_expires_at" class="text-gray-500">Sin Token</span>
                             </td>
                             <td>
                                 <div class="actions-column" (click)="onActionClick(item)">

@@ -5,6 +5,8 @@ import { MessageService } from 'primeng/api';
 // Podríamos importar actions de NgRx, pero para la gestión simple usaremos REST directo
 import { RestService } from '../../../service/rest.service';
 import { UsersService } from '../../../../service/users.service';
+import { Router } from '@angular/router';
+import { ExcelService } from 'src/app/erp/dashboard/service/excel.service';
 
 @Component({
     selector: 'app-gym-management',
@@ -18,25 +20,46 @@ export class GymManagementComponent implements OnInit {
     branches: any[] = [];
     loading: boolean = false;
 
-    // Modals
-    showGymDialog = false;
-    showBranchDialog = false;
+    // Table & Modern layout properties
+    cols: any[] = [];
+    globalFilterFields: string[] = ['name', 'address', 'gym.name'];
+    rowsPerPageOptions: number[] = [10, 20];
+    actionItems: any[] = [];
+    selectedRow: any = null;
+    showSearchDialog: boolean = false;
 
-    // Forms
+    // Modals for Gym
+    showGymDialog = false;
     gymObj: any = { name: '', status: true };
-    branchObj: any = {
-        gym_id: null,
-        name: '',
-        address: '',
-        phone: '',
-        status: true,
-    };
 
     constructor(
         private rest: RestService,
         private userSer: UsersService,
         private messageService: MessageService,
-    ) {}
+        private router: Router,
+        private excelService: ExcelService
+    ) {
+        this.actionItems = [
+            {
+                label: 'Editar',
+                icon: 'pi pi-pencil',
+                command: () => {
+                    if (this.selectedRow) {
+                        this.editBranch(this.selectedRow);
+                    }
+                }
+            },
+            {
+                label: 'Eliminar',
+                icon: 'pi pi-trash',
+                command: () => {
+                    if (this.selectedRow) {
+                        this.deleteBranch(this.selectedRow);
+                    }
+                }
+            }
+        ];
+    }
 
     ngOnInit(): void {
         this.loadData();
@@ -67,6 +90,28 @@ export class GymManagementComponent implements OnInit {
             },
             error: () => (this.loading = false),
         });
+    }
+
+    onGlobalFilter(table: any, event: Event) {
+        table.filterGlobal((event.target as HTMLInputElement).value, 'contains');
+    }
+
+    onSearchValueChange(value: string) {
+        // Implementar lógica similar a opciones.component
+        const inputElement = document.querySelector('.p-inputtext-sm') as HTMLInputElement;
+        if (inputElement) {
+            inputElement.value = value;
+            const event = new Event('input', { bubbles: true });
+            inputElement.dispatchEvent(event);
+        }
+    }
+
+    onActionClick(item: any) {
+        this.selectedRow = item;
+    }
+
+    exportCSV() {
+        this.excelService.exportAsExcelFile(this.branches, 'sedes');
     }
 
     // ---- GYMS ----
@@ -115,51 +160,33 @@ export class GymManagementComponent implements OnInit {
                         this.loadData();
                     },
                 });
-            // Nota: Si usas delete via post o delete method:
-            // this.rest.post(`gym/gyms/${gym.id}`, token, {_method: 'DELETE'})
         }
     }
 
     // ---- BRANCHES ----
     openNewBranch() {
-        this.branchObj = {
-            gym_id: this.gyms.length > 0 ? this.gyms[0].id : null,
-            name: '',
-            address: '',
-            phone: '',
-            status: true,
-        };
-        this.showBranchDialog = true;
+        this.router.navigate(['desk/gym/sedes/ins-sede']);
     }
 
     editBranch(b: any) {
-        this.branchObj = { ...b };
-        this.showBranchDialog = true;
+        const dato = btoa(JSON.stringify(b));  
+        this.router.navigate(['desk/gym/sedes/up-sede/' + dato]);
     }
 
-    saveBranch() {
-        const token = this.userSer.getToken();
-        const action = this.branchObj.id ? 'put' : 'post';
-        const endpoint = this.branchObj.id
-            ? `gym/branches/${this.branchObj.id}`
-            : 'gym/branches';
-
-        this.rest[action](endpoint, token, this.branchObj).subscribe({
-            next: () => {
-                this.messageService.add({
-                    severity: 'success',
-                    summary: 'Éxito',
-                    detail: 'Sede guardada',
-                });
-                this.showBranchDialog = false;
-                this.loadData();
-            },
-            error: (e) =>
-                this.messageService.add({
-                    severity: 'error',
-                    summary: 'Error',
-                    detail: e.error?.error || 'Error al guardar',
-                }),
-        });
+    deleteBranch(b: any) {
+        if (confirm('¿Estás seguro de eliminar esta sede?')) {
+            const token = this.userSer.getToken();
+            // Implement delete branch
+            this.rest.post(`gym/branches/${b.id}`, token, {_method: 'DELETE'}).subscribe({
+                next: () => {
+                    this.messageService.add({ severity: 'success', summary: 'Éxito', detail: 'Sede eliminada' });
+                    this.loadData();
+                },
+                error: () => {
+                    // Si el backend no soporta _method: DELETE via post en este caso, se puede hacer get /delete o delete /branches/id
+                    this.messageService.add({ severity: 'error', summary: 'Error', detail: 'No se pudo eliminar' });
+                }
+            });
+        }
     }
 }

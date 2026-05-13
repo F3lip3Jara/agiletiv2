@@ -66,7 +66,11 @@ export class InsEmpresaComponent {
                      Validators.pattern('^[0-9]+-[0-9kK]{1}')]],
         empGiro: ['', Validators.required],
         empFono: ['', Validators.required],
-        empTokenOMS: ['']
+        empTokenOMS: [''],
+        empTiempoIdle: [900, [Validators.required, Validators.min(60)]],
+        empTiempoTimeout: [60, [Validators.required, Validators.min(10)]],
+        empTiempoExpiracionToken: [1440, [Validators.required, Validators.min(60)]],
+        empZonaHoraria: ['America/Santiago', Validators.required]
       });
   
       // Validación del RUT
@@ -173,7 +177,7 @@ export class InsEmpresaComponent {
      this.inputAvatar.nativeElement.value = '';
     }
 
-    public guardar(empDes: string, empDir: string, empRut: string, empGiro: string, empFono: string, empTokenOMS: string) {
+    public guardar(empDes: string, empDir: string, empRut: string, empGiro: string, empFono: string, empTokenOMS: string, empTiempoIdle: number, empTiempoTimeout: number, empTiempoExpiracionToken: number, empZonaHoraria: string) {
       if (this.ins.valid && this.valRut) {
        let empresa: Empresa = { 
         empId: 0,
@@ -182,7 +186,11 @@ export class InsEmpresaComponent {
         empRut: empRut,
         empGiro: empGiro,
         empFono: empFono,
-        empTokenOMS: empTokenOMS
+        empTokenOMS: empTokenOMS,
+        empTiempoIdle: empTiempoIdle,
+        empTiempoTimeout: empTiempoTimeout,
+        empTiempoExpiracionToken: empTiempoExpiracionToken,
+        empZonaHoraria: empZonaHoraria
       }
         this.val = true;   
         this.store.dispatch(incrementarRequest({ request: 1 }));

@@ -2,11 +2,15 @@ import { RouterModule } from '@angular/router';
 import { NgModule } from '@angular/core';
 import { AppLayoutComponent } from "./layout/app.layout.component";
 import { NotfoundComponent } from './erp/auth/notfound/notfound.component';
+import { AuthGuard } from './erp/auth/guards/auth.guard';
+
 @NgModule({
     imports: [
         RouterModule.forRoot([
             {
-                path: 'desk', component: AppLayoutComponent,
+                path: 'desk', 
+                component: AppLayoutComponent,
+                canActivate: [AuthGuard],
                 children: [
                     { path: 'home', loadChildren: () => import('./erp/dashboard/dashboard.module').then(m => m.DashboardModule) },
                     { path: 'parametros', loadChildren: () => import('./erp/dashboard/component/parametros/parametros.module').then(m => m.ParametrosModule) },
